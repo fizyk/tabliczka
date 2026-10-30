@@ -6,11 +6,20 @@ from tabliczka.operations import ADD, DIVIDE, MULTIPLY, SUBTRACT
 from tabliczka.session import run_drill
 
 
-@click.group()
-@click.argument("name", type=str, required=True)
-def main(name: str) -> None:
-    """Greet the learner by name."""
+@click.group(invoke_without_command=True)
+@click.option(
+    "--imie",
+    "name",
+    prompt="Jak masz na imię?",
+    help="Name to greet the learner by. Asked for when missing.",
+)
+@click.pass_context
+def main(context: click.Context, name: str) -> None:
+    """Greet the learner by name, then run the drill, asking which when missing."""
     click.echo(f"Witaj {name}!")
+    if context.invoked_subcommand is None:
+        drill = click.prompt("Co ćwiczymy?", type=click.Choice(list(main.commands)))
+        context.invoke(main.commands[drill])
 
 
 @main.command()
