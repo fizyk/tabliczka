@@ -56,6 +56,16 @@ this order:
 4. The Polish interface copy: commands, prompts, help text, headings and the
    summary in `cli.py`, `operations.py` and `session.py`.
 
+## Published text
+
+- Interface copy, read by the child: `click.echo`, `click.prompt` and `click.pause`
+  text, the feedback, the summary, `Operation.heading` and `Question.prompt` in
+  `cli.py`, `session.py`, `operations.py` and `__main__.py`.
+- Validation messages, read by the child: `self.fail(...)` in `LearnerAnswer`.
+- Option and command help, read by the parent: `help=` in `cli.py`.
+- Release notes, read by the parent: `newsfragments/*.rst`, built into
+  `CHANGES.rst` and each GitHub Release.
+
 ## Preserved behaviour
 
 These are deliberate; do not "fix" them without being asked:

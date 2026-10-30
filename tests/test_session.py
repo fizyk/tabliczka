@@ -55,7 +55,7 @@ def test_empty_summary_has_no_wrong_answer_lines() -> None:
 
 
 @pytest.mark.parametrize("typed", ["4\nkoniec\n", "4\n Koniec \n", "4\n"])
-def test_run_drill__prints_summary(monkeypatch: pytest.MonkeyPatch, typed: str) -> None:
+def test_run_drill(monkeypatch: pytest.MonkeyPatch, typed: str) -> None:
     """The drill scores each answer and prints the summary when the learner stops."""
     monkeypatch.setattr("tabliczka.session.choice", lambda operations: ADD)
     monkeypatch.setattr("tabliczka.operations.randint", lambda min_n, max_n: 2)
