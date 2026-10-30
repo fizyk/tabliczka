@@ -12,6 +12,8 @@ uv run pytest tests/test_session.py::<name>  # one test
 uv run tabliczka --imie <name> dodawanie     # run the CLI
 python main.py                               # same, asking for name and drill
 prek run --all-files                         # formatters, linters, ty
+uv run --group windows pyinstaller --onefile --console --name tabliczka \
+  src/tabliczka/__main__.py                  # the Windows program, built on Windows
 ```
 
 Every pull request adds a towncrier newsfragment,
@@ -21,14 +23,16 @@ never bump the version by hand.
 
 ## Architecture
 
-A Click CLI that drills children on arithmetic until Ctrl+C, then prints a score
-summary. User-facing text is Polish.
+A Click CLI that drills children on arithmetic until they type `koniec` or press
+Ctrl+C, then prints a score summary. User-facing text is Polish.
 
 - `operations.py` - one class per operation (`Add`, `Subtract`, `Multiply`,
   `Divide`) satisfying the `Operation` protocol, exported as singletons. Each
   builds a `Question` from operands in `[min_n, max_n]`.
 - `session.py` - `run_drill(operations)` owns the loop, prompt, feedback and the
-  `click.Abort` summary via `Scoreboard`. It never decides which operations run.
+  summary via `Scoreboard`. It never decides which operations run.
+- `__main__.py` - the entry point PyInstaller packages; as the Windows program it
+  waits for a key before its console window closes.
 - `cli.py` - the group takes `--imie` and asks for a missing name or drill; each
   subcommand only picks the operation list.
 
@@ -36,6 +40,10 @@ New drills (mixed operations, a configurable maximum, printable worksheets; see
 the GitHub issues) should pass different operations or arguments to `run_drill`,
 not add new loops.
 The design rationale is in `.junie/plans/modularise-tabliczka-cli.md`.
+
+Pushing a `v*` tag runs `.github/workflows/windows-release.yml`, which builds
+`tabliczka.exe` on Windows and publishes it in a GitHub Release with that version's
+`CHANGES.rst` section.
 
 ## Glossary
 
@@ -47,6 +55,16 @@ this order:
 3. The correct and wrong counts in `Scoreboard` in `session.py`.
 4. The Polish interface copy: commands, prompts, help text, headings and the
    summary in `cli.py`, `operations.py` and `session.py`.
+
+## Published text
+
+- Interface copy, read by the child: `click.echo`, `click.prompt` and `click.pause`
+  text, the feedback, the summary, `Operation.heading` and `Question.prompt` in
+  `cli.py`, `session.py`, `operations.py` and `__main__.py`.
+- Validation messages, read by the child: `self.fail(...)` in `LearnerAnswer`.
+- Option and command help, read by the parent: `help=` in `cli.py`.
+- Release notes, read by the parent: `newsfragments/*.rst`, built into
+  `CHANGES.rst` and each GitHub Release.
 
 ## Preserved behaviour
 

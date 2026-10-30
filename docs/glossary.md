@@ -6,7 +6,7 @@ Polish terms are what the learner sees; identifiers are English.
 
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
-| drill (ćwiczenie) | A run of randomly chosen questions that lasts until the learner presses Ctrl+C. | `run_drill` | `src/tabliczka/session.py`, `run_drill` |
+| drill (ćwiczenie) | A run of randomly chosen questions that lasts until the learner types the stop word or presses Ctrl+C. | `run_drill` | `src/tabliczka/session.py`, `run_drill` |
 | operation | An arithmetic skill a drill can ask questions about. | `Operation` | `src/tabliczka/operations.py`, `Operation` |
 | operation id | The fixed name that identifies an operation in the scores. | `id`; values `add`, `subtract`, `multiplication`, `division` | `src/tabliczka/operations.py`, `Operation.id` |
 | addition (Dodawanie) | The operation that asks for the sum of two operands. | `ADD`, class `Add` | `src/tabliczka/operations.py`, `Add` |
@@ -16,6 +16,8 @@ Polish terms are what the learner sees; identifiers are English.
 | question | One exercise put to the learner, with its expected answer. | `Question` | `src/tabliczka/operations.py`, `Question` |
 | prompt | The text of a question as shown to the learner. | `prompt` | `src/tabliczka/operations.py`, `Question.prompt` |
 | answer | The correct result of a question. | `answer` | `src/tabliczka/operations.py`, `Question.answer` |
+| learner answer | What the learner types in reply to a question: a whole number or the stop word. | `LearnerAnswer` | `src/tabliczka/session.py`, `LearnerAnswer` |
+| stop word (koniec) | The word that ends a drill when typed instead of an answer. | `STOP_WORD` | `src/tabliczka/session.py`, `STOP_WORD` |
 | operand range | The lowest and highest operand a question may use, 1 to 10 by default. | `min_n`, `max_n` | `src/tabliczka/operations.py`, `Operation.generate` |
 
 ## Scoring
