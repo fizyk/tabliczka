@@ -58,20 +58,26 @@ Introduce a `Question` + `Operation` protocol. `Add`, `Subtract`, `Multiply`, `D
 ```python
 @dataclass(frozen=True)
 class Question:
-    prompt: str          # e.g. "Dodawanie: Ile to 3+4?"
+    prompt: str  # e.g. "Dodawanie: Ile to 3+4?"
     answer: int
-    operation_id: str    # "add" | "substract" | "multiplication" | "division"
+    operation_id: str  # "add" | "substract" | "multiplication" | "division"
+
 
 class Operation(Protocol):
     id: str
-    heading: str         # scoreboard section title, e.g. "Odejmowanie:"
+    heading: str  # scoreboard section title, e.g. "Odejmowanie:"
+
     def generate(self, min_n: int = 1, max_n: int = 10) -> Question: ...
+
 
 class Scoreboard:
     def record(self, operation_id: str, correct: bool) -> None: ...
     def print_summary(self, operations: Sequence[Operation]) -> None: ...
 
-def run_drill(operations: Sequence[Operation], *, min_n: int = 1, max_n: int = 10) -> None: ...
+
+def run_drill(
+    operations: Sequence[Operation], *, min_n: int = 1, max_n: int = 10
+) -> None: ...
 ```
 
 Subtract must generate `minuend = x+y`, prompt `{minuend}-{x}`, answer `y`. Divide must generate `product = x*y`, prompt `{product}:{x}`, answer `y`.

@@ -11,6 +11,7 @@ uv run pytest                                # all tests
 uv run pytest tests/test_session.py::<name>  # one test
 uv run tabliczka <name> dodawanie            # run the CLI
 python main.py <name> mnozenie               # same, via the root shim
+prek run --all-files                         # formatters, linters, ty
 ```
 
 Every pull request adds a towncrier newsfragment,

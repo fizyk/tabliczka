@@ -1,3 +1,5 @@
+"""Tests for the command line."""
+
 from typing import cast
 
 import click
@@ -29,8 +31,11 @@ def test_commands_greet_and_start_the_expected_drill(
     intro: str,
     operations: list[Operation],
 ) -> None:
+    """Each command greets the learner and starts its drill."""
     calls: list[list[Operation]] = []
-    monkeypatch.setattr("tabliczka.cli.run_drill", lambda selected: calls.append(selected))
+    monkeypatch.setattr(
+        "tabliczka.cli.run_drill", lambda selected: calls.append(selected)
+    )
 
     result = CliRunner().invoke(cast(click.Command, main), ["Ala", command])
 

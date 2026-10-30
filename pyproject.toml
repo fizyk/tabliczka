@@ -26,15 +26,38 @@ release = [
     "tbump==6.11.0",
 ]
 
-[tool.tbump]
+[tool.ruff]
+target-version = "py315"
+line-length = 88
 
-[[tool.tbump.field]]
-name = "extra"
-default = ""
+[tool.ruff.lint]
+select = [
+    "D",   # pydocstyle
+    "E",   # pycodestyle
+    "F",   # pyflakes
+    "FBT", # flake8-boolean-trap
+    "I",   # isort
+    "PYI", # flake8-pyi
+    "UP",  # pyupgrade
+]
+
+[tool.pyproject-fmt]
+column_width = 88
+indent = 4
+keep_full_version = true
+generate_python_version_classifiers = false
+table_format = "long"
+sub_table_spacing = "\n"
+
+[tool.tbump]
 
 [[tool.tbump.before_commit]]
 name = "Build changelog"
 cmd = "uv run towncrier build --version {new_version} --yes"
+
+[[tool.tbump.field]]
+name = "extra"
+default = ""
 
 [[tool.tbump.file]]
 src = "src/tabliczka/__init__.py"
