@@ -7,11 +7,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Python 3.15 is pinned in `mise.toml`; dependencies are managed with `uv`.
 
 ```sh
-uv run --extra dev pytest                                  # all tests
-uv run --extra dev pytest tests/test_session.py::<name>    # one test
-uv run tabliczka <name> dodawanie                          # run the CLI
-python main.py <name> mnozenie                             # same, via the root shim
+uv run pytest                                # all tests
+uv run pytest tests/test_session.py::<name>  # one test
+uv run tabliczka <name> dodawanie            # run the CLI
+python main.py <name> mnozenie               # same, via the root shim
 ```
+
+Every pull request adds a towncrier newsfragment,
+`newsfragments/<issue>.<type>.rst`, with a type from `[tool.towncrier]` in
+`pyproject.toml`. Releases are cut by the scheduled release workflow with tbump;
+never bump the version by hand.
 
 ## Architecture
 

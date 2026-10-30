@@ -1,0 +1,1 @@
+Publish versioned releases with a changelog, built with uv_build and released with tbump and towncrier.
