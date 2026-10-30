@@ -6,7 +6,7 @@ Polish terms are what the learner sees; identifiers are English.
 
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
-| drill | A run of randomly chosen questions that lasts until the learner presses Ctrl+C. | `run_drill` | `src/tabliczka/session.py`, `run_drill` |
+| drill (ćwiczenie) | A run of randomly chosen questions that lasts until the learner presses Ctrl+C. | `run_drill` | `src/tabliczka/session.py`, `run_drill` |
 | operation | An arithmetic skill a drill can ask questions about. | `Operation` | `src/tabliczka/operations.py`, `Operation` |
 | operation id | The fixed name that identifies an operation in the scores. | `id`; values `add`, `subtract`, `multiplication`, `division` | `src/tabliczka/operations.py`, `Operation.id` |
 | addition (Dodawanie) | The operation that asks for the sum of two operands. | `ADD`, class `Add` | `src/tabliczka/operations.py`, `Add` |
@@ -33,7 +33,7 @@ Polish terms are what the learner sees; identifiers are English.
 
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
-| learner name | The name the program greets the learner by. | `name` | `src/tabliczka/cli.py`, `main` |
+| learner name (imię ucznia) | The name the program greets the learner by. | `name`; `--imie` on the command line | `src/tabliczka/cli.py`, `main` |
 | addition drill (dodawanie) | The command that drills addition and subtraction. | `dodawanie` | `src/tabliczka/cli.py`, `dodawanie` |
 | multiplication drill (mnozenie) | The command that drills multiplication and division. | `mnozenie` | `src/tabliczka/cli.py`, `mnozenie` |
 
@@ -42,6 +42,7 @@ Polish terms are what the learner sees; identifiers are English.
 - **Operation names.** Classes and singletons use verbs for every operation (`Add`,
   `Subtract`, `Multiply`, `Divide`), but operation ids mix verbs and nouns (`add`,
   `subtract`, `multiplication`, `division`).
+- **Learner name.** The command line option is `--imie`; the code holds it as `name`.
 - **Multiplication drill.** The command is `mnozenie` (no Polish letters); the copy
   says `Mnożenie`.
 - **Correct and wrong.** `run_drill` holds the outcome as `correct`; the scoreboard

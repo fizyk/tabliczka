@@ -9,36 +9,62 @@ from click.testing import CliRunner
 from tabliczka.cli import main
 from tabliczka.operations import ADD, DIVIDE, MULTIPLY, SUBTRACT, Operation
 
+ADDITION_INTRO = "Nauczymy się dodawania i odejmowania!\n"
+MULTIPLICATION_INTRO = "Nauczymy się tabliczki mnożenia i dzielenia!\n"
+NAME_PROMPT = "Jak masz na imię?: "
+DRILL_PROMPT = "Co ćwiczymy? (dodawanie, mnozenie): "
+
 
 @pytest.mark.parametrize(
-    ("command", "intro", "operations"),
+    ("arguments", "typed", "output", "operations"),
     [
         (
-            "dodawanie",
-            "Nauczymy się dodawania i odejmowania!",
+            ["--imie", "Ala", "dodawanie"],
+            "",
+            f"Witaj Ala!\n{ADDITION_INTRO}",
             [ADD, SUBTRACT],
         ),
         (
-            "mnozenie",
-            "Nauczymy się tabliczki mnożenia i dzielenia!",
+            ["--imie", "Ala", "mnozenie"],
+            "",
+            f"Witaj Ala!\n{MULTIPLICATION_INTRO}",
             [MULTIPLY, DIVIDE],
+        ),
+        (
+            ["dodawanie"],
+            "Ala\n",
+            f"{NAME_PROMPT}Ala\nWitaj Ala!\n{ADDITION_INTRO}",
+            [ADD, SUBTRACT],
+        ),
+        (
+            ["--imie", "Ala"],
+            "mnozenie\n",
+            f"Witaj Ala!\n{DRILL_PROMPT}mnozenie\n{MULTIPLICATION_INTRO}",
+            [MULTIPLY, DIVIDE],
+        ),
+        (
+            [],
+            "Ala\ndodawanie\n",
+            f"{NAME_PROMPT}Ala\nWitaj Ala!\n{DRILL_PROMPT}dodawanie\n{ADDITION_INTRO}",
+            [ADD, SUBTRACT],
         ),
     ],
 )
-def test_commands_greet_and_start_the_expected_drill(
+def test_main(
     monkeypatch: pytest.MonkeyPatch,
-    command: str,
-    intro: str,
+    arguments: list[str],
+    typed: str,
+    output: str,
     operations: list[Operation],
 ) -> None:
-    """Each command greets the learner and starts its drill."""
+    """The learner is greeted and the drill starts, asking for what was not given."""
     calls: list[list[Operation]] = []
     monkeypatch.setattr(
         "tabliczka.cli.run_drill", lambda selected: calls.append(selected)
     )
 
-    result = CliRunner().invoke(cast(click.Command, main), ["Ala", command])
+    result = CliRunner().invoke(cast(click.Command, main), arguments, input=typed)
 
     assert result.exit_code == 0
-    assert result.output == f"Witaj Ala!\n{intro}\n"
+    assert result.output == output
     assert calls == [operations]

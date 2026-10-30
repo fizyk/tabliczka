@@ -1,0 +1,1 @@
+The learner's name is now given with ``--imie``, so ``tabliczka Ala dodawanie`` becomes ``tabliczka --imie Ala dodawanie``. Started without a name or a drill, the program asks for them.
