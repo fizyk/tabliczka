@@ -1,3 +1,5 @@
+"""Tests for the arithmetic operations."""
+
 import re
 
 import pytest
@@ -21,8 +23,11 @@ def test_generate_preserves_question_format(
     expected_answer: int,
     expected_id: str,
 ) -> None:
+    """Generated questions keep their prompt, answer and operation id."""
     operands = iter((4, 2))
-    monkeypatch.setattr("tabliczka.operations.randint", lambda min_n, max_n: next(operands))
+    monkeypatch.setattr(
+        "tabliczka.operations.randint", lambda min_n, max_n: next(operands)
+    )
 
     question = operation.generate()
 
@@ -33,6 +38,7 @@ def test_generate_preserves_question_format(
 
 @pytest.mark.parametrize("operation", [ADD, SUBTRACT, MULTIPLY, DIVIDE])
 def test_generate_respects_operand_bounds(operation: Operation) -> None:
+    """Generated operands stay within the requested range."""
     for _ in range(100):
         question = operation.generate(max_n=5)
         numbers = [

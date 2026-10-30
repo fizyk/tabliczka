@@ -1,3 +1,5 @@
+"""Tests for the drill session and scoreboard."""
+
 import click
 from click.testing import CliRunner
 
@@ -6,6 +8,7 @@ from tabliczka.session import Scoreboard, run_drill
 
 
 def test_summary_prints_totals_and_per_operation_scores() -> None:
+    """The summary prints the totals, then each operation's score."""
     scoreboard = Scoreboard()
     scoreboard.record("add", correct=True)
     scoreboard.record("add", correct=True)
@@ -36,6 +39,7 @@ def test_summary_prints_totals_and_per_operation_scores() -> None:
 
 
 def test_empty_summary_has_no_wrong_answer_lines() -> None:
+    """A drill with no answers prints no wrong answer lines."""
     scoreboard = Scoreboard()
 
     @click.command()
@@ -53,6 +57,7 @@ def test_run_drill_records_answers_and_summarizes_on_abort(
     monkeypatch,
     capsys,
 ) -> None:
+    """The drill scores each answer and prints the summary on abort."""
     monkeypatch.setattr("tabliczka.session.choice", lambda operations: ADD)
     monkeypatch.setattr("tabliczka.operations.randint", lambda min_n, max_n: 2)
     prompts = []
