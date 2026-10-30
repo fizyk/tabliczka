@@ -25,6 +25,9 @@ dev = [
 release = [
     "tbump==6.11.0",
 ]
+windows = [
+    "pyinstaller==6.22.3",
+]
 
 [tool.ruff]
 target-version = "py315"

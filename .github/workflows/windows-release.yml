@@ -1,0 +1,45 @@
+name: Release Windows program
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+permissions: {}
+
+jobs:
+  windows-release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e # v10.3.2
+      - name: Run tests
+        run: uv run --locked --group windows pytest
+      - name: Build the program
+        run: >-
+          uv run --locked --group windows pyinstaller
+          --onefile --console --name tabliczka src/tabliczka/__main__.py
+      - name: Take this version's changelog
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          awk -v header="tabliczka ${VERSION#v} " '
+            index($0, header) == 1 { found = 1; next }
+            found && /^tabliczka [0-9]/ { exit }
+            found && !/^=+$/ { print }
+          ' CHANGES.rst \
+            | sed -E 's/`(#[0-9]+) <([^>]+)>`__/[\1](\2)/g' > release-notes.md
+          test -s release-notes.md
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ github.ref_name }}
+        run: >-
+          gh release create "$VERSION" dist/tabliczka.exe
+          --title "tabliczka ${VERSION#v}" --notes-file release-notes.md
