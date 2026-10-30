@@ -1,0 +1,12 @@
+language: en-GB
+reviews:
+  profile: "assertive"
+  suggested_labels: true
+  auto_apply_labels: true
+  auto_review:
+    auto_pause_after_reviewed_commits: 1
+    labels: ["!no code rabbit"]
+    drafts: false
+  slop_detection:
+    enabled: true
+    label: "ai-spam"
