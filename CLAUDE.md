@@ -35,7 +35,5 @@ These are deliberate; do not "fix" them without being asked:
 
 - Subtraction asks `(x+y)-x` and division `(x*y):x`, so answers stay positive
   integers within the operand range.
-- Operation ids `add` / `substract` / `multiplication` / `division` and the
-  typo `Dodawnia` in copy are kept as-is.
 - In the summary, each operation's wrong-answer line is shown when the **total**
   wrong count is non-zero, not that operation's own count.

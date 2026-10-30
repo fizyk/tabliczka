@@ -9,7 +9,7 @@ from tabliczka.operations import ADD, DIVIDE, MULTIPLY, SUBTRACT, Operation
     ("operation", "expected_prompt", "expected_answer", "expected_id"),
     [
         (ADD, "Dodawanie: Ile to 4+2?", 6, "add"),
-        (SUBTRACT, "Odejmowanie: Ile to 6-4?", 2, "substract"),
+        (SUBTRACT, "Odejmowanie: Ile to 6-4?", 2, "subtract"),
         (MULTIPLY, "Mnożenie: Ile to 4x2?", 8, "multiplication"),
         (DIVIDE, "Dzielenie: Ile to 8:4?", 2, "division"),
     ],

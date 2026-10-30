@@ -19,7 +19,7 @@ class Operation(Protocol):
 
 class Add:
     id = "add"
-    heading = "Dodawnia:"
+    heading = "Dodawanie:"
 
     def generate(self, min_n: int = 1, max_n: int = 10) -> Question:
         x = randint(min_n, max_n)
@@ -28,7 +28,7 @@ class Add:
 
 
 class Subtract:
-    id = "substract"
+    id = "subtract"
     heading = "Odejmowanie:"
 
     def generate(self, min_n: int = 1, max_n: int = 10) -> Question:

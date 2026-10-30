@@ -12,7 +12,7 @@ def main(name: str) -> None:
 
 @main.command()
 def dodawanie() -> None:
-    click.echo("Nauczymy się dodawnia i odejmowania!")
+    click.echo("Nauczymy się dodawania i odejmowania!")
     run_drill([ADD, SUBTRACT])
 
 

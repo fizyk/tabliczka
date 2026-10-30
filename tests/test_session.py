@@ -9,7 +9,7 @@ def test_summary_prints_totals_and_per_operation_scores() -> None:
     scoreboard = Scoreboard()
     scoreboard.record("add", correct=True)
     scoreboard.record("add", correct=True)
-    scoreboard.record("substract", correct=False)
+    scoreboard.record("subtract", correct=False)
 
     @click.command()
     def command() -> None:
@@ -25,7 +25,7 @@ def test_summary_prints_totals_and_per_operation_scores() -> None:
         "2 - dobrze\n"
         "1 - źle\n"
         "====================\n"
-        "Dodawnia:\n"
+        "Dodawanie:\n"
         "2 - dobrze\n"
         "0 - źle\n"
         "====================\n"

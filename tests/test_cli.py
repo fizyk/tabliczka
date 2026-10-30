@@ -13,7 +13,7 @@ from tabliczka.operations import ADD, DIVIDE, MULTIPLY, SUBTRACT, Operation
     [
         (
             "dodawanie",
-            "Nauczymy się dodawnia i odejmowania!",
+            "Nauczymy się dodawania i odejmowania!",
             [ADD, SUBTRACT],
         ),
         (
