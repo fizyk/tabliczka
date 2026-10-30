@@ -6,12 +6,16 @@ from tabliczka.operations import ADD, DIVIDE, MULTIPLY, SUBTRACT
 from tabliczka.session import run_drill
 
 
-@click.group(invoke_without_command=True)
+@click.group(
+    invoke_without_command=True,
+    help="Wita ucznia i uruchamia ćwiczenie. O brakujące imię lub ćwiczenie "
+    "program zapyta.",
+)
 @click.option(
     "--imie",
     "name",
     prompt="Jak masz na imię?",
-    help="Name to greet the learner by. Asked for when missing.",
+    help="Imię ucznia do powitania. Jeśli go brak, program o nie zapyta.",
 )
 @click.pass_context
 def main(context: click.Context, name: str) -> None:
@@ -22,14 +26,14 @@ def main(context: click.Context, name: str) -> None:
         context.invoke(main.commands[drill])
 
 
-@main.command()
+@main.command(help="Ćwiczy dodawanie i odejmowanie.")
 def dodawanie() -> None:
     """Drill addition and subtraction."""
     click.echo("Nauczymy się dodawania i odejmowania!")
     run_drill([ADD, SUBTRACT])
 
 
-@main.command()
+@main.command(help="Ćwiczy mnożenie i dzielenie.")
 def mnozenie() -> None:
     """Drill multiplication and division."""
     click.echo("Nauczymy się tabliczki mnożenia i dzielenia!")

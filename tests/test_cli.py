@@ -11,7 +11,7 @@ from tabliczka.operations import ADD, DIVIDE, MULTIPLY, SUBTRACT, Operation
 
 ADDITION_INTRO = "Nauczymy się dodawania i odejmowania!\n"
 MULTIPLICATION_INTRO = "Nauczymy się tabliczki mnożenia i dzielenia!\n"
-NAME_PROMPT = "Jak masz na imię?: Ala\n"
+NAME_PROMPT = "Jak masz na imię?: "
 DRILL_PROMPT = "Co ćwiczymy? (dodawanie, mnozenie): "
 
 
@@ -33,7 +33,7 @@ DRILL_PROMPT = "Co ćwiczymy? (dodawanie, mnozenie): "
         (
             ["dodawanie"],
             "Ala\n",
-            f"{NAME_PROMPT}Witaj Ala!\n{ADDITION_INTRO}",
+            f"{NAME_PROMPT}Ala\nWitaj Ala!\n{ADDITION_INTRO}",
             [ADD, SUBTRACT],
         ),
         (
@@ -45,7 +45,7 @@ DRILL_PROMPT = "Co ćwiczymy? (dodawanie, mnozenie): "
         (
             [],
             "Ala\ndodawanie\n",
-            f"{NAME_PROMPT}Witaj Ala!\n{DRILL_PROMPT}dodawanie\n{ADDITION_INTRO}",
+            f"{NAME_PROMPT}Ala\nWitaj Ala!\n{DRILL_PROMPT}dodawanie\n{ADDITION_INTRO}",
             [ADD, SUBTRACT],
         ),
     ],
