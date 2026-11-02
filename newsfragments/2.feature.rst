@@ -1,0 +1,1 @@
+Each release attaches a Windows program, ``tabliczka.exe``, that runs without installing Python. Typing ``koniec`` ends a drill, and the program's window stays open after the summary until a key is pressed.
