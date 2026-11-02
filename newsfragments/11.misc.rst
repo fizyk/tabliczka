@@ -1,1 +1,0 @@
-Check formatting, linting and typing with pre-commit, using ruff and ty.
