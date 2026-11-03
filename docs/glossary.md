@@ -6,7 +6,7 @@ Polish terms are what the learner sees; identifiers are English.
 
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
-| drill (ćwiczenie) | A run of randomly chosen questions that lasts until the learner types the stop word, presses Ctrl+C or has answered the number of questions. | `Drill` | `src/tabliczka/practice/models/drill.py`, `Drill` |
+| drill (ćwiczenie) | A run of randomly chosen questions that lasts until the learner types the stop word, presses Ctrl+C or has answered the number of questions. | `Drill` | `src/tabliczka/practice/api.py`, `Drill` |
 | operation | An arithmetic skill a drill can ask questions about. | `Operation` | `src/tabliczka/exercises/models/operation.py`, `Operation` |
 | operation id | The fixed name that identifies an operation in the scores. | `id`; values `add`, `subtract`, `multiplication`, `division` | `src/tabliczka/exercises/models/operation.py`, `Operation.id` |
 | addition (Dodawanie) | The operation that asks for the sum of two operands, the sum at most the largest number. | `ADD`, class `Add` | `src/tabliczka/exercises/service.py`, `Add` |
@@ -22,7 +22,7 @@ Polish terms are what the learner sees; identifiers are English.
 | stop word (koniec) | The word that ends a drill when typed instead of an answer. | `STOP_WORD` | `src/tabliczka/ui/cli.py`, `STOP_WORD` |
 | largest number (max) | The highest value of the number an operation limits: the sum for addition, the minuend for subtraction, each factor for multiplication and division. | `max_n`; `--max` on the command line | `src/tabliczka/exercises/models/operation.py`, `Operation.generate` |
 | default largest number | The largest number an operation uses when the drill does not choose one: 20 for addition and subtraction, 10 for multiplication and division. | `default_max_n` | `src/tabliczka/exercises/models/operation.py`, `Operation.default_max_n` |
-| number of questions (pytania) | How many questions a drill asks before the summary; without it the drill lasts until the learner stops. | `question_count`; `--pytania` on the command line | `src/tabliczka/practice/models/drill.py`, `Drill.question_count` |
+| number of questions (pytania) | How many questions a drill asks before the summary; without it the drill lasts until the learner stops. | `question_count`; `--pytania` on the command line | `src/tabliczka/practice/api.py`, `Drill.question_count` |
 
 ## Scoring
 
@@ -55,7 +55,7 @@ Polish terms are what the learner sees; identifiers are English.
 - **Multiplication drill.** The command is `mnozenie` (no Polish letters); the copy
   says `Mnożenie`.
 - **Learner answer.** The type that reads it is `LearnerAnswer`; the value is
-  `given` in `run_drill` and `check_answer`.
+  `given` in `run_drill` and `Drill.check_answer`.
 
 ## One word, two meanings
 

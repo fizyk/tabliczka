@@ -3,8 +3,8 @@
 import pytest
 
 from tabliczka.exercises.service import ADD, DIVIDE, MULTIPLY
-from tabliczka.practice.api import ask_questions, check_answer, start_drill
-from tabliczka.practice.models import Drill, Score, Scoreboard
+from tabliczka.practice.api import Drill
+from tabliczka.practice.models import Score, Scoreboard
 
 
 def test_scoreboard() -> None:
@@ -23,10 +23,10 @@ def test_scoreboard() -> None:
     assert scoreboard.total(["add", "subtract"]) == Score(correct=1, wrong=2)
 
 
-def test_start_drill() -> None:
+def test_drill() -> None:
     """A drill starts with the operations whose ids it is given and no answers."""
     # When
-    drill = start_drill(["division", "add"], max_n=12, question_count=5)
+    drill = Drill(["division", "add"], max_n=12, question_count=5)
 
     # Then
     assert drill.operations == [DIVIDE, ADD]
@@ -35,14 +35,13 @@ def test_start_drill() -> None:
 
 
 @pytest.mark.parametrize(("question_count", "asked"), [(2, 2), (None, 50)])
-def test_ask_questions(
+def test_questions(
     monkeypatch: pytest.MonkeyPatch, question_count: int | None, asked: int
 ) -> None:
     """A drill asks ``question_count`` questions, or never stops without one."""
     # Given
     monkeypatch.setattr("tabliczka.practice.service.choice", lambda operations: ADD)
-    drill = Drill([ADD], question_count=question_count)
-    questions = ask_questions(drill)
+    questions = Drill(["add"], question_count=question_count).questions()
 
     # When
     taken = [question for question, _ in zip(questions, range(50), strict=False)]
@@ -55,7 +54,7 @@ def test_ask_questions(
     ("max_n", "upper_bounds"),
     [(None, [20, 10]), (7, [7, 7])],
 )
-def test_ask_questions__max_n(
+def test_questions__max_n(
     monkeypatch: pytest.MonkeyPatch, max_n: int | None, upper_bounds: list[int]
 ) -> None:
     """Each operation uses ``max_n`` when given and its own default otherwise."""
@@ -71,10 +70,10 @@ def test_ask_questions__max_n(
         return low
 
     monkeypatch.setattr("tabliczka.exercises.service.randint", randint)
-    drill = Drill([ADD, MULTIPLY], max_n=max_n, question_count=2)
+    drill = Drill(["add", "multiplication"], max_n=max_n, question_count=2)
 
     # When
-    list(ask_questions(drill))
+    list(drill.questions())
 
     # Then
     assert [asked_upper_bounds[0], asked_upper_bounds[2]] == upper_bounds
@@ -87,12 +86,12 @@ def test_ask_questions__max_n(
 def test_check_answer(offset: int, *, correct: bool, score: Score) -> None:
     """An answer is checked against the question and counted for its operation."""
     # Given
-    drill = Drill([ADD])
+    drill = Drill(["add"])
     question = ADD.generate(10)
     given = question.answer + offset
 
     # When
-    result = check_answer(drill, question, given)
+    result = drill.check_answer(question, given)
 
     # Then
     assert result is correct

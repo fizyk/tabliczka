@@ -7,8 +7,8 @@ import click
 import pytest
 from click.testing import CliRunner
 
-from tabliczka.exercises.service import ADD, SUBTRACT
-from tabliczka.practice.models import Drill
+from tabliczka.exercises.service import ADD
+from tabliczka.practice.api import Drill
 from tabliczka.ui.cli import LEARNER_ANSWER, main, print_summary, run_drill
 
 ADDITION_INTRO = "Nauczymy się dodawania i odejmowania!\n"
@@ -150,7 +150,7 @@ def test_main__rejects(
 def test_print_summary() -> None:
     """The summary prints the totals, then each operation's own score."""
     # Given
-    drill = Drill([ADD, SUBTRACT])
+    drill = Drill(["add", "subtract"])
     drill.scoreboard.record("add", correct=True)
     drill.scoreboard.record("add", correct=True)
     drill.scoreboard.record("subtract", correct=False)
@@ -181,7 +181,7 @@ def test_print_summary__no_answers() -> None:
     """A drill with no answers prints no wrong answer lines."""
     # Given
     command = click.Command(
-        "summary", callback=lambda: print_summary(Drill([ADD, SUBTRACT]))
+        "summary", callback=lambda: print_summary(Drill(["add", "subtract"]))
     )
 
     # When

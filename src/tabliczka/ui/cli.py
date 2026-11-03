@@ -6,8 +6,8 @@ from contextlib import suppress
 import click
 from click import Abort
 
-from tabliczka.practice.api import ask_questions, check_answer, start_drill
-from tabliczka.practice.models import Drill, Score
+from tabliczka.practice.api import Drill
+from tabliczka.practice.models import Score
 
 STOP_WORD = "koniec"
 
@@ -74,14 +74,14 @@ def run_drill(
 
     Then print the summary.
     """
-    drill = start_drill(operation_ids, max_n=max_n, question_count=question_count)
+    drill = Drill(operation_ids, max_n=max_n, question_count=question_count)
     click.echo(f"Wpisz „{STOP_WORD}”, żeby zakończyć.")
     with suppress(Abort):
-        for question in ask_questions(drill):
+        for question in drill.questions():
             given = click.prompt(question.prompt, type=LEARNER_ANSWER)
             if given is None:
                 break
-            if check_answer(drill, question, given):
+            if drill.check_answer(question, given):
                 click.echo(click.style("Dobrze!", fg="green"))
             else:
                 click.echo(

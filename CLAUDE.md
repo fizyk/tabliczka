@@ -37,11 +37,11 @@ services; it does not re-export them. Across packages, import `api` functions an
   `max_n`, is the operation's own choice (the sum, the minuend, each factor), and
   has its own `default_max_n`. `get_operations(operation_ids)` in `api.py` looks
   them up.
-- `practice` - a `Drill` holds the operations, `max_n`, `question_count` and the
-  `Scoreboard`. `api.py` starts one with `start_drill(operation_ids, ...)`, then
-  `ask_questions(drill)` yields its questions and `check_answer(drill, question,
-  given)` scores each. It knows nothing of the terminal and never decides which
-  operations run.
+- `practice` - `Drill(operation_ids, max_n=, question_count=)` in `api.py` holds
+  the operations, limits and `Scoreboard`; `drill.questions()` yields its
+  questions and `drill.check_answer(question, given)` scores each, through the
+  stateless functions in `service.py`. It knows nothing of the terminal and never
+  decides which operations run.
 - `__main__.py` - the entry point PyInstaller packages; as the Windows program it
   waits for a key before its console window closes.
 - `ui/cli.py` - the group takes `--imie` and asks for a missing name or drill; each
@@ -50,9 +50,8 @@ services; it does not re-export them. Across packages, import `api` functions an
   the summary, all through the `practice` API.
 
 New drills (printable worksheets and others; see the GitHub issues) should pass
-different operations or arguments to `start_drill`, not add new question logic; a
-new user interface writes only its own loop over `ask_questions` and
-`check_answer`.
+different operations or arguments to `Drill`, not add new question logic; a new
+user interface writes only its own loop over `questions()` and `check_answer()`.
 The design rationale is in `.junie/plans/modularise-tabliczka-cli.md`.
 
 Pushing a `v*` tag runs `.github/workflows/windows-release.yml`, which builds
@@ -67,7 +66,7 @@ this order:
 1. The domain types `Question` and `Operation` in `exercises/models/`.
 2. The operation ids, default largest numbers and singletons in
    `exercises/service.py`.
-3. `Drill`, `Score` and `Scoreboard` in `practice/models/`.
+3. `Drill` in `practice/api.py`, and `Score` and `Scoreboard` in `practice/models/`.
 4. The Polish interface copy: commands, options, prompts, help text, headings and
    the summary in `ui/cli.py` and `exercises/service.py`.
 
