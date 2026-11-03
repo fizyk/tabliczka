@@ -33,6 +33,26 @@ def test_drill() -> None:
     assert drill.scoreboard.scores == {}
 
 
+@pytest.mark.parametrize(
+    ("operation_ids", "max_n", "question_count", "message"),
+    [
+        ([], None, None, "A drill needs operation ids"),
+        (["add"], 1, None, "max_n 1 is below 2"),
+        (["multiplication"], 0, None, "max_n 0 is below 2"),
+        (["add"], None, 0, "question_count 0 is below 1"),
+    ],
+)
+def test_drill__rejects(
+    operation_ids: list[str],
+    max_n: int | None,
+    question_count: int | None,
+    message: str,
+) -> None:
+    """A drill with no operations, too small a largest number or no questions fails."""
+    with pytest.raises(ValueError, match=message):
+        Drill(operation_ids, max_n=max_n, question_count=question_count)
+
+
 @pytest.mark.parametrize(("question_count", "asked"), [(2, 2), (None, 50)])
 def test_questions(
     monkeypatch: pytest.MonkeyPatch, question_count: int | None, asked: int

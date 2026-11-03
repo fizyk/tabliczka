@@ -18,7 +18,11 @@ class Drill:
         max_n: int | None = None,
         question_count: int | None = None,
     ) -> None:
-        """Start a drill of the operations with the given ids, with no answers yet."""
+        """Start a drill of the operations with the given ids, with no answers yet.
+
+        Reject no operation ids, a ``max_n`` below 2 and a ``question_count`` below 1.
+        """
+        service.check_drill(operation_ids, max_n=max_n, question_count=question_count)
         self.operations = get_operations(operation_ids)
         self.max_n = max_n
         self.question_count = question_count
