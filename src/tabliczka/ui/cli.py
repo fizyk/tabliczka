@@ -7,7 +7,7 @@ import click
 from click import Abort
 
 from tabliczka.practice.api import Drill
-from tabliczka.practice.models import Score
+from tabliczka.practice.models import Score, Summary
 
 STOP_WORD = "koniec"
 
@@ -16,6 +16,13 @@ OPERATION_IDS_BY_NAME = {
     "odejmowanie": "subtract",
     "mnozenie": "multiplication",
     "dzielenie": "division",
+}
+
+OPERATION_HEADINGS_BY_ID = {
+    "add": "Dodawanie",
+    "subtract": "Odejmowanie",
+    "multiplication": "Mnożenie",
+    "division": "Dzielenie",
 }
 
 
@@ -49,19 +56,19 @@ def print_score(score: Score) -> None:
         click.echo(click.style(f"{score.wrong} - źle", fg="red"))
 
 
-def print_summary(drill: Drill) -> None:
+def print_summary(summary: Summary) -> None:
     """Print the totals, then the score of each operation."""
     click.echo("\n")
     click.echo("=" * 20)
     click.echo("Twój wynik to:")
-    print_score(drill.scoreboard.total(operation.id for operation in drill.operations))
+    print_score(summary.total)
     click.echo("=" * 20)
 
-    for index, operation in enumerate(drill.operations):
+    for index, (operation_id, score) in enumerate(summary.scores.items()):
         if index:
             click.echo("=" * 20)
-        click.echo(operation.heading)
-        print_score(drill.scoreboard.score(operation.id))
+        click.echo(f"{OPERATION_HEADINGS_BY_ID[operation_id]}:")
+        print_score(score)
 
 
 def run_drill(
@@ -78,7 +85,10 @@ def run_drill(
     click.echo(f"Wpisz „{STOP_WORD}”, żeby zakończyć.")
     with suppress(Abort):
         for question in drill.questions():
-            given = click.prompt(question.prompt, type=LEARNER_ANSWER)
+            heading = OPERATION_HEADINGS_BY_ID[question.operation_id]
+            given = click.prompt(
+                f"{heading}: Ile to {question.expression}?", type=LEARNER_ANSWER
+            )
             if given is None:
                 break
             if drill.check_answer(question, given):
@@ -90,7 +100,7 @@ def run_drill(
                         fg="red",
                     )
                 )
-    print_summary(drill)
+    print_summary(drill.summary())
 
 
 def drill_options[CommandFunction: Callable[..., None]](

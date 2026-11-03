@@ -1,7 +1,5 @@
 """The record of a drill's results."""
 
-from collections.abc import Iterable
-
 from tabliczka.practice.models.score import Score
 
 
@@ -23,11 +21,3 @@ class Scoreboard:
     def score(self, operation_id: str) -> Score:
         """Return the score of one operation, zero when it has no answers."""
         return self.scores.get(operation_id, Score())
-
-    def total(self, operation_ids: Iterable[str]) -> Score:
-        """Return the scores of the given operations summed."""
-        scores = [self.score(operation_id) for operation_id in operation_ids]
-        return Score(
-            correct=sum(score.correct for score in scores),
-            wrong=sum(score.wrong for score in scores),
-        )

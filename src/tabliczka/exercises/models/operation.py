@@ -13,7 +13,6 @@ class Operation(Protocol):
     """
 
     id: str
-    heading: str
     default_max_n: int
 
     def generate(self, max_n: int) -> Question:

@@ -4,11 +4,11 @@ import pytest
 
 from tabliczka.exercises.service import ADD, DIVIDE, MULTIPLY
 from tabliczka.practice.api import Drill
-from tabliczka.practice.models import Score, Scoreboard
+from tabliczka.practice.models import Score, Scoreboard, Summary
 
 
 def test_scoreboard() -> None:
-    """The scoreboard counts each operation's answers and sums them."""
+    """The scoreboard counts each operation's answers."""
     # Given
     scoreboard = Scoreboard()
 
@@ -20,7 +20,6 @@ def test_scoreboard() -> None:
     # Then
     assert scoreboard.score("add") == Score(correct=1, wrong=1)
     assert scoreboard.score("division") == Score()
-    assert scoreboard.total(["add", "subtract"]) == Score(correct=1, wrong=2)
 
 
 def test_drill() -> None:
@@ -96,3 +95,27 @@ def test_check_answer(offset: int, *, correct: bool, score: Score) -> None:
     # Then
     assert result is correct
     assert drill.scoreboard.score("add") == score
+
+
+def test_summary() -> None:
+    """The summary sums the drill's scores and lists each operation's, in order."""
+    # Given
+    drill = Drill(["subtract", "add", "division"])
+    drill.scoreboard.record("add", correct=True)
+    drill.scoreboard.record("add", correct=False)
+    drill.scoreboard.record("subtract", correct=False)
+    drill.scoreboard.record("multiplication", correct=True)
+
+    # When
+    summary = drill.summary()
+
+    # Then
+    assert summary == Summary(
+        total=Score(correct=1, wrong=2),
+        scores={
+            "subtract": Score(wrong=1),
+            "add": Score(correct=1, wrong=1),
+            "division": Score(),
+        },
+    )
+    assert list(summary.scores) == ["subtract", "add", "division"]

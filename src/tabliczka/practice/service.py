@@ -1,11 +1,11 @@
-"""Asking a drill's questions and scoring the answers."""
+"""Asking a drill's questions, scoring the answers and summing the scores."""
 
 from collections.abc import Iterator, Sequence
 from itertools import count
 from random import choice
 
 from tabliczka.exercises.models import Operation, Question
-from tabliczka.practice.models import Scoreboard
+from tabliczka.practice.models import Score, Scoreboard, Summary
 
 
 def ask_questions(
@@ -29,3 +29,13 @@ def check_answer(scoreboard: Scoreboard, question: Question, given: int) -> bool
     correct = given == question.answer
     scoreboard.record(question.operation_id, correct=correct)
     return correct
+
+
+def summarise(scoreboard: Scoreboard, operations: Sequence[Operation]) -> Summary:
+    """Return each operation's score and their total."""
+    scores = {operation.id: scoreboard.score(operation.id) for operation in operations}
+    total = Score(
+        correct=sum(score.correct for score in scores.values()),
+        wrong=sum(score.wrong for score in scores.values()),
+    )
+    return Summary(total, scores)

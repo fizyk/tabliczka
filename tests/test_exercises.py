@@ -10,22 +10,22 @@ from tabliczka.exercises.service import ADD, DIVIDE, MULTIPLY, SUBTRACT
 
 
 @pytest.mark.parametrize(
-    ("operation", "expected_prompt", "expected_answer", "expected_id"),
+    ("operation", "expected_expression", "expected_answer", "expected_id"),
     [
-        (ADD, "Dodawanie: Ile to 2+4?", 6, "add"),
-        (SUBTRACT, "Odejmowanie: Ile to 6-2?", 4, "subtract"),
-        (MULTIPLY, "Mnożenie: Ile to 6x2?", 12, "multiplication"),
-        (DIVIDE, "Dzielenie: Ile to 12:6?", 2, "division"),
+        (ADD, "2+4", 6, "add"),
+        (SUBTRACT, "6-2", 4, "subtract"),
+        (MULTIPLY, "6x2", 12, "multiplication"),
+        (DIVIDE, "12:6", 2, "division"),
     ],
 )
-def test_generate_preserves_question_format(
+def test_generate(
     monkeypatch: pytest.MonkeyPatch,
     operation: Operation,
-    expected_prompt: str,
+    expected_expression: str,
     expected_answer: int,
     expected_id: str,
 ) -> None:
-    """Generated questions keep their prompt, answer and operation id."""
+    """Generated questions keep their expression, answer and operation id."""
     # Given
     numbers = iter((6, 2))
     monkeypatch.setattr(
@@ -36,7 +36,7 @@ def test_generate_preserves_question_format(
     question = operation.generate(10)
 
     # Then
-    assert question.prompt == expected_prompt
+    assert question.expression == expected_expression
     assert question.answer == expected_answer
     assert question.operation_id == expected_id
 
@@ -50,9 +50,9 @@ def test_default_max_n(operation: Operation, default_max_n: int) -> None:
     assert operation.default_max_n == default_max_n
 
 
-def numbers_in(prompt: str) -> list[int]:
-    """Return the numbers a question prompt asks about."""
-    return [int(number) for number in re.findall(r"\d+", prompt.split("Ile to ")[1])]
+def numbers_in(expression: str) -> list[int]:
+    """Return the numbers a question's expression asks about."""
+    return [int(number) for number in re.findall(r"\d+", expression)]
 
 
 @pytest.mark.parametrize("operation", [ADD, SUBTRACT])
@@ -64,7 +64,7 @@ def test_generate__sum_within_max_n(operation: Operation, max_n: int) -> None:
         question = operation.generate(max_n)
 
         # Then
-        first, second = numbers_in(question.prompt)
+        first, second = numbers_in(question.expression)
         if operation is ADD:
             assert first >= 1 and second >= 1
             assert question.answer == first + second <= max_n
@@ -81,7 +81,7 @@ def test_generate__factors_within_max_n(operation: Operation) -> None:
         question = operation.generate(5)
 
         # Then
-        first, second = numbers_in(question.prompt)
+        first, second = numbers_in(question.expression)
         if operation is MULTIPLY:
             factors = [first, second]
             assert question.answer == first * second

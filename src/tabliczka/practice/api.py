@@ -1,11 +1,11 @@
-"""Running a drill: asking its questions and scoring the answers."""
+"""Running a drill: asking its questions, scoring the answers, summing up."""
 
 from collections.abc import Iterator, Sequence
 
 from tabliczka.exercises.api import get_operations
 from tabliczka.exercises.models import Question
 from tabliczka.practice import service
-from tabliczka.practice.models import Scoreboard
+from tabliczka.practice.models import Scoreboard, Summary
 
 
 class Drill:
@@ -33,3 +33,7 @@ class Drill:
     def check_answer(self, question: Question, given: int) -> bool:
         """Record whether ``given`` answers the question, and return it."""
         return service.check_answer(self.scoreboard, question, given)
+
+    def summary(self) -> Summary:
+        """Return the drill's total and each operation's score so far."""
+        return service.summarise(self.scoreboard, self.operations)

@@ -16,7 +16,8 @@ Polish terms are what the learner sees; identifiers are English.
 | operand | One of the two numbers a question is built from; in multiplication and division, a factor. | `x`, `y` | `src/tabliczka/exercises/service.py`, `Add.generate` and the other operations |
 | minuend (odjemna) | The number a subtraction question subtracts from, `x+y`. | `minuend` | `src/tabliczka/exercises/service.py`, `Subtract.generate` |
 | question | One exercise put to the learner, with its expected answer. | `Question` | `src/tabliczka/exercises/models/question.py`, `Question` |
-| prompt | The text of a question as shown to the learner. | `prompt` | `src/tabliczka/exercises/models/question.py`, `Question.prompt` |
+| expression | The arithmetic a question asks about, such as `2+4`. | `expression` | `src/tabliczka/exercises/models/question.py`, `Question.expression` |
+| prompt (Ile to) | The text of a question as shown to the learner: the operation's heading and the expression. | `click.prompt` text in `run_drill` | `src/tabliczka/ui/cli.py`, `run_drill` |
 | answer | The correct result of a question. | `answer` | `src/tabliczka/exercises/models/question.py`, `Question.answer` |
 | learner answer | What the learner types in reply to a question: a whole number or the stop word. | `LearnerAnswer` | `src/tabliczka/ui/cli.py`, `LearnerAnswer` |
 | stop word (koniec) | The word that ends a drill when typed instead of an answer. | `STOP_WORD` | `src/tabliczka/ui/cli.py`, `STOP_WORD` |
@@ -32,9 +33,9 @@ Polish terms are what the learner sees; identifiers are English.
 | score | The counts of correct and wrong answers, for one operation or for a whole drill. | `Score` | `src/tabliczka/practice/models/score.py`, `Score` |
 | correct count (dobrze) | The number of questions answered correctly. | `correct` | `src/tabliczka/practice/models/score.py`, `Score.correct` |
 | wrong count (źle) | The number of questions answered wrongly. | `wrong` | `src/tabliczka/practice/models/score.py`, `Score.wrong` |
-| total | The correct and wrong counts summed over all operations in a drill. | `total` | `src/tabliczka/practice/models/scoreboard.py`, `Scoreboard.total` |
-| summary (Twój wynik to) | The report of the totals and each operation's score, printed when a drill ends. | `print_summary` | `src/tabliczka/ui/cli.py`, `print_summary` |
-| heading | The title of one operation's section in the score summary. | `heading` | `src/tabliczka/exercises/models/operation.py`, `Operation.heading` |
+| total | The correct and wrong counts summed over all operations in a drill. | `total` | `src/tabliczka/practice/models/summary.py`, `Summary.total` |
+| summary (Twój wynik to) | The drill's total and each operation's score, printed when a drill ends. | `Summary`; printed by `print_summary` | `src/tabliczka/practice/models/summary.py`, `Summary` |
+| heading | The Polish name of an operation, opening its prompts and its section in the summary. | values of `OPERATION_HEADINGS_BY_ID` | `src/tabliczka/ui/cli.py`, `OPERATION_HEADINGS_BY_ID` |
 
 ## Command line
 
@@ -60,7 +61,7 @@ Polish terms are what the learner sees; identifiers are English.
 ## One word, two meanings
 
 - **`score`.** `Scoreboard.score` returns one operation's `Score`; the drill as a
-  whole has a total, also a `Score`.
+  whole has `Summary.total`, also a `Score`.
 - **ćwiczenie.** The copy uses it for any drill; the `cwiczenie` command is the
   chosen drill only.
 - **`correct`.** The local `correct` in `check_answer` says whether one answer was

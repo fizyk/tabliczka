@@ -35,19 +35,22 @@ services; it does not re-export them. Across packages, import `api` functions an
   in `service.py`, satisfying the `Operation` protocol, kept as singletons in
   `OPERATIONS_BY_ID`. Each builds a `Question` whose largest number, at most
   `max_n`, is the operation's own choice (the sum, the minuend, each factor), and
-  has its own `default_max_n`. `get_operations(operation_ids)` in `api.py` looks
+  has its own `default_max_n`. It holds no Polish text: a question carries only its
+  `expression`, such as `2+4`. `get_operations(operation_ids)` in `api.py` looks
   them up.
 - `practice` - `Drill(operation_ids, max_n=, question_count=)` in `api.py` holds
   the operations, limits and `Scoreboard`; `drill.questions()` yields its
-  questions and `drill.check_answer(question, given)` scores each, through the
-  stateless functions in `service.py`. It knows nothing of the terminal and never
+  questions, `drill.check_answer(question, given)` scores each and
+  `drill.summary()` returns the `Summary` of scores, through the stateless functions
+  in `service.py`. It knows nothing of the terminal and never
   decides which operations run.
 - `__main__.py` - the entry point PyInstaller packages; as the Windows program it
   waits for a key before its console window closes.
 - `ui/cli.py` - the group takes `--imie` and asks for a missing name or drill; each
   subcommand only picks the operation ids and passes `--max` and `--pytania` on.
   `run_drill` owns the terminal: the prompt loop, the stop word, the feedback and
-  the summary, all through the `practice` API.
+  the printed summary, all through the `practice` API. All the Polish copy lives
+  here, including each operation's heading in `OPERATION_HEADINGS_BY_ID`.
 
 New drills (printable worksheets and others; see the GitHub issues) should pass
 different operations or arguments to `Drill`, not add new question logic; a new
@@ -66,15 +69,16 @@ this order:
 1. The domain types `Question` and `Operation` in `exercises/models/`.
 2. The operation ids, default largest numbers and singletons in
    `exercises/service.py`.
-3. `Drill` in `practice/api.py`, and `Score` and `Scoreboard` in `practice/models/`.
+3. `Drill` in `practice/api.py`, and `Score`, `Scoreboard` and `Summary` in
+   `practice/models/`.
 4. The Polish interface copy: commands, options, prompts, help text, headings and
-   the summary in `ui/cli.py` and `exercises/service.py`.
+   the summary in `ui/cli.py`.
 
 ## Published text
 
 - Interface copy, read by the child: `click.echo`, `click.prompt` and `click.pause`
-  text, the feedback, the summary, `Operation.heading` and `Question.prompt` in
-  `ui/cli.py`, `exercises/service.py` and `__main__.py`.
+  text, the feedback, the summary and `OPERATION_HEADINGS_BY_ID` in `ui/cli.py` and
+  `__main__.py`.
 - Validation messages, read by the child: `self.fail(...)` in `LearnerAnswer`.
 - Validation messages, read by the parent: `click.BadParameter` in `ui/cli.py`.
 - Option and command help, read by the parent: `help=` in `ui/cli.py`.
