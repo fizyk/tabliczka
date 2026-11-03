@@ -96,7 +96,14 @@ def test_get_operations() -> None:
     assert get_operations(["division", "add"]) == [DIVIDE, ADD]
 
 
-def test_get_operations__unknown_id() -> None:
-    """An id no operation has is rejected."""
-    with pytest.raises(ValueError, match=r"Unknown operation ids \['power'\]"):
-        get_operations(["add", "power"])
+@pytest.mark.parametrize(
+    ("operation_ids", "message"),
+    [
+        (["add", "power"], r"Unknown operation ids \['power'\]"),
+        (["add", "division", "add"], r"Operation ids \['add'\] are repeated"),
+    ],
+)
+def test_get_operations__rejects(operation_ids: list[str], message: str) -> None:
+    """An id no operation has, or one given twice, is rejected."""
+    with pytest.raises(ValueError, match=message):
+        get_operations(operation_ids)
