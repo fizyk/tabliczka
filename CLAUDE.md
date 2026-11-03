@@ -37,17 +37,22 @@ services; it does not re-export them. Across packages, import `api` functions an
   `max_n`, is the operation's own choice (the sum, the minuend, each factor), and
   has its own `default_max_n`. `get_operations(operation_ids)` in `api.py` looks
   them up.
-- `practice` - `run_drill(operations, max_n=, question_count=)` in `service.py`
-  owns the loop, prompt, feedback and the summary from `Scoreboard`. It never
-  decides which operations run. `run_drill(operation_ids, ...)` in `api.py` looks
-  the operations up and calls it.
+- `practice` - a `Drill` holds the operations, `max_n`, `question_count` and the
+  `Scoreboard`. `api.py` starts one with `start_drill(operation_ids, ...)`, then
+  `ask_questions(drill)` yields its questions and `check_answer(drill, question,
+  given)` scores each. It knows nothing of the terminal and never decides which
+  operations run.
 - `__main__.py` - the entry point PyInstaller packages; as the Windows program it
   waits for a key before its console window closes.
 - `ui/cli.py` - the group takes `--imie` and asks for a missing name or drill; each
   subcommand only picks the operation ids and passes `--max` and `--pytania` on.
+  `run_drill` owns the terminal: the prompt loop, the stop word, the feedback and
+  the summary, all through the `practice` API.
 
 New drills (printable worksheets and others; see the GitHub issues) should pass
-different operations or arguments to `run_drill`, not add new loops.
+different operations or arguments to `start_drill`, not add new question logic; a
+new user interface writes only its own loop over `ask_questions` and
+`check_answer`.
 The design rationale is in `.junie/plans/modularise-tabliczka-cli.md`.
 
 Pushing a `v*` tag runs `.github/workflows/windows-release.yml`, which builds
@@ -62,15 +67,15 @@ this order:
 1. The domain types `Question` and `Operation` in `exercises/models/`.
 2. The operation ids, default largest numbers and singletons in
    `exercises/service.py`.
-3. `Score` and `Scoreboard` in `practice/models/`.
+3. `Drill`, `Score` and `Scoreboard` in `practice/models/`.
 4. The Polish interface copy: commands, options, prompts, help text, headings and
-   the summary in `ui/cli.py`, `exercises/service.py` and `practice/service.py`.
+   the summary in `ui/cli.py` and `exercises/service.py`.
 
 ## Published text
 
 - Interface copy, read by the child: `click.echo`, `click.prompt` and `click.pause`
   text, the feedback, the summary, `Operation.heading` and `Question.prompt` in
-  `ui/cli.py`, `practice/service.py`, `exercises/service.py` and `__main__.py`.
+  `ui/cli.py`, `exercises/service.py` and `__main__.py`.
 - Validation messages, read by the child: `self.fail(...)` in `LearnerAnswer`.
 - Validation messages, read by the parent: `click.BadParameter` in `ui/cli.py`.
 - Option and command help, read by the parent: `help=` in `ui/cli.py`.
