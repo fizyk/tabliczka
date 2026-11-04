@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.scripts]
-tabliczka = "tabliczka.cli:main"
+tabliczka = "tabliczka.ui.cli:main"
 
 [dependency-groups]
 dev = [

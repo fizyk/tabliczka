@@ -8,7 +8,7 @@ import sys
 
 import click
 
-from tabliczka.cli import main
+from tabliczka.ui.cli import main
 
 if __name__ == "__main__":
     try:
