@@ -159,3 +159,18 @@ def test_summary() -> None:
         },
     )
     assert list(summary.scores) == ["subtract", "add", "division"]
+
+
+def test_summary__keeps_scores_when_answers_follow() -> None:
+    """A summary keeps the scores it was made with after more answers."""
+    # Given
+    drill = Drill(["add"])
+    drill.check_answer(ADD.generate(10), 0)
+    summary = drill.summary()
+
+    # When
+    drill.check_answer(ADD.generate(10), 0)
+
+    # Then
+    assert summary.scores == {"add": Score(wrong=1)}
+    assert summary.total == Score(wrong=1)
