@@ -50,6 +50,20 @@ def test_default_max_n(operation: Operation, default_max_n: int) -> None:
     assert operation.default_max_n == default_max_n
 
 
+@pytest.mark.parametrize(
+    ("operation", "min_max_n"),
+    [(ADD, 2), (SUBTRACT, 2), (MULTIPLY, 1), (DIVIDE, 1)],
+)
+def test_generate__min_max_n(operation: Operation, min_max_n: int) -> None:
+    """Each operation can generate a question with its smallest largest number."""
+    # When
+    question = operation.generate(min_max_n)
+
+    # Then
+    assert operation.min_max_n == min_max_n
+    assert question.answer >= 1
+
+
 def numbers_in(expression: str) -> list[int]:
     """Return the numbers a question's expression asks about."""
     return [int(number) for number in re.findall(r"\d+", expression)]

@@ -12,6 +12,7 @@ class Add:
 
     id = "add"
     default_max_n = 20
+    min_max_n = 2
 
     def generate(self, max_n: int) -> Question:
         """Return an addition question."""
@@ -25,6 +26,7 @@ class Subtract:
 
     id = "subtract"
     default_max_n = 20
+    min_max_n = 2
 
     def generate(self, max_n: int) -> Question:
         """Return a subtraction question."""
@@ -38,6 +40,7 @@ class Multiply:
 
     id = "multiplication"
     default_max_n = 10
+    min_max_n = 1
 
     def generate(self, max_n: int) -> Question:
         """Return a multiplication question."""
@@ -51,6 +54,7 @@ class Divide:
 
     id = "division"
     default_max_n = 10
+    min_max_n = 1
 
     def generate(self, max_n: int) -> Question:
         """Return a division question."""

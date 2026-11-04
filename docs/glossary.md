@@ -23,6 +23,7 @@ Polish terms are what the learner sees; identifiers are English.
 | stop word (koniec) | The word that ends a drill when typed instead of an answer. | `STOP_WORD` | `src/tabliczka/ui/cli.py`, `STOP_WORD` |
 | largest number (max) | The highest value of the number an operation limits: the sum for addition, the minuend for subtraction, each factor for multiplication and division. | `max_n`; `--max` on the command line | `src/tabliczka/exercises/models/operation.py`, `Operation.generate` |
 | default largest number | The largest number an operation uses when the drill does not choose one: 20 for addition and subtraction, 10 for multiplication and division. | `default_max_n` | `src/tabliczka/exercises/models/operation.py`, `Operation.default_max_n` |
+| smallest largest number | The lowest largest number an operation can ask questions with: 2 for addition and subtraction, 1 for multiplication and division. | `min_max_n` | `src/tabliczka/exercises/models/operation.py`, `Operation.min_max_n` |
 | number of questions (pytania) | How many questions a drill asks before the summary; without it the drill lasts until the learner stops. | `question_count`; `--pytania` on the command line | `src/tabliczka/practice/api.py`, `Drill.question_count` |
 
 ## Scoring

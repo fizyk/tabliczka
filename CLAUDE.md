@@ -35,9 +35,9 @@ services; it does not re-export them. Across packages, import `api` functions an
   in `service.py`, satisfying the `Operation` protocol, kept as singletons in
   `OPERATIONS_BY_ID`. Each builds a `Question` whose largest number, at most
   `max_n`, is the operation's own choice (the sum, the minuend, each factor), and
-  has its own `default_max_n`. It holds no Polish text: a question carries only its
-  `expression`, such as `2+4`. `get_operations(operation_ids)` in `api.py` looks
-  them up.
+  has its own `default_max_n` and the smallest `max_n` it accepts, `min_max_n`. It
+  holds no Polish text: a question carries only its `expression`, such as `2+4`.
+  `get_operations(operation_ids)` in `api.py` looks them up.
 - `practice` - `Drill(operation_ids, max_n=, question_count=)` in `api.py` holds
   the operations, limits and `Scoreboard`; `drill.questions()` yields its
   questions, `drill.check_answer(question, given)` scores each and

@@ -9,13 +9,23 @@ from tabliczka.practice.models import Score, Scoreboard, Summary
 
 
 def check_drill(
-    operation_ids: Sequence[str], *, max_n: int | None, question_count: int | None
+    operations: Sequence[Operation], *, max_n: int | None, question_count: int | None
 ) -> None:
     """Reject a drill that could not ask its questions."""
-    if not operation_ids:
+    if not operations:
         raise ValueError("A drill needs operation ids. Give at least one.")
-    if max_n is not None and max_n < 2:
-        raise ValueError(f"max_n {max_n} is below 2. Give 2 or more, or None.")
+    too_small_for = [
+        operation
+        for operation in operations
+        if max_n is not None and max_n < operation.min_max_n
+    ]
+    if too_small_for:
+        raise ValueError(
+            f"max_n {max_n} is too small for operation ids "
+            f"{[operation.id for operation in too_small_for]}. "
+            f"Give {max(operation.min_max_n for operation in too_small_for)} or more, "
+            "or None."
+        )
     if question_count is not None and question_count < 1:
         raise ValueError(
             f"question_count {question_count} is below 1. Give 1 or more, or None."

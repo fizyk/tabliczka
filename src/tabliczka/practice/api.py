@@ -20,10 +20,11 @@ class Drill:
     ) -> None:
         """Start a drill of the operations with the given ids, with no answers yet.
 
-        Reject no operation ids, a ``max_n`` below 2 and a ``question_count`` below 1.
+        Reject no operation ids, a ``max_n`` below an operation's ``min_max_n`` and a
+        ``question_count`` below 1.
         """
-        service.check_drill(operation_ids, max_n=max_n, question_count=question_count)
         self.operations = get_operations(operation_ids)
+        service.check_drill(self.operations, max_n=max_n, question_count=question_count)
         self.max_n = max_n
         self.question_count = question_count
         self.scoreboard = Scoreboard()

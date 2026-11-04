@@ -37,8 +37,19 @@ def test_drill() -> None:
     ("operation_ids", "max_n", "question_count", "message"),
     [
         ([], None, None, "A drill needs operation ids"),
-        (["add"], 1, None, "max_n 1 is below 2"),
-        (["multiplication"], 0, None, "max_n 0 is below 2"),
+        (
+            ["add"],
+            1,
+            None,
+            r"max_n 1 is too small for operation ids \['add'\]\. Give 2",
+        ),
+        (
+            ["multiplication", "subtract"],
+            1,
+            None,
+            r"max_n 1 is too small for operation ids \['subtract'\]\. Give 2",
+        ),
+        (["multiplication"], 0, None, r"operation ids \['multiplication'\]\. Give 1"),
         (["add"], None, 0, "question_count 0 is below 1"),
     ],
 )
@@ -51,6 +62,15 @@ def test_drill__rejects(
     """A drill with no operations, too small a largest number or no questions fails."""
     with pytest.raises(ValueError, match=message):
         Drill(operation_ids, max_n=max_n, question_count=question_count)
+
+
+def test_drill__smallest_max_n() -> None:
+    """Multiplication and division accept 1 as the largest number."""
+    # When
+    drill = Drill(["multiplication", "division"], max_n=1)
+
+    # Then
+    assert drill.max_n == 1
 
 
 @pytest.mark.parametrize(("question_count", "asked"), [(2, 2), (None, 50)])
