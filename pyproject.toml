@@ -121,3 +121,6 @@ showcontent = true
 directory = "misc"
 name = "Miscellaneous"
 showcontent = true
+
+[tool.rstcheck]
+report_level = "WARNING"
