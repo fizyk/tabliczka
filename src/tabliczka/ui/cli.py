@@ -8,6 +8,16 @@ from click import Abort
 
 from tabliczka.practice.api import Drill
 from tabliczka.practice.models import Score, Summary
+from tabliczka.ui.text import (
+    CORRECT_FEEDBACK,
+    OPERATION_HEADINGS_BY_ID,
+    SUMMARY_HEADING,
+    correct_count,
+    greeting,
+    question_text,
+    wrong_count,
+    wrong_feedback,
+)
 
 STOP_WORD = "koniec"
 
@@ -16,13 +26,6 @@ OPERATION_IDS_BY_NAME = {
     "odejmowanie": "subtract",
     "mnozenie": "multiplication",
     "dzielenie": "division",
-}
-
-OPERATION_HEADINGS_BY_ID = {
-    "add": "Dodawanie",
-    "subtract": "Odejmowanie",
-    "multiplication": "Mnożenie",
-    "division": "Dzielenie",
 }
 
 
@@ -51,16 +54,16 @@ LEARNER_ANSWER = LearnerAnswer()
 
 def print_score(score: Score) -> None:
     """Print the correct count, then the wrong count when there are wrong answers."""
-    click.echo(click.style(f"{score.correct} - dobrze", fg="green"))
+    click.echo(click.style(correct_count(score), fg="green"))
     if score.wrong:
-        click.echo(click.style(f"{score.wrong} - źle", fg="red"))
+        click.echo(click.style(wrong_count(score), fg="red"))
 
 
 def print_summary(summary: Summary) -> None:
     """Print the totals, then the score of each operation."""
     click.echo("\n")
     click.echo("=" * 20)
-    click.echo("Twój wynik to:")
+    click.echo(SUMMARY_HEADING)
     print_score(summary.total)
     click.echo("=" * 20)
 
@@ -85,21 +88,13 @@ def run_drill(
     click.echo(f"Wpisz „{STOP_WORD}”, żeby zakończyć.")
     with suppress(Abort):
         for question in drill.questions():
-            heading = OPERATION_HEADINGS_BY_ID[question.operation_id]
-            given = click.prompt(
-                f"{heading}: Ile to {question.expression}?", type=LEARNER_ANSWER
-            )
+            given = click.prompt(question_text(question), type=LEARNER_ANSWER)
             if given is None:
                 break
             if drill.check_answer(question, given):
-                click.echo(click.style("Dobrze!", fg="green"))
+                click.echo(click.style(CORRECT_FEEDBACK, fg="green"))
             else:
-                click.echo(
-                    click.style(
-                        f"Niestety, źle, prawidłowy wynik to {question.answer}.",
-                        fg="red",
-                    )
-                )
+                click.echo(click.style(wrong_feedback(question), fg="red"))
     print_summary(drill.summary())
 
 
@@ -146,7 +141,7 @@ def chosen_operation_ids(
 @click.pass_context
 def main(context: click.Context, name: str) -> None:
     """Greet the learner by name, then run the drill, asking which when missing."""
-    click.echo(f"Witaj {name}!")
+    click.echo(greeting(name))
     if context.invoked_subcommand is None:
         drill = click.prompt("Co ćwiczymy?", type=click.Choice(list(main.commands)))
         context.invoke(main.commands[drill])
