@@ -1,10 +1,11 @@
 """Tests for the window."""
 
 import sys
+from collections.abc import Iterator
 from unittest.mock import MagicMock
 
 import pytest
-from PySide6.QtCore import Qt
+from PySide6.QtCore import QLocale, Qt
 from PySide6.QtWidgets import QApplication, QMessageBox
 from pytestqt.qtbot import QtBot
 
@@ -19,6 +20,15 @@ from tabliczka.ui.window import (
     show_error,
     summary_html,
 )
+
+
+@pytest.fixture
+def english_locale() -> Iterator[None]:
+    """Use a locale whose group separator is a comma."""
+    default = QLocale()
+    QLocale.setDefault(QLocale(QLocale.Language.English, QLocale.Country.UnitedStates))
+    yield
+    QLocale.setDefault(default)
 
 
 @pytest.fixture
@@ -77,6 +87,24 @@ def test_start_page__largest_number_default(
     assert page.max_n.minimum() == minimum
     assert page.max_n.text() == "domyślna"
     assert page.chosen_max_n() is None
+
+
+@pytest.mark.parametrize(("chosen", "max_n"), [(1, 2), (5, 5)])
+def test_start_page__largest_number_chosen(
+    qtbot: QtBot, chosen: int, max_n: int
+) -> None:
+    """A chosen largest number stays chosen, raised to what the operations allow."""
+    # Given
+    page = StartPage()
+    qtbot.addWidget(page)
+    choose(page, "Ala", ["multiplication"])
+    page.max_n.setValue(chosen)
+
+    # When
+    page.operation_boxes["add"].setChecked(True)
+
+    # Then
+    assert page.chosen_max_n() == max_n
 
 
 def test_start_page__chosen_values(qtbot: QtBot) -> None:
@@ -143,8 +171,10 @@ def test_drill_window__stop(qtbot: QtBot, addition_only: None) -> None:
     assert "1 - dobrze" in summary.text()
 
 
-@pytest.mark.parametrize("typed", ["", "-", "dwa"])
-def test_question_page__ignores(qtbot: QtBot, addition_only: None, typed: str) -> None:
+@pytest.mark.parametrize("typed", ["", "-", "dwa", "1,000"])
+def test_question_page__ignores(
+    qtbot: QtBot, addition_only: None, english_locale: None, typed: str
+) -> None:
     """Enter does nothing until a whole number is typed."""
     # Given
     window = DrillWindow()
@@ -153,9 +183,9 @@ def test_question_page__ignores(qtbot: QtBot, addition_only: None, typed: str) -
     qtbot.mouseClick(window.start_page.start_button, Qt.MouseButton.LeftButton)
     page = window.pages.currentWidget()
     assert isinstance(page, QuestionPage)
+    page.answer.setText(typed)
 
     # When
-    qtbot.keyClicks(page.answer, typed)
     qtbot.keyClick(page.answer, Qt.Key.Key_Return)
 
     # Then

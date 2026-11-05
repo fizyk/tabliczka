@@ -25,6 +25,17 @@ jobs:
         run: >-
           uv run --locked --group windows pyinstaller
           --onefile --windowed --name tabliczka src/tabliczka/__main__.py
+      - name: Start the program
+        shell: pwsh
+        run: |
+          Start-Process -FilePath dist\tabliczka.exe
+          Start-Sleep -Seconds 20
+          $windows = Get-Process -Name tabliczka -ErrorAction SilentlyContinue |
+            Where-Object MainWindowTitle -eq 'Tabliczka'
+          Stop-Process -Name tabliczka -Force -ErrorAction SilentlyContinue
+          if (-not $windows) {
+            throw 'The program did not show its window within 20 seconds.'
+          }
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: tabliczka

@@ -4,7 +4,7 @@ import sys
 import traceback
 from types import TracebackType
 
-from PySide6.QtCore import Signal
+from PySide6.QtCore import QLocale, Signal
 from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import (
     QApplication,
@@ -65,6 +65,15 @@ def score_lines(score: Score) -> list[str]:
     if score.wrong:
         lines.append(coloured(wrong_count(score), WRONG_COLOUR))
     return lines
+
+
+def whole_number_validator(parent: QWidget) -> QIntValidator:
+    """Return a validator of whole numbers typed without group separators."""
+    validator = QIntValidator(parent)
+    locale = validator.locale()
+    locale.setNumberOptions(QLocale.NumberOption.RejectGroupSeparator)
+    validator.setLocale(locale)
+    return validator
 
 
 class StartPage(QWidget):
@@ -137,10 +146,11 @@ class StartPage(QWidget):
             (operation.min_max_n for operation in get_operations(operation_ids)),
             default=1,
         )
-        at_default = self.max_n.value() == self.max_n.minimum()
+        chosen = self.chosen_max_n()
         self.max_n.setMinimum(smallest - 1)
-        if at_default:
-            self.max_n.setValue(self.max_n.minimum())
+        self.max_n.setValue(
+            self.max_n.minimum() if chosen is None else max(chosen, smallest)
+        )
         self.start_button.setEnabled(bool(self.learner_name() and operation_ids))
 
 
@@ -158,7 +168,7 @@ class QuestionPage(QWidget):
         self.question = next(self.questions)
         self.question_label = QLabel(question_text(self.question))
         self.answer = QLineEdit()
-        self.answer.setValidator(QIntValidator(self.answer))
+        self.answer.setValidator(whole_number_validator(self.answer))
         self.stop_button = QPushButton("Koniec")
 
         layout = QVBoxLayout(self)
