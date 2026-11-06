@@ -4,7 +4,7 @@ requires = [ "uv-build>=0.12,<0.14" ]
 
 [project]
 name = "tabliczka"
-version = "0.2.0"
+version = "0.3.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.15"
@@ -76,7 +76,7 @@ message_template = "Release {new_version}"
 tag_template = "v{new_version}"
 
 [tool.tbump.version]
-current = "0.2.0"
+current = "0.3.0"
 regex = '''
   (?P<major>\d+)
   \.
@@ -123,3 +123,6 @@ showcontent = true
 directory = "misc"
 name = "Miscellaneous"
 showcontent = true
+
+[tool.rstcheck]
+report_level = "WARNING"

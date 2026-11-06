@@ -3,6 +3,22 @@ CHANGELOG
 
 .. towncrier release notes start
 
+tabliczka 0.3.0 (2026-11-05)
+============================
+
+Features
+--------
+
+- Add the ``cwiczenie`` command, which drills any combination of addition,
+  subtraction, multiplication and division chosen with ``--dzialanie``, all four by
+  default. Every drill command takes ``--max``, the largest number (the sum for
+  addition, the minuend for subtraction, each factor for multiplication and
+  division), and ``--pytania``, the number of questions before the summary. Addition
+  now defaults to a sum of at most 20, and subtraction to a minuend of at most 20.
+  The summary shows each operation's wrong answers only when that operation has
+  any. (`#4 <https://github.com/fizyk/tabliczka/issues/4>`__)
+
+
 tabliczka 0.2.0 (2026-11-02)
 ============================
 
