@@ -54,7 +54,7 @@ services; it does not re-export them. Across packages, import `api` functions an
   `run_drill` owns the terminal: the prompt loop, the stop word, the feedback and
   the printed summary, all through the `practice` API. Its own Polish copy, the
   commands, options and prompts, lives here.
-- `ui/window.py` - `StartPage` asks for the name and the drill, `QuestionPage`
+- `ui/gui.py` - `StartPage` asks for the name and the drill, `QuestionPage`
   asks one question at a time, `SummaryPage` shows the summary, and `DrillWindow`
   moves between them. `main` shows any unexpected error in a message.
 
@@ -79,13 +79,13 @@ this order:
    `practice/models/`.
 4. The Polish interface copy: headings, feedback and the summary in `ui/text.py`;
    commands, options, prompts and help text in `ui/cli.py`; labels and buttons in
-   `ui/window.py`.
+   `ui/gui.py`.
 
 ## Published text
 
 - Interface copy, read by the child: everything in `ui/text.py`; `click.echo` and
   `click.prompt` text in `ui/cli.py`; labels, buttons, special values and
-  `ERROR_MESSAGE` in `ui/window.py`.
+  `ERROR_MESSAGE` in `ui/gui.py`.
 - Validation messages, read by the child: `self.fail(...)` in `LearnerAnswer`.
 - Validation messages, read by the parent: `click.BadParameter` in `ui/cli.py`.
 - Option and command help, read by the parent: `help=` in `ui/cli.py`.

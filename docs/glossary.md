@@ -52,11 +52,11 @@ Polish terms are what the learner sees; identifiers are English.
 
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
-| start page (Zaczynamy) | The first page of the window, asking for the learner name and the drill: the operations, the largest number and the number of questions. | `StartPage` | `src/tabliczka/ui/window.py`, `StartPage` |
-| question page | The page that asks a drill's questions one at a time. | `QuestionPage` | `src/tabliczka/ui/window.py`, `QuestionPage` |
-| stop button (Koniec) | The button that ends a drill in the window and shows the summary, as the stop word does on the command line. | `stop_button` | `src/tabliczka/ui/window.py`, `QuestionPage` |
+| start page (Zaczynamy) | The first page of the window, asking for the learner name and the drill: the operations, the largest number and the number of questions. | `StartPage` | `src/tabliczka/ui/gui.py`, `StartPage` |
+| question page | The page that asks a drill's questions one at a time. | `QuestionPage` | `src/tabliczka/ui/gui.py`, `QuestionPage` |
+| stop button (Koniec) | The button that ends a drill in the window and shows the summary, as the stop word does on the command line. | `stop_button` | `src/tabliczka/ui/gui.py`, `QuestionPage` |
 | feedback (Dobrze, Niestety, źle) | What the learner is told after each answer: right, or wrong with the correct answer. | `CORRECT_FEEDBACK`, `wrong_feedback` | `src/tabliczka/ui/text.py` |
-| error message (Coś poszło nie tak) | The message the window shows for an unexpected error, with its traceback in the details. | `ERROR_MESSAGE`; shown by `show_error` | `src/tabliczka/ui/window.py`, `show_error` |
+| error message (Coś poszło nie tak) | The message the window shows for an unexpected error, with its traceback in the details. | `ERROR_MESSAGE`; shown by `show_error` | `src/tabliczka/ui/gui.py`, `show_error` |
 
 ## Spelled two ways
 

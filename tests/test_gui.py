@@ -1,4 +1,4 @@
-"""Tests for the window."""
+"""Tests for the graphical user interface."""
 
 import sys
 from collections.abc import Iterator
@@ -11,7 +11,7 @@ from pytestqt.qtbot import QtBot
 
 from tabliczka.exercises.service import ADD
 from tabliczka.practice.models import Score, Summary
-from tabliczka.ui.window import (
+from tabliczka.ui.gui import (
     DrillWindow,
     QuestionPage,
     StartPage,
@@ -237,7 +237,7 @@ def test_main(monkeypatch: pytest.MonkeyPatch, qapp: QApplication) -> None:
     # Given
     application_mock = MagicMock(spec=QApplication)
     application_mock.return_value.exec.return_value = 0
-    monkeypatch.setattr("tabliczka.ui.window.QApplication", application_mock)
+    monkeypatch.setattr("tabliczka.ui.gui.QApplication", application_mock)
     monkeypatch.setattr(sys, "excepthook", sys.excepthook)
 
     # When
