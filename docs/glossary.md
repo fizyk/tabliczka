@@ -6,7 +6,7 @@ Polish terms are what the learner sees; identifiers are English.
 
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
-| drill (ćwiczenie) | A run of randomly chosen questions that lasts until the learner types the stop word, presses Ctrl+C or has answered the number of questions. | `Drill` | `src/tabliczka/practice/api.py`, `Drill` |
+| drill (ćwiczenie) | A run of randomly chosen questions that lasts until the learner types the stop word, presses Ctrl+C or the stop button, or has answered the number of questions. | `Drill` | `src/tabliczka/practice/api.py`, `Drill` |
 | operation | An arithmetic skill a drill can ask questions about. | `Operation` | `src/tabliczka/exercises/models/operation.py`, `Operation` |
 | operation id | The fixed name that identifies an operation in the scores. | `id`; values `add`, `subtract`, `multiplication`, `division` | `src/tabliczka/exercises/models/operation.py`, `Operation.id` |
 | addition (Dodawanie) | The operation that asks for the sum of two operands, the sum at most the largest number. | `ADD`, class `Add` | `src/tabliczka/exercises/service.py`, `Add` |
@@ -17,7 +17,7 @@ Polish terms are what the learner sees; identifiers are English.
 | minuend (odjemna) | The number a subtraction question subtracts from, `x+y`. | `minuend` | `src/tabliczka/exercises/service.py`, `Subtract.generate` |
 | question | One exercise put to the learner, with its expected answer. | `Question` | `src/tabliczka/exercises/models/question.py`, `Question` |
 | expression | The arithmetic a question asks about, such as `2+4`. | `expression` | `src/tabliczka/exercises/models/question.py`, `Question.expression` |
-| prompt (Ile to) | The text of a question as shown to the learner: the operation's heading and the expression. | `click.prompt` text in `run_drill` | `src/tabliczka/ui/cli.py`, `run_drill` |
+| prompt (Ile to) | The text of a question as shown to the learner: the operation's heading and the expression. | `question_text` | `src/tabliczka/ui/text.py`, `question_text` |
 | answer | The correct result of a question. | `answer` | `src/tabliczka/exercises/models/question.py`, `Question.answer` |
 | learner answer | What the learner types in reply to a question: a whole number or the stop word. | `LearnerAnswer` | `src/tabliczka/ui/cli.py`, `LearnerAnswer` |
 | stop word (koniec) | The word that ends a drill when typed instead of an answer. | `STOP_WORD` | `src/tabliczka/ui/cli.py`, `STOP_WORD` |
@@ -35,8 +35,8 @@ Polish terms are what the learner sees; identifiers are English.
 | correct count (dobrze) | The number of questions answered correctly. | `correct` | `src/tabliczka/practice/models/score.py`, `Score.correct` |
 | wrong count (źle) | The number of questions answered wrongly. | `wrong` | `src/tabliczka/practice/models/score.py`, `Score.wrong` |
 | total | The correct and wrong counts summed over all operations in a drill. | `total` | `src/tabliczka/practice/models/summary.py`, `Summary.total` |
-| summary (Twój wynik to) | The drill's total and each operation's score, printed when a drill ends. | `Summary`; printed by `print_summary` | `src/tabliczka/practice/models/summary.py`, `Summary` |
-| heading | The Polish name of an operation, opening its prompts and its section in the summary. | values of `OPERATION_HEADINGS_BY_ID` | `src/tabliczka/ui/cli.py`, `OPERATION_HEADINGS_BY_ID` |
+| summary (Twój wynik to) | The drill's total and each operation's score, shown when a drill ends. | `Summary`; shown by `print_summary` and `summary_html` | `src/tabliczka/practice/models/summary.py`, `Summary` |
+| heading | The Polish name of an operation, opening its prompts and its section in the summary. | values of `OPERATION_HEADINGS_BY_ID` | `src/tabliczka/ui/text.py`, `OPERATION_HEADINGS_BY_ID` |
 
 ## Command line
 
@@ -47,6 +47,16 @@ Polish terms are what the learner sees; identifiers are English.
 | multiplication drill (mnozenie) | The command that drills multiplication and division. | `mnozenie` | `src/tabliczka/ui/cli.py`, `mnozenie` |
 | operation name (działanie) | The Polish name that chooses one operation with `--dzialanie`. | keys of `OPERATION_IDS_BY_NAME`; values `dodawanie`, `odejmowanie`, `mnozenie`, `dzielenie` | `src/tabliczka/ui/cli.py`, `OPERATION_IDS_BY_NAME` |
 | chosen drill (cwiczenie) | The command that drills the operations chosen with `--dzialanie`, all four when none is chosen. | `cwiczenie`; `--dzialanie` | `src/tabliczka/ui/cli.py`, `cwiczenie` |
+
+## Window
+
+| Term | Definition | Canonical identifier | Where defined |
+|---|---|---|---|
+| start page (Zaczynamy) | The first page of the window, asking for the learner name and the drill: the operations, the largest number and the number of questions. | `StartPage` | `src/tabliczka/ui/gui.py`, `StartPage` |
+| question page | The page that asks a drill's questions one at a time. | `QuestionPage` | `src/tabliczka/ui/gui.py`, `QuestionPage` |
+| stop button (Koniec) | The button that ends a drill in the window and shows the summary, as the stop word does on the command line. | `stop_button` | `src/tabliczka/ui/gui.py`, `QuestionPage` |
+| feedback (Dobrze, Niestety, źle) | What the learner is told after each answer: right, or wrong with the correct answer. | `CORRECT_FEEDBACK`, `wrong_feedback` | `src/tabliczka/ui/text.py` |
+| error message (Coś poszło nie tak) | The message the window shows for an unexpected error, with its traceback in the details. | `ERROR_MESSAGE`; shown by `show_error` | `src/tabliczka/ui/gui.py`, `show_error` |
 
 ## Spelled two ways
 

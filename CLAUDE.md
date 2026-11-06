@@ -11,8 +11,9 @@ uv run pytest                                # all tests
 uv run pytest tests/test_practice.py::<name> # one test
 uv run tabliczka --imie <name> dodawanie     # run the CLI
 python main.py                               # same, asking for name and drill
+uv run python -m tabliczka                   # the window
 prek run --all-files                         # formatters, linters, ty
-uv run --group windows pyinstaller --onefile --console --name tabliczka \
+uv run --group windows pyinstaller --onefile --windowed --name tabliczka \
   src/tabliczka/__main__.py                  # the Windows program, built on Windows
 ```
 
@@ -23,8 +24,8 @@ never bump the version by hand.
 
 ## Architecture
 
-A Click CLI that drills children on arithmetic until they type `koniec` or press
-Ctrl+C, then prints a score summary. User-facing text is Polish.
+A PySide6 window, and a Click CLI for running from source, that drill children on
+arithmetic until they stop, then show a score summary. User-facing text is Polish.
 
 Each domain subpackage has `api.py`, `service.py` and `models/` with one class per
 file. `api.py` holds the functions other packages call, and each calls the
@@ -44,13 +45,18 @@ services; it does not re-export them. Across packages, import `api` functions an
   `drill.summary()` returns the `Summary` of scores, through the stateless functions
   in `service.py`. It knows nothing of the terminal and never
   decides which operations run.
-- `__main__.py` - the entry point PyInstaller packages; as the Windows program it
-  waits for a key before its console window closes.
+- `__main__.py` - the entry point PyInstaller packages; it opens the window.
+- `ui/text.py` - the Polish copy both interfaces show: each operation's heading in
+  `OPERATION_HEADINGS_BY_ID`, the greeting, the question, the feedback and the
+  summary lines.
 - `ui/cli.py` - the group takes `--imie` and asks for a missing name or drill; each
   subcommand only picks the operation ids and passes `--max` and `--pytania` on.
   `run_drill` owns the terminal: the prompt loop, the stop word, the feedback and
-  the printed summary, all through the `practice` API. All the Polish copy lives
-  here, including each operation's heading in `OPERATION_HEADINGS_BY_ID`.
+  the printed summary, all through the `practice` API. Its own Polish copy, the
+  commands, options and prompts, lives here.
+- `ui/gui.py` - `StartPage` asks for the name and the drill, `QuestionPage`
+  asks one question at a time, `SummaryPage` shows the summary, and `DrillWindow`
+  moves between them. `main` shows any unexpected error in a message.
 
 New drills (printable worksheets and others; see the GitHub issues) should pass
 different operations or arguments to `Drill`, not add new question logic; a new
@@ -58,7 +64,7 @@ user interface writes only its own loop over `questions()` and `check_answer()`.
 The design rationale is in `.junie/plans/modularise-tabliczka-cli.md`.
 
 Pushing a `v*` tag runs `.github/workflows/windows-release.yml`, which builds
-`tabliczka.exe` on Windows and publishes it in a GitHub Release with that version's
+the windowed `tabliczka.exe` on Windows and publishes it in a GitHub Release with that version's
 `CHANGES.rst` section.
 
 ## Glossary
@@ -71,14 +77,15 @@ this order:
    `exercises/service.py`.
 3. `Drill` in `practice/api.py`, and `Score`, `Scoreboard` and `Summary` in
    `practice/models/`.
-4. The Polish interface copy: commands, options, prompts, help text, headings and
-   the summary in `ui/cli.py`.
+4. The Polish interface copy: headings, feedback and the summary in `ui/text.py`;
+   commands, options, prompts and help text in `ui/cli.py`; labels and buttons in
+   `ui/gui.py`.
 
 ## Published text
 
-- Interface copy, read by the child: `click.echo`, `click.prompt` and `click.pause`
-  text, the feedback, the summary and `OPERATION_HEADINGS_BY_ID` in `ui/cli.py` and
-  `__main__.py`.
+- Interface copy, read by the child: everything in `ui/text.py`; `click.echo` and
+  `click.prompt` text in `ui/cli.py`; labels, buttons, special values and
+  `ERROR_MESSAGE` in `ui/gui.py`.
 - Validation messages, read by the child: `self.fail(...)` in `LearnerAnswer`.
 - Validation messages, read by the parent: `click.BadParameter` in `ui/cli.py`.
 - Option and command help, read by the parent: `help=` in `ui/cli.py`.
