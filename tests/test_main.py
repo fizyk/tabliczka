@@ -5,14 +5,14 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from tabliczka.ui import gui
+from tabliczka.ui.gui import application
 
 
 def test_main_module(monkeypatch: pytest.MonkeyPatch) -> None:
     """The package opens the window when run as a program."""
     # Given
-    main_mock = MagicMock(spec=gui.main)
-    monkeypatch.setattr(gui, "main", main_mock)
+    main_mock = MagicMock(spec=application.main)
+    monkeypatch.setattr(application, "main", main_mock)
 
     # When
     runpy.run_module("tabliczka", run_name="__main__")

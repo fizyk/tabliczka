@@ -18,13 +18,13 @@ Polish terms are what the learner sees; identifiers are English.
 | question | One exercise put to the learner, with its expected answer. | `Question` | `src/tabliczka/exercises/models/question.py`, `Question` |
 | expression | The arithmetic a question asks about, such as `2+4`. | `expression` | `src/tabliczka/exercises/models/question.py`, `Question.expression` |
 | prompt (Ile to) | The text of a question as shown to the learner: the operation's heading and the expression. | `question_text` | `src/tabliczka/ui/text.py`, `question_text` |
-| answer | The correct result of a question. | `answer` | `src/tabliczka/exercises/models/question.py`, `Question.answer` |
+| answer (expected answer) | The correct result of a question. | `answer` | `src/tabliczka/exercises/models/question.py`, `Question.answer` |
 | learner answer | What the learner types in reply to a question: a whole number or the stop word. | `LearnerAnswer` | `src/tabliczka/ui/cli.py`, `LearnerAnswer` |
 | stop word (koniec) | The word that ends a drill when typed instead of an answer. | `STOP_WORD` | `src/tabliczka/ui/cli.py`, `STOP_WORD` |
-| largest number (max) | The highest value of the number an operation limits: the sum for addition, the minuend for subtraction, each factor for multiplication and division. | `max_n`; `--max` on the command line | `src/tabliczka/exercises/models/operation.py`, `Operation.generate` |
-| default largest number | The largest number an operation uses when the drill does not choose one: 20 for addition and subtraction, 10 for multiplication and division. | `default_max_n` | `src/tabliczka/exercises/models/operation.py`, `Operation.default_max_n` |
+| largest number (max, Największa liczba) | The highest value of the number an operation limits: the sum for addition, the minuend for subtraction, each factor for multiplication and division. | `max_n`; `--max` on the command line; `LARGEST_NUMBER_LABEL` in the window | `src/tabliczka/exercises/models/operation.py`, `Operation.generate` |
+| default largest number (jak zwykle) | The largest number an operation uses when the drill does not choose one: 20 for addition and subtraction, 10 for multiplication and division. | `default_max_n`; shown as `DEFAULT_LARGEST_NUMBER_TEXT` in the window | `src/tabliczka/exercises/models/operation.py`, `Operation.default_max_n` |
 | smallest largest number | The lowest largest number an operation can ask questions with: 2 for addition and subtraction, 1 for multiplication and division. | `min_max_n` | `src/tabliczka/exercises/models/operation.py`, `Operation.min_max_n` |
-| number of questions (pytania) | How many questions a drill asks before the summary; without it the drill lasts until the learner stops. | `question_count`; `--pytania` on the command line | `src/tabliczka/practice/api.py`, `Drill.question_count` |
+| number of questions (pytania, Liczba pytań) | How many questions a drill asks before the summary; without it the drill lasts until the learner stops. | `question_count`; `--pytania` on the command line; `QUESTION_COUNT_LABEL` in the window | `src/tabliczka/practice/api.py`, `Drill.question_count` |
 
 ## Scoring
 
@@ -52,11 +52,12 @@ Polish terms are what the learner sees; identifiers are English.
 
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
-| start page (Zaczynamy) | The first page of the window, asking for the learner name and the drill: the operations, the largest number and the number of questions. | `StartPage` | `src/tabliczka/ui/gui.py`, `StartPage` |
-| question page | The page that asks a drill's questions one at a time. | `QuestionPage` | `src/tabliczka/ui/gui.py`, `QuestionPage` |
-| stop button (Koniec) | The button that ends a drill in the window and shows the summary, as the stop word does on the command line. | `stop_button` | `src/tabliczka/ui/gui.py`, `QuestionPage` |
-| feedback (Dobrze, Niestety, źle) | What the learner is told after each answer: right, or wrong with the correct answer. | `CORRECT_FEEDBACK`, `wrong_feedback` | `src/tabliczka/ui/text.py` |
-| error message (Coś poszło nie tak) | The message the window shows for an unexpected error, with its traceback in the details. | `ERROR_MESSAGE`; shown by `show_error` | `src/tabliczka/ui/gui.py`, `show_error` |
+| start page (Zaczynamy) | The first page of the window, asking for the learner name and the drill: the operations, the largest number and the number of questions. | `StartPage`; `start_button`, with its text in `START_BUTTON_TEXT` | `src/tabliczka/ui/gui/pages/start.py`, `StartPage` |
+| drill settings | The learner name and the drill set on the start page: the operations, the largest number and the number of questions. | `DrillSettings` | `src/tabliczka/ui/gui/pages/start.py`, `DrillSettings` |
+| question page | The page that asks a drill's questions one at a time. | `QuestionPage` | `src/tabliczka/ui/gui/pages/question.py`, `QuestionPage` |
+| stop button (Koniec) | The button that ends a drill in the window and shows the summary, as the stop word does on the command line. | `stop_button`, with its text in `STOP_BUTTON_TEXT` | `src/tabliczka/ui/gui/pages/question.py`, `QuestionPage` |
+| feedback (Dobrze, Niestety, źle) | What the learner is told after each answer: right, or wrong with the correct answer. | `CORRECT_FEEDBACK`, `wrong_feedback`; coloured by `feedback_html` | `src/tabliczka/ui/text.py` |
+| error message (Coś poszło nie tak) | The message the window shows for an unexpected error, with its traceback in the details. | `ERROR_MESSAGE`; shown by `show_error` | `src/tabliczka/ui/gui/text.py`, `ERROR_MESSAGE` |
 
 ## Spelled two ways
 
@@ -67,7 +68,7 @@ Polish terms are what the learner sees; identifiers are English.
 - **Multiplication drill.** The command is `mnozenie` (no Polish letters); the copy
   says `Mnożenie`.
 - **Learner answer.** The type that reads it is `LearnerAnswer`; the value is
-  `given` in `run_drill` and `Drill.check_answer`.
+  `given` in `run_drill`, `Drill.check_answer` and `QuestionPage`.
 
 ## One word, two meanings
 
