@@ -3,6 +3,26 @@ CHANGELOG
 
 .. towncrier release notes start
 
+tabliczka 0.4.0 (2026-11-07)
+============================
+
+Features
+--------
+
+- The Windows program is now a window instead of a console. It asks for the name and
+  the drill (the operations, the largest number and the number of questions), then
+  shows one question at a time: Enter checks the answer, the result shows in green or
+  red, and the ``Koniec`` button shows the summary. An unexpected error shows in a
+  message instead of closing the window. The command line stays for running from
+  source. (`#5 <https://github.com/fizyk/tabliczka/issues/5>`__)
+
+
+Miscellaneous
+-------------
+
+- Check the changelog with rstcheck without failing on the section headings each release repeats.
+
+
 tabliczka 0.3.0 (2026-11-05)
 ============================
 
