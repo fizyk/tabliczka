@@ -54,9 +54,15 @@ services; it does not re-export them. Across packages, import `api` functions an
   `run_drill` owns the terminal: the prompt loop, the stop word, the feedback and
   the printed summary, all through the `practice` API. Its own Polish copy, the
   commands, options and prompts, lives here.
-- `ui/gui.py` - `StartPage` asks for the name and the drill, `QuestionPage`
-  asks one question at a time, `SummaryPage` shows the summary, and `DrillWindow`
-  moves between them. `main` shows any unexpected error in a message.
+- `ui/gui/` - the window, one thing per module. `pages/start.py`, `pages/question.py`
+  and `pages/summary.py` hold one page each: `StartPage` returns the name and the
+  drill as one `DrillSettings`, `QuestionPage` asks one question at a time and
+  reports each answer with its `answered` signal, and `SummaryPage` shows the
+  summary. `drill_window.py` holds `DrillWindow`, which moves between the pages and
+  shows the feedback; pages never touch each other's widgets. `rich_text.py`
+  colours the feedback and the summary, `text.py` holds the window's own Polish
+  copy, and `application.py` holds `main`, which shows any unexpected error in a
+  message.
 
 New drills (printable worksheets and others; see the GitHub issues) should pass
 different operations or arguments to `Drill`, not add new question logic; a new
@@ -79,13 +85,12 @@ this order:
    `practice/models/`.
 4. The Polish interface copy: headings, feedback and the summary in `ui/text.py`;
    commands, options, prompts and help text in `ui/cli.py`; labels and buttons in
-   `ui/gui.py`.
+   `ui/gui/text.py`.
 
 ## Published text
 
-- Interface copy, read by the child: everything in `ui/text.py`; `click.echo` and
-  `click.prompt` text in `ui/cli.py`; labels, buttons, special values and
-  `ERROR_MESSAGE` in `ui/gui.py`.
+- Interface copy, read by the child: everything in `ui/text.py` and
+  `ui/gui/text.py`; `click.echo` and `click.prompt` text in `ui/cli.py`.
 - Validation messages, read by the child: `self.fail(...)` in `LearnerAnswer`.
 - Validation messages, read by the parent: `click.BadParameter` in `ui/cli.py`.
 - Option and command help, read by the parent: `help=` in `ui/cli.py`.
