@@ -35,7 +35,7 @@ def test_load_profile__none() -> None:
 
 
 @pytest.mark.parametrize(
-    ("content", "error"),
+    ("content", "message"),
     [
         ("{", "JSONDecodeError"),
         ('{"name": "Ala"}', "KeyError"),
@@ -50,7 +50,9 @@ def test_load_profile__none() -> None:
         ),
     ],
 )
-def test_load_profile__rejects(app_data_folder: Path, content: str, error: str) -> None:
+def test_load_profile__rejects(
+    app_data_folder: Path, content: str, message: str
+) -> None:
     """A profile file that is not a profile is rejected, naming the file."""
     # Given
     app_data_folder.mkdir()
@@ -59,4 +61,4 @@ def test_load_profile__rejects(app_data_folder: Path, content: str, error: str) 
     # When / Then
     with pytest.raises(ValueError, match="profile.json cannot be read") as error_info:
         load_profile()
-    assert error in str(error_info.value)
+    assert message in str(error_info.value)

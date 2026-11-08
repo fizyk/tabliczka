@@ -8,15 +8,15 @@ from tabliczka.exercises.api import get_operations
 from tabliczka.profiles import repository
 from tabliczka.profiles.models import Profile
 
-APP_NAME = "tabliczka"
+APPLICATION_NAME = "tabliczka"
 PROFILE_FILE_NAME = "profile.json"
 
 
 def profile_path() -> Path:
     """Return the path of the profile file in the user account's app data folder."""
-    return Path(user_config_dir(APP_NAME, appauthor=False, roaming=True)).joinpath(
-        PROFILE_FILE_NAME
-    )
+    return Path(
+        user_config_dir(APPLICATION_NAME, appauthor=False, roaming=True)
+    ).joinpath(PROFILE_FILE_NAME)
 
 
 def load_profile() -> Profile | None:

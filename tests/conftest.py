@@ -14,6 +14,6 @@ def app_data_folder(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
     folder = tmp_path / "app-data"
     monkeypatch.setattr(
         "tabliczka.profiles.service.user_config_dir",
-        lambda app_name, *, appauthor, roaming: str(folder),
+        lambda application_name, *, appauthor, roaming: str(folder),
     )
     return folder
