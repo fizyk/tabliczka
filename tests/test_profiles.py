@@ -1,6 +1,7 @@
 """Tests for keeping the learner's profile between runs."""
 
 from pathlib import Path
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -28,6 +29,26 @@ def test_save_profile(app_data_folder: Path, profile: Profile) -> None:
     assert load_profile() == profile
 
 
+def test_save_profile__interrupted(
+    monkeypatch: pytest.MonkeyPatch, app_data_folder: Path
+) -> None:
+    """A save that does not finish leaves only the profile saved before."""
+    # Given
+    saved = Profile("Ala", ("add",), max_n=None, question_count=None)
+    save_profile(saved)
+    monkeypatch.setattr(
+        Path, "replace", MagicMock(spec=Path.replace, side_effect=OSError)
+    )
+
+    # When
+    with pytest.raises(OSError):
+        save_profile(Profile("Olek", ("add",), max_n=None, question_count=None))
+
+    # Then
+    assert load_profile() == saved
+    assert [file.name for file in app_data_folder.iterdir()] == ["profile.json"]
+
+
 def test_load_profile__none() -> None:
     """Nothing is loaded before the first profile is saved."""
     # When / Then
@@ -47,6 +68,21 @@ def test_load_profile__none() -> None:
             '{"name": "Ala", "operation_ids": ["power"], "max_n": null, '
             '"question_count": null}',
             "Unknown operation ids",
+        ),
+        (
+            '{"name": 12, "operation_ids": ["add"], "max_n": null, '
+            '"question_count": null}',
+            "A profile needs",
+        ),
+        (
+            '{"name": "Ala", "operation_ids": ["add"], "max_n": "12", '
+            '"question_count": null}',
+            "A profile needs",
+        ),
+        (
+            '{"name": "Ala", "operation_ids": ["add"], "max_n": null, '
+            '"question_count": 1.5}',
+            "A profile needs",
         ),
     ],
 )

@@ -19,6 +19,19 @@ def profile_path() -> Path:
     ).joinpath(PROFILE_FILE_NAME)
 
 
+def check_field_types(profile: Profile) -> None:
+    """Reject a profile whose fields do not hold the types ``Profile`` declares."""
+    limits_valid = all(
+        limit is None or type(limit) is int
+        for limit in (profile.max_n, profile.question_count)
+    )
+    if not isinstance(profile.name, str) or not limits_valid:
+        raise ValueError(
+            "A profile needs a name as text, "
+            "and max_n and question_count as whole numbers or null."
+        )
+
+
 def load_profile() -> Profile | None:
     """Return the saved profile, or ``None`` when none is saved.
 
@@ -28,6 +41,7 @@ def load_profile() -> Profile | None:
     try:
         profile = repository.read(path)
         if profile is not None:
+            check_field_types(profile)
             get_operations(profile.operation_ids)
     except (KeyError, TypeError, ValueError) as error:
         raise ValueError(

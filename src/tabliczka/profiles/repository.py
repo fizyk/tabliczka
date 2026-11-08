@@ -3,6 +3,7 @@
 import json
 from dataclasses import asdict
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 
 from tabliczka.profiles.models import Profile
 
@@ -19,6 +20,14 @@ def read(path: Path) -> Profile | None:
 
 
 def write(path: Path, profile: Profile) -> None:
-    """Store the profile at ``path``, creating its folder when missing."""
+    """Store the profile at ``path``, creating its folder when missing.
+
+    An interrupted write leaves the file stored before intact.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(asdict(profile), ensure_ascii=False), encoding="utf-8")
+    with NamedTemporaryFile(
+        mode="w", encoding="utf-8", dir=path.parent, delete_on_close=False
+    ) as temporary_file:
+        temporary_file.write(json.dumps(asdict(profile), ensure_ascii=False))
+        temporary_file.close()
+        Path(temporary_file.name).replace(path)
