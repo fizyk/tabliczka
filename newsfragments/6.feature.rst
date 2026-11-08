@@ -1,3 +1,3 @@
-The window remembers the name and the drill chosen at the last start, separately for
-each Windows account, and shows them on the start page ready to change. They are kept
-in ``profile.json`` in the account's ``AppData\Roaming\tabliczka`` folder.
+The window remembers the name and the drill last started, separately for each Windows
+account, and shows them on the start page ready to change. They are kept in
+``profile.json`` in the account's ``AppData\Roaming\tabliczka`` folder.
