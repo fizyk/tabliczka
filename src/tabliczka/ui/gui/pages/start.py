@@ -1,7 +1,5 @@
 """The first page, asking for the learner's name and the drill."""
 
-from dataclasses import dataclass
-
 from PySide6.QtWidgets import (
     QCheckBox,
     QFormLayout,
@@ -13,6 +11,7 @@ from PySide6.QtWidgets import (
 )
 
 from tabliczka.exercises.api import get_operations
+from tabliczka.profiles.models import Profile
 from tabliczka.ui.gui.text import (
     DEFAULT_LARGEST_NUMBER_TEXT,
     LARGEST_NUMBER_LABEL,
@@ -26,16 +25,6 @@ from tabliczka.ui.text import OPERATION_HEADINGS_BY_ID
 
 LARGEST_NUMBER_LIMIT = 1000
 QUESTION_COUNT_LIMIT = 1000
-
-
-@dataclass(frozen=True)
-class DrillSettings:
-    """The learner's name and the drill set on the start page."""
-
-    name: str
-    operation_ids: tuple[str, ...]
-    max_n: int | None
-    question_count: int | None
 
 
 class StartPage(QWidget):
@@ -77,9 +66,19 @@ class StartPage(QWidget):
         self.name.returnPressed.connect(self.start_button.click)
         self.update_limits()
 
-    def settings(self) -> DrillSettings:
+    def fill(self, profile: Profile) -> None:
+        """Show the profile's name, operations and limits, ready to change."""
+        self.name.setText(profile.name)
+        for operation_id, box in self.operation_boxes.items():
+            box.setChecked(operation_id in profile.operation_ids)
+        self.max_n.setValue(
+            self.max_n.minimum() if profile.max_n is None else profile.max_n
+        )
+        self.question_count.setValue(profile.question_count or 0)
+
+    def profile(self) -> Profile:
         """Return the typed name and the chosen operations and limits."""
-        return DrillSettings(
+        return Profile(
             name=self.learner_name(),
             operation_ids=tuple(self.operation_ids()),
             max_n=self.chosen_max_n(),

@@ -3,7 +3,8 @@
 import pytest
 from pytestqt.qtbot import QtBot
 
-from tabliczka.ui.gui.pages.start import DrillSettings, StartPage
+from tabliczka.profiles.models import Profile
+from tabliczka.ui.gui.pages.start import StartPage
 
 
 def choose(page: StartPage, name: str, operation_ids: list[str]) -> None:
@@ -80,18 +81,18 @@ def test_start_page__largest_number_chosen(
 
 
 @pytest.mark.parametrize(
-    ("max_n", "question_count", "settings"),
+    ("max_n", "question_count", "profile"),
     [
-        (12, 5, DrillSettings("Ala", ("add", "division"), max_n=12, question_count=5)),
+        (12, 5, Profile("Ala", ("add", "division"), max_n=12, question_count=5)),
         (
             0,
             0,
-            DrillSettings("Ala", ("add", "division"), max_n=None, question_count=None),
+            Profile("Ala", ("add", "division"), max_n=None, question_count=None),
         ),
     ],
 )
-def test_start_page__settings(
-    qtbot: QtBot, max_n: int, question_count: int, settings: DrillSettings
+def test_start_page__profile(
+    qtbot: QtBot, max_n: int, question_count: int, profile: Profile
 ) -> None:
     """The typed name and the chosen operations and limits are returned together."""
     # Given
@@ -102,4 +103,25 @@ def test_start_page__settings(
     page.question_count.setValue(question_count)
 
     # When / Then
-    assert page.settings() == settings
+    assert page.profile() == profile
+
+
+@pytest.mark.parametrize(
+    "profile",
+    [
+        Profile("Ala", ("add", "division"), max_n=12, question_count=5),
+        Profile("Ala", ("multiplication",), max_n=None, question_count=None),
+    ],
+)
+def test_start_page__fill(qtbot: QtBot, profile: Profile) -> None:
+    """A profile fills the page, which returns it unchanged."""
+    # Given
+    page = StartPage()
+    qtbot.addWidget(page)
+
+    # When
+    page.fill(profile)
+
+    # Then
+    assert page.profile() == profile
+    assert page.start_button.isEnabled()

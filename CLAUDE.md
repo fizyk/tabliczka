@@ -45,6 +45,11 @@ services; it does not re-export them. Across packages, import `api` functions an
   `drill.summary()` returns the `Summary` of scores, through the stateless functions
   in `service.py`. It knows nothing of the terminal and never
   decides which operations run.
+- `profiles` - `load_profile()` and `save_profile(profile)` in `api.py` keep one
+  `Profile` per user account: the learner's name, operation ids, `max_n` and
+  `question_count`. `service.py` finds the file in the account's app data folder
+  with `platformdirs` and rejects one it cannot read back; `repository.py` reads
+  and writes it as JSON.
 - `__main__.py` - the entry point PyInstaller packages; it opens the window.
 - `ui/text.py` - the Polish copy both interfaces show: each operation's heading in
   `OPERATION_HEADINGS_BY_ID`, the greeting, the question, the feedback and the
@@ -56,13 +61,14 @@ services; it does not re-export them. Across packages, import `api` functions an
   commands, options and prompts, lives here.
 - `ui/gui/` - the window, one thing per module. `pages/start.py`, `pages/question.py`
   and `pages/summary.py` hold one page each: `StartPage` returns the name and the
-  drill as one `DrillSettings`, `QuestionPage` asks one question at a time and
-  reports each answer with its `answered` signal, and `SummaryPage` shows the
-  summary. `drill_window.py` holds `DrillWindow`, which moves between the pages and
-  shows the feedback; pages never touch each other's widgets. `rich_text.py`
-  colours the feedback and the summary, `text.py` holds the window's own Polish
-  copy, and `application.py` holds `main`, which shows any unexpected error in a
-  message.
+  drill as one `Profile` and is filled from one, `QuestionPage` asks one question
+  at a time and reports each answer with its `answered` signal, and `SummaryPage`
+  shows the summary. `drill_window.py` holds `DrillWindow`, which fills the start
+  page with the saved profile, saves it again at each start, moves between the
+  pages and shows the feedback; pages never touch each other's widgets.
+  `rich_text.py` colours the feedback and the summary, `text.py` holds the
+  window's own Polish copy, and `application.py` holds `main`, which shows any
+  unexpected error in a message.
 
 New drills (printable worksheets and others; see the GitHub issues) should pass
 different operations or arguments to `Drill`, not add new question logic; a new
@@ -83,7 +89,8 @@ this order:
    `exercises/service.py`.
 3. `Drill` in `practice/api.py`, and `Score`, `Scoreboard` and `Summary` in
    `practice/models/`.
-4. The Polish interface copy: headings, feedback and the summary in `ui/text.py`;
+4. `Profile` in `profiles/models/`.
+5. The Polish interface copy: headings, feedback and the summary in `ui/text.py`;
    commands, options, prompts and help text in `ui/cli.py`; labels and buttons in
    `ui/gui/text.py`.
 
@@ -94,8 +101,8 @@ this order:
 - Validation messages, read by the child: `self.fail(...)` in `LearnerAnswer`.
 - Validation messages, read by the parent: `click.BadParameter` in `ui/cli.py`.
 - Option and command help, read by the parent: `help=` in `ui/cli.py`.
-- Exception messages, read by the developer: `raise` in `exercises/` and
-  `practice/`.
+- Exception messages, read by the developer: `raise` in `exercises/`,
+  `practice/` and `profiles/`.
 - Release notes, read by the parent: `newsfragments/*.rst`, built into
   `CHANGES.rst` and each GitHub Release.
 
