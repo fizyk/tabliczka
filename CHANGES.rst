@@ -3,6 +3,16 @@ CHANGELOG
 
 .. towncrier release notes start
 
+tabliczka 0.4.1 (2026-11-08)
+============================
+
+Miscellaneous
+-------------
+
+- The window was reorganised behind the scenes, ready for new drills; it works as
+  before. (`#23 <https://github.com/fizyk/tabliczka/issues/23>`__)
+
+
 tabliczka 0.4.0 (2026-11-07)
 ============================
 

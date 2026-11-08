@@ -1,2 +1,0 @@
-The window was reorganised behind the scenes, ready for new drills; it works as
-before.
