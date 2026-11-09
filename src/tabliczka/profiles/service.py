@@ -23,12 +23,12 @@ def check_field_types(profile: Profile) -> None:
     """Reject a profile whose fields do not hold the types ``Profile`` declares."""
     limits_valid = all(
         limit is None or type(limit) is int
-        for limit in (profile.max_n, profile.question_count)
+        for limit in (profile.largest_number, profile.question_count)
     )
     if not isinstance(profile.name, str) or not limits_valid:
         raise ValueError(
             "A profile needs a name as text, "
-            "and max_n and question_count as whole numbers or null."
+            "and largest_number and question_count as whole numbers or null."
         )
 
 

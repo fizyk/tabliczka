@@ -37,18 +37,19 @@ services; it does not re-export them. Across packages, import `api` functions,
 - `exercises` - one class per operation (`Add`, `Subtract`, `Multiply`, `Divide`)
   in `service.py`, satisfying the `Operation` protocol, kept as singletons in
   `OPERATIONS_BY_ID`. Each builds a `Question` whose largest number, at most
-  `max_n`, is the operation's own choice (the sum, the minuend, each factor), and
-  has its own `default_max_n` and the smallest `max_n` it accepts, `min_max_n`. It
-  holds no Polish text: a question carries only its `expression`, such as `2+4`.
+  `largest_number`, is the operation's own choice (the sum, the minuend, each
+  factor), and has its own `default_largest_number` and the smallest
+  `largest_number` it accepts, `smallest_largest_number`. It holds no Polish text:
+  a question carries only its `expression`, such as `2+4`.
   `get_operations(operation_ids)` in `api.py` looks them up.
-- `practice` - `Drill(operation_ids, max_n=, question_count=)` in `api.py` holds
-  the operations, limits and `Scoreboard`; `drill.questions()` yields its
+- `practice` - `Drill(operation_ids, largest_number=, question_count=)` in `api.py`
+  holds the operations, limits and `Scoreboard`; `drill.questions()` yields its
   questions, `drill.check_answer(question, given)` scores each and
   `drill.summary()` returns the `Summary` of scores, through the stateless functions
   in `service.py`. It knows nothing of the terminal and never
   decides which operations run.
 - `profiles` - `load_profile()` and `save_profile(profile)` in `api.py` keep one
-  `Profile` per user account: the learner's name, operation ids, `max_n` and
+  `Profile` per user account: the learner's name, operation ids, `largest_number` and
   `question_count`. `load_profile()` returns an empty profile, with no name and
   no operations, when none is saved. `service.py` finds the file in the account's
   app data folder with `platformdirs` and rejects one it cannot read back;

@@ -61,11 +61,11 @@ def test_drill_window__stop(qtbot: QtBot, addition_only: None) -> None:
 def test_drill_window__saved_profile(qtbot: QtBot, addition_only: None) -> None:
     """The start page shows the saved profile, and starting saves the changes."""
     # Given
-    save_profile(Profile("Ala", ("add",), max_n=12, question_count=5))
+    save_profile(Profile("Ala", ("add",), largest_number=12, question_count=5))
     window = DrillWindow()
     qtbot.addWidget(window)
     assert window.start_page.profile() == Profile(
-        "Ala", ("add",), max_n=12, question_count=5
+        "Ala", ("add",), largest_number=12, question_count=5
     )
     window.start_page.question_count.setValue(3)
 
@@ -73,4 +73,6 @@ def test_drill_window__saved_profile(qtbot: QtBot, addition_only: None) -> None:
     qtbot.mouseClick(window.start_page.start_button, Qt.MouseButton.LeftButton)
 
     # Then
-    assert load_profile() == Profile("Ala", ("add",), max_n=12, question_count=3)
+    assert load_profile() == Profile(
+        "Ala", ("add",), largest_number=12, question_count=3
+    )

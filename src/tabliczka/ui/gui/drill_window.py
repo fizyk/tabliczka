@@ -41,7 +41,7 @@ class DrillWindow(QMainWindow):
         save_profile(profile)
         drill = Drill(
             profile.operation_ids,
-            max_n=profile.max_n,
+            largest_number=profile.largest_number,
             question_count=profile.question_count,
         )
         page = QuestionPage(profile.name, drill)

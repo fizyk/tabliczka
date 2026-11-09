@@ -13,9 +13,9 @@ class Operation(Protocol):
     """
 
     id: str
-    default_max_n: int
-    min_max_n: int
+    default_largest_number: int
+    smallest_largest_number: int
 
-    def generate(self, max_n: int) -> Question:
-        """Return a question whose limited number is at most ``max_n``."""
+    def generate(self, largest_number: int) -> Question:
+        """Return a question whose limited number is at most ``largest_number``."""
         ...
