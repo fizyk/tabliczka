@@ -19,13 +19,10 @@ class DrillWindow(QMainWindow):
     """
 
     def __init__(self) -> None:
-        """Show the start page, filled with the saved profile if there is one."""
+        """Show the start page, filled with the saved or an empty profile."""
         super().__init__()
         self.setWindowTitle(WINDOW_TITLE)
-        self.start_page = StartPage()
-        profile = load_profile()
-        if profile is not None:
-            self.start_page.fill(profile)
+        self.start_page = StartPage(load_profile())
         self.pages = QStackedWidget()
         self.pages.addWidget(self.start_page)
         self.feedback = QLabel()

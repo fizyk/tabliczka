@@ -38,7 +38,8 @@ services; it does not re-export them. Across packages, import `api` functions an
   `max_n`, is the operation's own choice (the sum, the minuend, each factor), and
   has its own `default_max_n` and the smallest `max_n` it accepts, `min_max_n`. It
   holds no Polish text: a question carries only its `expression`, such as `2+4`.
-  `get_operations(operation_ids)` in `api.py` looks them up.
+  `get_operations(operation_ids)` in `api.py` looks them up, and
+  `get_operation_ids()` returns every id.
 - `practice` - `Drill(operation_ids, max_n=, question_count=)` in `api.py` holds
   the operations, limits and `Scoreboard`; `drill.questions()` yields its
   questions, `drill.check_answer(question, given)` scores each and
@@ -47,9 +48,10 @@ services; it does not re-export them. Across packages, import `api` functions an
   decides which operations run.
 - `profiles` - `load_profile()` and `save_profile(profile)` in `api.py` keep one
   `Profile` per user account: the learner's name, operation ids, `max_n` and
-  `question_count`. `service.py` finds the file in the account's app data folder
-  with `platformdirs` and rejects one it cannot read back; `repository.py` reads
-  and writes it as JSON.
+  `question_count`. `load_profile()` returns an empty profile, with no name and
+  every operation, when none is saved. `service.py` finds the file in the
+  account's app data folder with `platformdirs` and rejects one it cannot read
+  back; `repository.py` reads and writes it as JSON.
 - `__main__.py` - the entry point PyInstaller packages; it opens the window.
 - `ui/text.py` - the Polish copy both interfaces show: each operation's heading in
   `OPERATION_HEADINGS_BY_ID`, the greeting, the question, the feedback and the
@@ -61,10 +63,10 @@ services; it does not re-export them. Across packages, import `api` functions an
   commands, options and prompts, lives here.
 - `ui/gui/` - the window, one thing per module. `pages/start.py`, `pages/question.py`
   and `pages/summary.py` hold one page each: `StartPage` returns the name and the
-  drill as one `Profile` and is filled from one, `QuestionPage` asks one question
+  drill as one `Profile` and is built from one, `QuestionPage` asks one question
   at a time and reports each answer with its `answered` signal, and `SummaryPage`
-  shows the summary. `drill_window.py` holds `DrillWindow`, which fills the start
-  page with the saved profile, saves it again at each start, moves between the
+  shows the summary. `drill_window.py` holds `DrillWindow`, which builds the start
+  page from the loaded profile, saves it again at each start, moves between the
   pages and shows the feedback; pages never touch each other's widgets.
   `rich_text.py` colours the feedback and the summary, `text.py` holds the
   window's own Polish copy, and `application.py` holds `main`, which shows any

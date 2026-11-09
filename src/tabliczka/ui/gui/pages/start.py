@@ -33,10 +33,10 @@ class StartPage(QWidget):
     The drill is the operations, the largest number and the number of questions.
     """
 
-    def __init__(self) -> None:
-        """Lay out the questions, with every operation chosen."""
+    def __init__(self, profile: Profile) -> None:
+        """Lay out the questions, showing the profile ready to change."""
         super().__init__()
-        self.name = QLineEdit()
+        self.name = QLineEdit(profile.name)
         self.operation_boxes = {
             operation_id: QCheckBox(heading)
             for operation_id, heading in OPERATION_HEADINGS_BY_ID.items()
@@ -47,12 +47,13 @@ class StartPage(QWidget):
         self.question_count = QSpinBox()
         self.question_count.setMaximum(QUESTION_COUNT_LIMIT)
         self.question_count.setSpecialValueText(NO_QUESTION_COUNT_TEXT)
+        self.question_count.setValue(profile.question_count or 0)
         self.start_button = QPushButton(START_BUTTON_TEXT)
 
         operations = QWidget()
         operations_layout = QVBoxLayout(operations)
-        for box in self.operation_boxes.values():
-            box.setChecked(True)
+        for operation_id, box in self.operation_boxes.items():
+            box.setChecked(operation_id in profile.operation_ids)
             box.toggled.connect(self.update_limits)
             operations_layout.addWidget(box)
         layout = QFormLayout(self)
@@ -65,16 +66,7 @@ class StartPage(QWidget):
         self.name.textChanged.connect(self.update_limits)
         self.name.returnPressed.connect(self.start_button.click)
         self.update_limits()
-
-    def fill(self, profile: Profile) -> None:
-        """Show the profile's name, operations and limits, ready to change."""
-        self.name.setText(profile.name)
-        for operation_id, box in self.operation_boxes.items():
-            box.setChecked(operation_id in profile.operation_ids)
-        self.max_n.setValue(
-            self.max_n.minimum() if profile.max_n is None else profile.max_n
-        )
-        self.question_count.setValue(profile.question_count or 0)
+        self.max_n.setValue(profile.max_n or 0)
 
     def profile(self) -> Profile:
         """Return the typed name and the chosen operations and limits."""

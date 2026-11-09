@@ -4,7 +4,7 @@ from pathlib import Path
 
 from platformdirs import user_config_dir
 
-from tabliczka.exercises.api import get_operations
+from tabliczka.exercises.api import get_operation_ids, get_operations
 from tabliczka.profiles import repository
 from tabliczka.profiles.models import Profile
 
@@ -32,17 +32,28 @@ def check_field_types(profile: Profile) -> None:
         )
 
 
-def load_profile() -> Profile | None:
-    """Return the saved profile, or ``None`` when none is saved.
+def empty_profile() -> Profile:
+    """Return the profile of an account with none saved: no name, every operation."""
+    return Profile(
+        name="",
+        operation_ids=tuple(get_operation_ids()),
+        max_n=None,
+        question_count=None,
+    )
+
+
+def load_profile() -> Profile:
+    """Return the saved profile, or an empty one when none is saved.
 
     Reject a profile file that cannot be read back as a profile.
     """
     path = profile_path()
     try:
         profile = repository.read(path)
-        if profile is not None:
-            check_field_types(profile)
-            get_operations(profile.operation_ids)
+        if profile is None:
+            return empty_profile()
+        check_field_types(profile)
+        get_operations(profile.operation_ids)
     except (KeyError, TypeError, ValueError) as error:
         raise ValueError(
             f"The profile file {path} cannot be read ({error!r}). "

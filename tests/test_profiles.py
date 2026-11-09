@@ -49,10 +49,15 @@ def test_save_profile__interrupted(
     assert [file.name for file in app_data_folder.iterdir()] == ["profile.json"]
 
 
-def test_load_profile__none() -> None:
-    """Nothing is loaded before the first profile is saved."""
+def test_load_profile__empty() -> None:
+    """Before the first save the profile has no name and every operation."""
     # When / Then
-    assert load_profile() is None
+    assert load_profile() == Profile(
+        "",
+        ("add", "subtract", "multiplication", "division"),
+        max_n=None,
+        question_count=None,
+    )
 
 
 @pytest.mark.parametrize(

@@ -42,7 +42,8 @@ Polish terms are what the learner sees; identifiers are English.
 
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
-| profile | The learner name and the drill: the operations, the largest number and the number of questions, as chosen on the start page and saved for each user account at each start. | `Profile`; returned by `StartPage.profile`, shown by `StartPage.fill` | `src/tabliczka/profiles/models/profile.py`, `Profile` |
+| profile | The learner name and the drill: the operations, the largest number and the number of questions, as chosen on the start page and saved for each user account at each start. | `Profile`; returned by `StartPage.profile`, shown by `StartPage` | `src/tabliczka/profiles/models/profile.py`, `Profile` |
+| empty profile | The profile of a user account with none saved: no learner name, every operation, each operation's default largest number and no limit on the number of questions. | `empty_profile` | `src/tabliczka/profiles/service.py`, `empty_profile` |
 | profile file | The JSON file in the user account's app data folder that keeps the profile. | `profile_path`; file name `PROFILE_FILE_NAME` | `src/tabliczka/profiles/service.py`, `profile_path` |
 
 ## Command line
@@ -59,7 +60,7 @@ Polish terms are what the learner sees; identifiers are English.
 
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
-| start page (Zaczynamy) | The first page of the window, asking for the learner name and the drill: the operations, the largest number and the number of questions, filled with the saved profile when there is one. | `StartPage`; `start_button`, with its text in `START_BUTTON_TEXT` | `src/tabliczka/ui/gui/pages/start.py`, `StartPage` |
+| start page (Zaczynamy) | The first page of the window, asking for the learner name and the drill: the operations, the largest number and the number of questions, showing the loaded profile. | `StartPage`; `start_button`, with its text in `START_BUTTON_TEXT` | `src/tabliczka/ui/gui/pages/start.py`, `StartPage` |
 | question page | The page that asks a drill's questions one at a time. | `QuestionPage` | `src/tabliczka/ui/gui/pages/question.py`, `QuestionPage` |
 | stop button (Koniec) | The button that ends a drill in the window and shows the summary, as the stop word does on the command line. | `stop_button`, with its text in `STOP_BUTTON_TEXT` | `src/tabliczka/ui/gui/pages/question.py`, `QuestionPage` |
 | feedback (Dobrze, Niestety, źle) | What the learner is told after each answer: right, or wrong with the correct answer. | `CORRECT_FEEDBACK`, `wrong_feedback`; coloured by `feedback_html` | `src/tabliczka/ui/text.py` |

@@ -4,8 +4,8 @@ from tabliczka.profiles import service
 from tabliczka.profiles.models import Profile
 
 
-def load_profile() -> Profile | None:
-    """Return the profile saved for this user account, or ``None`` when none is."""
+def load_profile() -> Profile:
+    """Return the profile saved for this user account, or an empty one when none is."""
     return service.load_profile()
 
 

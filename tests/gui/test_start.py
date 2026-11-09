@@ -6,6 +6,13 @@ from pytestqt.qtbot import QtBot
 from tabliczka.profiles.models import Profile
 from tabliczka.ui.gui.pages.start import StartPage
 
+EMPTY_PROFILE = Profile(
+    "",
+    ("add", "subtract", "multiplication", "division"),
+    max_n=None,
+    question_count=None,
+)
+
 
 def choose(page: StartPage, name: str, operation_ids: list[str]) -> None:
     """Type the name and choose only the operations with the given ids."""
@@ -31,7 +38,7 @@ def test_start_page__start_button(
 ) -> None:
     """The drill starts only with a name and at least one operation."""
     # Given
-    page = StartPage()
+    page = StartPage(EMPTY_PROFILE)
     qtbot.addWidget(page)
 
     # When
@@ -50,7 +57,7 @@ def test_start_page__largest_number_default(
 ) -> None:
     """The largest number stays each operation's own until chosen."""
     # Given
-    page = StartPage()
+    page = StartPage(EMPTY_PROFILE)
     qtbot.addWidget(page)
 
     # When
@@ -68,7 +75,7 @@ def test_start_page__largest_number_chosen(
 ) -> None:
     """A chosen largest number stays chosen, raised to what the operations allow."""
     # Given
-    page = StartPage()
+    page = StartPage(EMPTY_PROFILE)
     qtbot.addWidget(page)
     choose(page, "Ala", ["multiplication"])
     page.max_n.setValue(chosen)
@@ -96,7 +103,7 @@ def test_start_page__profile(
 ) -> None:
     """The typed name and the chosen operations and limits are returned together."""
     # Given
-    page = StartPage()
+    page = StartPage(EMPTY_PROFILE)
     qtbot.addWidget(page)
     choose(page, " Ala ", ["division", "add"])
     page.max_n.setValue(max_n)
@@ -113,14 +120,10 @@ def test_start_page__profile(
         Profile("Ala", ("multiplication",), max_n=None, question_count=None),
     ],
 )
-def test_start_page__fill(qtbot: QtBot, profile: Profile) -> None:
-    """A profile fills the page, which returns it unchanged."""
-    # Given
-    page = StartPage()
-    qtbot.addWidget(page)
-
+def test_start_page__shows_profile(qtbot: QtBot, profile: Profile) -> None:
+    """A page built from a profile returns it unchanged."""
     # When
-    page.fill(profile)
+    qtbot.addWidget(page := StartPage(profile))
 
     # Then
     assert page.profile() == profile
