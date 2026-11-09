@@ -3,6 +3,8 @@
 from PySide6.QtCore import Qt
 from pytestqt.qtbot import QtBot
 
+from tabliczka.profiles.api import load_profile, save_profile
+from tabliczka.profiles.models import Profile
 from tabliczka.ui.gui.drill_window import DrillWindow
 from tabliczka.ui.gui.pages.question import QuestionPage
 from tabliczka.ui.gui.pages.summary import SummaryPage
@@ -14,6 +16,7 @@ def test_drill_window(qtbot: QtBot, addition_only: None) -> None:
     window = DrillWindow()
     qtbot.addWidget(window)
     window.start_page.name.setText("Ala")
+    window.start_page.operation_boxes["add"].setChecked(True)
     window.start_page.question_count.setValue(2)
     qtbot.mouseClick(window.start_page.start_button, Qt.MouseButton.LeftButton)
     page = window.pages.currentWidget()
@@ -39,6 +42,7 @@ def test_drill_window__stop(qtbot: QtBot, addition_only: None) -> None:
     window = DrillWindow()
     qtbot.addWidget(window)
     window.start_page.name.setText("Ala")
+    window.start_page.operation_boxes["add"].setChecked(True)
     qtbot.mouseClick(window.start_page.start_button, Qt.MouseButton.LeftButton)
     page = window.pages.currentWidget()
     assert isinstance(page, QuestionPage)
@@ -52,3 +56,21 @@ def test_drill_window__stop(qtbot: QtBot, addition_only: None) -> None:
     summary = window.pages.currentWidget()
     assert isinstance(summary, SummaryPage)
     assert "1 - dobrze" in summary.text()
+
+
+def test_drill_window__saved_profile(qtbot: QtBot, addition_only: None) -> None:
+    """The start page shows the saved profile, and starting saves the changes."""
+    # Given
+    save_profile(Profile("Ala", ("add",), max_n=12, question_count=5))
+    window = DrillWindow()
+    qtbot.addWidget(window)
+    assert window.start_page.profile() == Profile(
+        "Ala", ("add",), max_n=12, question_count=5
+    )
+    window.start_page.question_count.setValue(3)
+
+    # When
+    qtbot.mouseClick(window.start_page.start_button, Qt.MouseButton.LeftButton)
+
+    # Then
+    assert load_profile() == Profile("Ala", ("add",), max_n=12, question_count=3)

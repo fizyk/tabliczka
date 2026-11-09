@@ -1,7 +1,5 @@
 """The first page, asking for the learner's name and the drill."""
 
-from dataclasses import dataclass
-
 from PySide6.QtWidgets import (
     QCheckBox,
     QFormLayout,
@@ -13,6 +11,7 @@ from PySide6.QtWidgets import (
 )
 
 from tabliczka.exercises.api import get_operations
+from tabliczka.profiles.models import Profile
 from tabliczka.ui.gui.text import (
     DEFAULT_LARGEST_NUMBER_TEXT,
     LARGEST_NUMBER_LABEL,
@@ -28,26 +27,16 @@ LARGEST_NUMBER_LIMIT = 1000
 QUESTION_COUNT_LIMIT = 1000
 
 
-@dataclass(frozen=True)
-class DrillSettings:
-    """The learner's name and the drill set on the start page."""
-
-    name: str
-    operation_ids: tuple[str, ...]
-    max_n: int | None
-    question_count: int | None
-
-
 class StartPage(QWidget):
     """Asks for the learner's name and the drill.
 
     The drill is the operations, the largest number and the number of questions.
     """
 
-    def __init__(self) -> None:
-        """Lay out the questions, with every operation chosen."""
+    def __init__(self, profile: Profile) -> None:
+        """Lay out the questions, showing the profile ready to change."""
         super().__init__()
-        self.name = QLineEdit()
+        self.name = QLineEdit(profile.name)
         self.operation_boxes = {
             operation_id: QCheckBox(heading)
             for operation_id, heading in OPERATION_HEADINGS_BY_ID.items()
@@ -58,12 +47,13 @@ class StartPage(QWidget):
         self.question_count = QSpinBox()
         self.question_count.setMaximum(QUESTION_COUNT_LIMIT)
         self.question_count.setSpecialValueText(NO_QUESTION_COUNT_TEXT)
+        self.question_count.setValue(profile.question_count or 0)
         self.start_button = QPushButton(START_BUTTON_TEXT)
 
         operations = QWidget()
         operations_layout = QVBoxLayout(operations)
-        for box in self.operation_boxes.values():
-            box.setChecked(True)
+        for operation_id, box in self.operation_boxes.items():
+            box.setChecked(operation_id in profile.operation_ids)
             box.toggled.connect(self.update_limits)
             operations_layout.addWidget(box)
         layout = QFormLayout(self)
@@ -76,10 +66,11 @@ class StartPage(QWidget):
         self.name.textChanged.connect(self.update_limits)
         self.name.returnPressed.connect(self.start_button.click)
         self.update_limits()
+        self.max_n.setValue(profile.max_n or 0)
 
-    def settings(self) -> DrillSettings:
+    def profile(self) -> Profile:
         """Return the typed name and the chosen operations and limits."""
-        return DrillSettings(
+        return Profile(
             name=self.learner_name(),
             operation_ids=tuple(self.operation_ids()),
             max_n=self.chosen_max_n(),

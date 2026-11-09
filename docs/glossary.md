@@ -38,11 +38,19 @@ Polish terms are what the learner sees; identifiers are English.
 | summary (Twój wynik to) | The drill's total and each operation's score, shown when a drill ends. | `Summary`; shown by `print_summary` and `summary_html` | `src/tabliczka/practice/models/summary.py`, `Summary` |
 | heading | The Polish name of an operation, opening its prompts and its section in the summary. | values of `OPERATION_HEADINGS_BY_ID` | `src/tabliczka/ui/text.py`, `OPERATION_HEADINGS_BY_ID` |
 
+## Profile
+
+| Term | Definition | Canonical identifier | Where defined |
+|---|---|---|---|
+| profile | The learner name and the drill: the operations, the largest number and the number of questions, as chosen on the start page and saved for each user account at each start. | `Profile`; returned by `StartPage.profile`, shown by `StartPage` | `src/tabliczka/profiles/models/profile.py`, `Profile` |
+| empty profile | The profile of a user account with none saved: no learner name, no operations, each operation's default largest number and no limit on the number of questions. | `Profile` | `src/tabliczka/profiles/repository.py`, `ProfileRepository.read` |
+| profile file | The JSON file in the user account's app data folder that keeps the profile. | `profile_path`; file name `PROFILE_FILE_NAME` | `src/tabliczka/profiles/service.py`, `profile_path` |
+
 ## Command line
 
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
-| learner name (imię ucznia) | The name the program greets the learner by. | `name`; `--imie` on the command line | `src/tabliczka/ui/cli.py`, `main` |
+| learner name (imię ucznia) | The name the program greets the learner by. | `name`, `Profile.name`; `--imie` on the command line | `src/tabliczka/ui/cli.py`, `main` |
 | addition drill (dodawanie) | The command that drills addition and subtraction. | `dodawanie` | `src/tabliczka/ui/cli.py`, `dodawanie` |
 | multiplication drill (mnozenie) | The command that drills multiplication and division. | `mnozenie` | `src/tabliczka/ui/cli.py`, `mnozenie` |
 | operation name (działanie) | The Polish name that chooses one operation with `--dzialanie`. | keys of `OPERATION_IDS_BY_NAME`; values `dodawanie`, `odejmowanie`, `mnozenie`, `dzielenie` | `src/tabliczka/ui/cli.py`, `OPERATION_IDS_BY_NAME` |
@@ -52,8 +60,7 @@ Polish terms are what the learner sees; identifiers are English.
 
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
-| start page (Zaczynamy) | The first page of the window, asking for the learner name and the drill: the operations, the largest number and the number of questions. | `StartPage`; `start_button`, with its text in `START_BUTTON_TEXT` | `src/tabliczka/ui/gui/pages/start.py`, `StartPage` |
-| drill settings | The learner name and the drill set on the start page: the operations, the largest number and the number of questions. | `DrillSettings` | `src/tabliczka/ui/gui/pages/start.py`, `DrillSettings` |
+| start page (Zaczynamy) | The first page of the window, asking for the learner name and the drill: the operations, the largest number and the number of questions, showing the loaded profile. | `StartPage`; `start_button`, with its text in `START_BUTTON_TEXT` | `src/tabliczka/ui/gui/pages/start.py`, `StartPage` |
 | question page | The page that asks a drill's questions one at a time. | `QuestionPage` | `src/tabliczka/ui/gui/pages/question.py`, `QuestionPage` |
 | stop button (Koniec) | The button that ends a drill in the window and shows the summary, as the stop word does on the command line. | `stop_button`, with its text in `STOP_BUTTON_TEXT` | `src/tabliczka/ui/gui/pages/question.py`, `QuestionPage` |
 | feedback (Dobrze, Niestety, źle) | What the learner is told after each answer: right, or wrong with the correct answer. | `CORRECT_FEEDBACK`, `wrong_feedback`; coloured by `feedback_html` | `src/tabliczka/ui/text.py` |
@@ -67,6 +74,8 @@ Polish terms are what the learner sees; identifiers are English.
 - **Learner name.** The command line option is `--imie`; the code holds it as `name`.
 - **Multiplication drill.** The command is `mnozenie` (no Polish letters); the copy
   says `Mnożenie`.
+- **App data folder.** The domain term and the test fixture say app data folder;
+  `user_config_dir` is the library call that finds it.
 - **Learner answer.** The type that reads it is `LearnerAnswer`; the value is
   `given` in `run_drill`, `Drill.check_answer` and `QuestionPage`.
 
