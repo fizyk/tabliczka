@@ -59,6 +59,8 @@ def test_load_profile__empty() -> None:
     ("content", "message"),
     [
         ("{", "JSONDecodeError"),
+        ("[]", "TypeError"),
+        ('"text"', "TypeError"),
         ('{"name": "Ala"}', "KeyError"),
         (
             '{"name": "Ala", "operation_ids": ["add"], "max_n": null}',
