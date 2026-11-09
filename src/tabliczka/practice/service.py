@@ -28,13 +28,13 @@ def check_drill(
             operation.smallest_largest_number for operation in too_small_for
         )
         raise ValueError(
-            f"largest_number {largest_number} is too small for operation ids "
+            f"The largest_number {largest_number} is too small for operation ids "
             f"{[operation.id for operation in too_small_for]}. "
             f"Give {smallest_allowed} or more, or None."
         )
     if question_count is not None and question_count < 1:
         raise ValueError(
-            f"question_count {question_count} is below 1. Give 1 or more, or None."
+            f"The question_count {question_count} is below 1. Give 1 or more, or None."
         )
 
 
