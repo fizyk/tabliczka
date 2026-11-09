@@ -29,17 +29,18 @@ arithmetic until they stop, then show a score summary. User-facing text is Polis
 
 Each domain subpackage has `api.py`, `service.py` and `models/` with one class per
 file. `api.py` holds the functions other packages call, and each calls the
-services; it does not re-export them. Across packages, import `api` functions and
-`models` types only.
+services; it does not re-export them. Across packages, import `api` functions,
+`models` types and `core` constants only.
 
+- `core/constants.py` - constants the whole program shares, such as
+  `APPLICATION_NAME`.
 - `exercises` - one class per operation (`Add`, `Subtract`, `Multiply`, `Divide`)
   in `service.py`, satisfying the `Operation` protocol, kept as singletons in
   `OPERATIONS_BY_ID`. Each builds a `Question` whose largest number, at most
   `max_n`, is the operation's own choice (the sum, the minuend, each factor), and
   has its own `default_max_n` and the smallest `max_n` it accepts, `min_max_n`. It
   holds no Polish text: a question carries only its `expression`, such as `2+4`.
-  `get_operations(operation_ids)` in `api.py` looks them up, and
-  `get_operation_ids()` returns every id.
+  `get_operations(operation_ids)` in `api.py` looks them up.
 - `practice` - `Drill(operation_ids, max_n=, question_count=)` in `api.py` holds
   the operations, limits and `Scoreboard`; `drill.questions()` yields its
   questions, `drill.check_answer(question, given)` scores each and
@@ -49,9 +50,9 @@ services; it does not re-export them. Across packages, import `api` functions an
 - `profiles` - `load_profile()` and `save_profile(profile)` in `api.py` keep one
   `Profile` per user account: the learner's name, operation ids, `max_n` and
   `question_count`. `load_profile()` returns an empty profile, with no name and
-  every operation, when none is saved. `service.py` finds the file in the
-  account's app data folder with `platformdirs` and rejects one it cannot read
-  back; `repository.py` reads and writes it as JSON.
+  no operations, when none is saved. `service.py` finds the file in the account's
+  app data folder with `platformdirs` and rejects one it cannot read back;
+  `ProfileRepository` in `repository.py` reads and writes it as JSON.
 - `__main__.py` - the entry point PyInstaller packages; it opens the window.
 - `ui/text.py` - the Polish copy both interfaces show: each operation's heading in
   `OPERATION_HEADINGS_BY_ID`, the greeting, the question, the feedback and the

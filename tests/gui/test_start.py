@@ -6,12 +6,7 @@ from pytestqt.qtbot import QtBot
 from tabliczka.profiles.models import Profile
 from tabliczka.ui.gui.pages.start import StartPage
 
-EMPTY_PROFILE = Profile(
-    "",
-    ("add", "subtract", "multiplication", "division"),
-    max_n=None,
-    question_count=None,
-)
+EMPTY_PROFILE = Profile("", (), max_n=None, question_count=None)
 
 
 def choose(page: StartPage, name: str, operation_ids: list[str]) -> None:

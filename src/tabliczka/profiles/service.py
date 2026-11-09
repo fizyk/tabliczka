@@ -4,11 +4,11 @@ from pathlib import Path
 
 from platformdirs import user_config_dir
 
-from tabliczka.exercises.api import get_operation_ids, get_operations
-from tabliczka.profiles import repository
+from tabliczka.core.constants import APPLICATION_NAME
+from tabliczka.exercises.api import get_operations
 from tabliczka.profiles.models import Profile
+from tabliczka.profiles.repository import ProfileRepository
 
-APPLICATION_NAME = "tabliczka"
 PROFILE_FILE_NAME = "profile.json"
 
 
@@ -32,16 +32,6 @@ def check_field_types(profile: Profile) -> None:
         )
 
 
-def empty_profile() -> Profile:
-    """Return the profile of an account with none saved: no name, every operation."""
-    return Profile(
-        name="",
-        operation_ids=tuple(get_operation_ids()),
-        max_n=None,
-        question_count=None,
-    )
-
-
 def load_profile() -> Profile:
     """Return the saved profile, or an empty one when none is saved.
 
@@ -49,9 +39,7 @@ def load_profile() -> Profile:
     """
     path = profile_path()
     try:
-        profile = repository.read(path)
-        if profile is None:
-            return empty_profile()
+        profile = ProfileRepository(path).read()
         check_field_types(profile)
         get_operations(profile.operation_ids)
     except (KeyError, TypeError, ValueError) as error:
@@ -64,4 +52,4 @@ def load_profile() -> Profile:
 
 def save_profile(profile: Profile) -> None:
     """Save the profile, replacing the one saved before."""
-    repository.write(profile_path(), profile)
+    ProfileRepository(profile_path()).write(profile)

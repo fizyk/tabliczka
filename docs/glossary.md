@@ -43,7 +43,7 @@ Polish terms are what the learner sees; identifiers are English.
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
 | profile | The learner name and the drill: the operations, the largest number and the number of questions, as chosen on the start page and saved for each user account at each start. | `Profile`; returned by `StartPage.profile`, shown by `StartPage` | `src/tabliczka/profiles/models/profile.py`, `Profile` |
-| empty profile | The profile of a user account with none saved: no learner name, every operation, each operation's default largest number and no limit on the number of questions. | `empty_profile` | `src/tabliczka/profiles/service.py`, `empty_profile` |
+| empty profile | The profile of a user account with none saved: no learner name, no operations, each operation's default largest number and no limit on the number of questions. | `Profile` | `src/tabliczka/profiles/repository.py`, `ProfileRepository.read` |
 | profile file | The JSON file in the user account's app data folder that keeps the profile. | `profile_path`; file name `PROFILE_FILE_NAME` | `src/tabliczka/profiles/service.py`, `profile_path` |
 
 ## Command line

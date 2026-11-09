@@ -74,11 +74,6 @@ OPERATIONS_BY_ID: dict[str, Operation] = {
 }
 
 
-def get_operation_ids() -> list[str]:
-    """Return the id of every operation."""
-    return list(OPERATIONS_BY_ID)
-
-
 def get_operations(operation_ids: Sequence[str]) -> list[Operation]:
     """Return the operations with the given ids, in the same order.
 

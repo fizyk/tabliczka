@@ -50,14 +50,9 @@ def test_save_profile__interrupted(
 
 
 def test_load_profile__empty() -> None:
-    """Before the first save the profile has no name and every operation."""
+    """Before the first save the profile has no name and no operations."""
     # When / Then
-    assert load_profile() == Profile(
-        "",
-        ("add", "subtract", "multiplication", "division"),
-        max_n=None,
-        question_count=None,
-    )
+    assert load_profile() == Profile("", (), max_n=None, question_count=None)
 
 
 @pytest.mark.parametrize(
