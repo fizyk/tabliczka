@@ -41,9 +41,9 @@ class StartPage(QWidget):
             operation_id: QCheckBox(heading)
             for operation_id, heading in OPERATION_HEADINGS_BY_ID.items()
         }
-        self.max_n = QSpinBox()
-        self.max_n.setMaximum(LARGEST_NUMBER_LIMIT)
-        self.max_n.setSpecialValueText(DEFAULT_LARGEST_NUMBER_TEXT)
+        self.largest_number = QSpinBox()
+        self.largest_number.setMaximum(LARGEST_NUMBER_LIMIT)
+        self.largest_number.setSpecialValueText(DEFAULT_LARGEST_NUMBER_TEXT)
         self.question_count = QSpinBox()
         self.question_count.setMaximum(QUESTION_COUNT_LIMIT)
         self.question_count.setSpecialValueText(NO_QUESTION_COUNT_TEXT)
@@ -59,21 +59,21 @@ class StartPage(QWidget):
         layout = QFormLayout(self)
         layout.addRow(NAME_LABEL, self.name)
         layout.addRow(OPERATIONS_LABEL, operations)
-        layout.addRow(LARGEST_NUMBER_LABEL, self.max_n)
+        layout.addRow(LARGEST_NUMBER_LABEL, self.largest_number)
         layout.addRow(QUESTION_COUNT_LABEL, self.question_count)
         layout.addRow(self.start_button)
 
         self.name.textChanged.connect(self.update_limits)
         self.name.returnPressed.connect(self.start_button.click)
         self.update_limits()
-        self.max_n.setValue(profile.max_n or 0)
+        self.largest_number.setValue(profile.largest_number or 0)
 
     def profile(self) -> Profile:
         """Return the typed name and the chosen operations and limits."""
         return Profile(
             name=self.learner_name(),
             operation_ids=tuple(self.operation_ids()),
-            max_n=self.chosen_max_n(),
+            largest_number=self.chosen_largest_number(),
             question_count=self.chosen_question_count(),
         )
 
@@ -89,10 +89,10 @@ class StartPage(QWidget):
             if box.isChecked()
         ]
 
-    def chosen_max_n(self) -> int | None:
+    def chosen_largest_number(self) -> int | None:
         """Return the chosen largest number, or ``None`` for each operation's own."""
-        value = self.max_n.value()
-        return None if value == self.max_n.minimum() else value
+        value = self.largest_number.value()
+        return None if value == self.largest_number.minimum() else value
 
     def chosen_question_count(self) -> int | None:
         """Return the chosen number of questions, or ``None`` for no limit."""
@@ -105,12 +105,15 @@ class StartPage(QWidget):
         """
         operation_ids = self.operation_ids()
         smallest = max(
-            (operation.min_max_n for operation in get_operations(operation_ids)),
+            (
+                operation.smallest_largest_number
+                for operation in get_operations(operation_ids)
+            ),
             default=1,
         )
-        chosen = self.chosen_max_n()
-        self.max_n.setMinimum(smallest - 1)
-        self.max_n.setValue(
-            self.max_n.minimum() if chosen is None else max(chosen, smallest)
+        chosen = self.chosen_largest_number()
+        self.largest_number.setMinimum(smallest - 1)
+        self.largest_number.setValue(
+            self.largest_number.minimum() if chosen is None else max(chosen, smallest)
         )
         self.start_button.setEnabled(bool(self.learner_name() and operation_ids))

@@ -12,14 +12,14 @@ from tabliczka.profiles.models import Profile
 @pytest.mark.parametrize(
     "profile",
     [
-        Profile("Ala", ("add", "division"), max_n=12, question_count=5),
-        Profile("Łucja", ("subtract",), max_n=None, question_count=None),
+        Profile("Ala", ("add", "division"), largest_number=12, question_count=5),
+        Profile("Łucja", ("subtract",), largest_number=None, question_count=None),
     ],
 )
 def test_save_profile(app_data_folder: Path, profile: Profile) -> None:
     """A saved profile is loaded back from the app data folder."""
     # Given
-    save_profile(Profile("Olek", ("add",), max_n=None, question_count=None))
+    save_profile(Profile("Olek", ("add",), largest_number=None, question_count=None))
 
     # When
     save_profile(profile)
@@ -34,7 +34,7 @@ def test_save_profile__interrupted(
 ) -> None:
     """A save that does not finish leaves only the profile saved before."""
     # Given
-    saved = Profile("Ala", ("add",), max_n=None, question_count=None)
+    saved = Profile("Ala", ("add",), largest_number=None, question_count=None)
     save_profile(saved)
     monkeypatch.setattr(
         Path, "replace", MagicMock(spec=Path.replace, side_effect=OSError)
@@ -42,7 +42,9 @@ def test_save_profile__interrupted(
 
     # When
     with pytest.raises(OSError):
-        save_profile(Profile("Olek", ("add",), max_n=None, question_count=None))
+        save_profile(
+            Profile("Olek", ("add",), largest_number=None, question_count=None)
+        )
 
     # Then
     assert load_profile() == saved
@@ -52,7 +54,7 @@ def test_save_profile__interrupted(
 def test_load_profile__empty() -> None:
     """Before the first save the profile has no name and no operations."""
     # When / Then
-    assert load_profile() == Profile("", (), max_n=None, question_count=None)
+    assert load_profile() == Profile("", (), largest_number=None, question_count=None)
 
 
 @pytest.mark.parametrize(
@@ -63,26 +65,26 @@ def test_load_profile__empty() -> None:
         ('"text"', "TypeError"),
         ('{"name": "Ala"}', "KeyError"),
         (
-            '{"name": "Ala", "operation_ids": ["add"], "max_n": null}',
+            '{"name": "Ala", "operation_ids": ["add"], "largest_number": null}',
             "TypeError",
         ),
         (
-            '{"name": "Ala", "operation_ids": ["power"], "max_n": null, '
+            '{"name": "Ala", "operation_ids": ["power"], "largest_number": null, '
             '"question_count": null}',
             "Unknown operation ids",
         ),
         (
-            '{"name": 12, "operation_ids": ["add"], "max_n": null, '
+            '{"name": 12, "operation_ids": ["add"], "largest_number": null, '
             '"question_count": null}',
             "A profile needs",
         ),
         (
-            '{"name": "Ala", "operation_ids": ["add"], "max_n": "12", '
+            '{"name": "Ala", "operation_ids": ["add"], "largest_number": "12", '
             '"question_count": null}',
             "A profile needs",
         ),
         (
-            '{"name": "Ala", "operation_ids": ["add"], "max_n": null, '
+            '{"name": "Ala", "operation_ids": ["add"], "largest_number": null, '
             '"question_count": 1.5}',
             "A profile needs",
         ),

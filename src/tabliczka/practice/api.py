@@ -15,24 +15,30 @@ class Drill:
         self,
         operation_ids: Sequence[str],
         *,
-        max_n: int | None = None,
+        largest_number: int | None = None,
         question_count: int | None = None,
     ) -> None:
         """Start a drill of the operations with the given ids, with no answers yet.
 
-        Reject no operation ids, a ``max_n`` below an operation's ``min_max_n`` and a
-        ``question_count`` below 1.
+        Reject no operation ids, a ``largest_number`` below an operation's
+        ``smallest_largest_number`` and a ``question_count`` below 1.
         """
         self.operations = get_operations(operation_ids)
-        service.check_drill(self.operations, max_n=max_n, question_count=question_count)
-        self.max_n = max_n
+        service.check_drill(
+            self.operations,
+            largest_number=largest_number,
+            question_count=question_count,
+        )
+        self.largest_number = largest_number
         self.question_count = question_count
         self.scoreboard = Scoreboard()
 
     def questions(self) -> Iterator[Question]:
         """Yield the drill's questions until it has asked ``question_count``, if set."""
         return service.ask_questions(
-            self.operations, max_n=self.max_n, question_count=self.question_count
+            self.operations,
+            largest_number=self.largest_number,
+            question_count=self.question_count,
         )
 
     def check_answer(self, question: Question, given: int) -> bool:

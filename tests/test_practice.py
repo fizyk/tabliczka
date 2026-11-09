@@ -25,29 +25,29 @@ def test_scoreboard() -> None:
 def test_drill() -> None:
     """A drill starts with the operations whose ids it is given and no answers."""
     # When
-    drill = Drill(["division", "add"], max_n=12, question_count=5)
+    drill = Drill(["division", "add"], largest_number=12, question_count=5)
 
     # Then
     assert drill.operations == [DIVIDE, ADD]
-    assert (drill.max_n, drill.question_count) == (12, 5)
+    assert (drill.largest_number, drill.question_count) == (12, 5)
     assert drill.scoreboard.scores == {}
 
 
 @pytest.mark.parametrize(
-    ("operation_ids", "max_n", "question_count", "message"),
+    ("operation_ids", "largest_number", "question_count", "message"),
     [
         ([], None, None, "A drill needs operation ids"),
         (
             ["add"],
             1,
             None,
-            r"max_n 1 is too small for operation ids \['add'\]\. Give 2",
+            r"largest_number 1 is too small for operation ids \['add'\]\. Give 2",
         ),
         (
             ["multiplication", "subtract"],
             1,
             None,
-            r"max_n 1 is too small for operation ids \['subtract'\]\. Give 2",
+            r"largest_number 1 is too small for operation ids \['subtract'\]\. Give 2",
         ),
         (["multiplication"], 0, None, r"operation ids \['multiplication'\]\. Give 1"),
         (["add"], None, 0, "question_count 0 is below 1"),
@@ -55,22 +55,24 @@ def test_drill() -> None:
 )
 def test_drill__rejects(
     operation_ids: list[str],
-    max_n: int | None,
+    largest_number: int | None,
     question_count: int | None,
     message: str,
 ) -> None:
     """A drill with no operations, too small a largest number or no questions fails."""
     with pytest.raises(ValueError, match=message):
-        Drill(operation_ids, max_n=max_n, question_count=question_count)
+        Drill(
+            operation_ids, largest_number=largest_number, question_count=question_count
+        )
 
 
-def test_drill__smallest_max_n() -> None:
+def test_drill__smallest_largest_number() -> None:
     """Multiplication and division accept 1 as the largest number."""
     # When
-    drill = Drill(["multiplication", "division"], max_n=1)
+    drill = Drill(["multiplication", "division"], largest_number=1)
 
     # Then
-    assert drill.max_n == 1
+    assert drill.largest_number == 1
 
 
 @pytest.mark.parametrize(("question_count", "asked"), [(2, 2), (None, 50)])
@@ -90,13 +92,13 @@ def test_questions(
 
 
 @pytest.mark.parametrize(
-    ("max_n", "upper_bounds"),
+    ("largest_number", "upper_bounds"),
     [(None, [20, 10]), (7, [7, 7])],
 )
-def test_questions__max_n(
-    monkeypatch: pytest.MonkeyPatch, max_n: int | None, upper_bounds: list[int]
+def test_questions__largest_number(
+    monkeypatch: pytest.MonkeyPatch, largest_number: int | None, upper_bounds: list[int]
 ) -> None:
-    """Each operation uses ``max_n`` when given and its own default otherwise."""
+    """Each operation uses ``largest_number`` when given, otherwise its default."""
     # Given
     operations = iter((ADD, MULTIPLY))
     monkeypatch.setattr(
@@ -109,7 +111,9 @@ def test_questions__max_n(
         return low
 
     monkeypatch.setattr("tabliczka.exercises.service.randint", randint)
-    drill = Drill(["add", "multiplication"], max_n=max_n, question_count=2)
+    drill = Drill(
+        ["add", "multiplication"], largest_number=largest_number, question_count=2
+    )
 
     # When
     list(drill.questions())

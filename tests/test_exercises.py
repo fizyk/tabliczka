@@ -42,25 +42,29 @@ def test_generate(
 
 
 @pytest.mark.parametrize(
-    ("operation", "default_max_n"),
+    ("operation", "default_largest_number"),
     [(ADD, 20), (SUBTRACT, 20), (MULTIPLY, 10), (DIVIDE, 10)],
 )
-def test_default_max_n(operation: Operation, default_max_n: int) -> None:
+def test_default_largest_number(
+    operation: Operation, default_largest_number: int
+) -> None:
     """Addition and subtraction default to 20, multiplication and division to 10."""
-    assert operation.default_max_n == default_max_n
+    assert operation.default_largest_number == default_largest_number
 
 
 @pytest.mark.parametrize(
-    ("operation", "min_max_n"),
+    ("operation", "smallest_largest_number"),
     [(ADD, 2), (SUBTRACT, 2), (MULTIPLY, 1), (DIVIDE, 1)],
 )
-def test_generate__min_max_n(operation: Operation, min_max_n: int) -> None:
+def test_generate__smallest_largest_number(
+    operation: Operation, smallest_largest_number: int
+) -> None:
     """Each operation can generate a question with its smallest largest number."""
     # When
-    question = operation.generate(min_max_n)
+    question = operation.generate(smallest_largest_number)
 
     # Then
-    assert operation.min_max_n == min_max_n
+    assert operation.smallest_largest_number == smallest_largest_number
     assert question.answer >= 1
 
 
@@ -70,26 +74,28 @@ def numbers_in(expression: str) -> list[int]:
 
 
 @pytest.mark.parametrize("operation", [ADD, SUBTRACT])
-@pytest.mark.parametrize("max_n", [2, 7])
-def test_generate__sum_within_max_n(operation: Operation, max_n: int) -> None:
-    """Addition and subtraction keep the sum of the operands within ``max_n``."""
+@pytest.mark.parametrize("largest_number", [2, 7])
+def test_generate__sum_within_largest_number(
+    operation: Operation, largest_number: int
+) -> None:
+    """Addition and subtraction keep the operands' sum within ``largest_number``."""
     for _ in range(100):
         # When
-        question = operation.generate(max_n)
+        question = operation.generate(largest_number)
 
         # Then
         first, second = numbers_in(question.expression)
         if operation is ADD:
             assert first >= 1 and second >= 1
-            assert question.answer == first + second <= max_n
+            assert question.answer == first + second <= largest_number
         else:
             assert second >= 1 and question.answer >= 1
-            assert first == second + question.answer <= max_n
+            assert first == second + question.answer <= largest_number
 
 
 @pytest.mark.parametrize("operation", [MULTIPLY, DIVIDE])
-def test_generate__factors_within_max_n(operation: Operation) -> None:
-    """Multiplication and division keep each factor within ``max_n``."""
+def test_generate__factors_within_largest_number(operation: Operation) -> None:
+    """Multiplication and division keep each factor within ``largest_number``."""
     for _ in range(100):
         # When
         question = operation.generate(5)

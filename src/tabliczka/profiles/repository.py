@@ -20,7 +20,9 @@ class ProfileRepository:
         try:
             text = self.path.read_text(encoding="utf-8")
         except FileNotFoundError:
-            return Profile(name="", operation_ids=(), max_n=None, question_count=None)
+            return Profile(
+                name="", operation_ids=(), largest_number=None, question_count=None
+            )
         fields = json.loads(text)
         fields["operation_ids"] = tuple(fields["operation_ids"])
         return Profile(**fields)

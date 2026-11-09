@@ -6,7 +6,7 @@ from pytestqt.qtbot import QtBot
 from tabliczka.profiles.models import Profile
 from tabliczka.ui.gui.pages.start import StartPage
 
-EMPTY_PROFILE = Profile("", (), max_n=None, question_count=None)
+EMPTY_PROFILE = Profile("", (), largest_number=None, question_count=None)
 
 
 def choose(page: StartPage, name: str, operation_ids: list[str]) -> None:
@@ -59,49 +59,55 @@ def test_start_page__largest_number_default(
     choose(page, "Ala", operation_ids)
 
     # Then
-    assert page.max_n.minimum() == minimum
-    assert page.max_n.text() == "jak zwykle"
-    assert page.chosen_max_n() is None
+    assert page.largest_number.minimum() == minimum
+    assert page.largest_number.text() == "jak zwykle"
+    assert page.chosen_largest_number() is None
 
 
-@pytest.mark.parametrize(("chosen", "max_n"), [(1, 2), (5, 5)])
+@pytest.mark.parametrize(("chosen", "largest_number"), [(1, 2), (5, 5)])
 def test_start_page__largest_number_chosen(
-    qtbot: QtBot, chosen: int, max_n: int
+    qtbot: QtBot, chosen: int, largest_number: int
 ) -> None:
     """A chosen largest number stays chosen, raised to what the operations allow."""
     # Given
     page = StartPage(EMPTY_PROFILE)
     qtbot.addWidget(page)
     choose(page, "Ala", ["multiplication"])
-    page.max_n.setValue(chosen)
+    page.largest_number.setValue(chosen)
 
     # When
     page.operation_boxes["add"].setChecked(True)
 
     # Then
-    assert page.chosen_max_n() == max_n
+    assert page.chosen_largest_number() == largest_number
 
 
 @pytest.mark.parametrize(
-    ("max_n", "question_count", "profile"),
+    ("largest_number", "question_count", "profile"),
     [
-        (12, 5, Profile("Ala", ("add", "division"), max_n=12, question_count=5)),
+        (
+            12,
+            5,
+            Profile("Ala", ("add", "division"), largest_number=12, question_count=5),
+        ),
         (
             0,
             0,
-            Profile("Ala", ("add", "division"), max_n=None, question_count=None),
+            Profile(
+                "Ala", ("add", "division"), largest_number=None, question_count=None
+            ),
         ),
     ],
 )
 def test_start_page__profile(
-    qtbot: QtBot, max_n: int, question_count: int, profile: Profile
+    qtbot: QtBot, largest_number: int, question_count: int, profile: Profile
 ) -> None:
     """The typed name and the chosen operations and limits are returned together."""
     # Given
     page = StartPage(EMPTY_PROFILE)
     qtbot.addWidget(page)
     choose(page, " Ala ", ["division", "add"])
-    page.max_n.setValue(max_n)
+    page.largest_number.setValue(largest_number)
     page.question_count.setValue(question_count)
 
     # When / Then
@@ -111,8 +117,8 @@ def test_start_page__profile(
 @pytest.mark.parametrize(
     "profile",
     [
-        Profile("Ala", ("add", "division"), max_n=12, question_count=5),
-        Profile("Ala", ("multiplication",), max_n=None, question_count=None),
+        Profile("Ala", ("add", "division"), largest_number=12, question_count=5),
+        Profile("Ala", ("multiplication",), largest_number=None, question_count=None),
     ],
 )
 def test_start_page__shows_profile(qtbot: QtBot, profile: Profile) -> None:

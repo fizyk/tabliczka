@@ -19,7 +19,14 @@ DRILL_PROMPT = "Co ćwiczymy? (dodawanie, mnozenie, cwiczenie): "
 
 
 @pytest.mark.parametrize(
-    ("arguments", "typed", "output", "operation_ids", "max_n", "question_count"),
+    (
+        "arguments",
+        "typed",
+        "output",
+        "operation_ids",
+        "largest_number",
+        "question_count",
+    ),
     [
         (
             ["--imie", "Ala", "dodawanie"],
@@ -97,7 +104,7 @@ def test_main(
     typed: str,
     output: str,
     operation_ids: list[str],
-    max_n: int | None,
+    largest_number: int | None,
     question_count: int | None,
 ) -> None:
     """The learner is greeted and the drill starts, asking for what was not given."""
@@ -112,7 +119,7 @@ def test_main(
     assert result.exit_code == 0
     assert result.output == output
     run_drill_mock.assert_called_once_with(
-        operation_ids, max_n=max_n, question_count=question_count
+        operation_ids, largest_number=largest_number, question_count=question_count
     )
 
 

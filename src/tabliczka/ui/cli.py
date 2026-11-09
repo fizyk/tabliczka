@@ -77,14 +77,16 @@ def print_summary(summary: Summary) -> None:
 def run_drill(
     operation_ids: Sequence[str],
     *,
-    max_n: int | None = None,
+    largest_number: int | None = None,
     question_count: int | None = None,
 ) -> None:
     """Ask questions until the learner stops, aborts or answers ``question_count``.
 
     Then print the summary.
     """
-    drill = Drill(operation_ids, max_n=max_n, question_count=question_count)
+    drill = Drill(
+        operation_ids, largest_number=largest_number, question_count=question_count
+    )
     click.echo(f"Wpisz „{STOP_WORD}”, żeby zakończyć.")
     with suppress(Abort):
         for question in drill.questions():
@@ -104,7 +106,7 @@ def drill_options[CommandFunction: Callable[..., None]](
     """Add the largest number and the number of questions to a drill command."""
     command = click.option(
         "--max",
-        "max_n",
+        "largest_number",
         type=click.IntRange(min=2),
         help="Ustala największą liczbę w pytaniach (sumę, odjemną albo czynnik); "
         "domyślnie 20 przy dodawaniu i odejmowaniu, 10 przy mnożeniu i dzieleniu.",
@@ -149,19 +151,25 @@ def main(context: click.Context, name: str) -> None:
 
 @main.command(help="Ćwiczy dodawanie i odejmowanie.")
 @drill_options
-def dodawanie(max_n: int | None, question_count: int | None) -> None:
+def dodawanie(largest_number: int | None, question_count: int | None) -> None:
     """Drill addition and subtraction."""
     click.echo("Nauczymy się dodawania i odejmowania!")
-    run_drill(["add", "subtract"], max_n=max_n, question_count=question_count)
+    run_drill(
+        ["add", "subtract"],
+        largest_number=largest_number,
+        question_count=question_count,
+    )
 
 
 @main.command(help="Ćwiczy mnożenie i dzielenie.")
 @drill_options
-def mnozenie(max_n: int | None, question_count: int | None) -> None:
+def mnozenie(largest_number: int | None, question_count: int | None) -> None:
     """Drill multiplication and division."""
     click.echo("Nauczymy się tabliczki mnożenia i dzielenia!")
     run_drill(
-        ["multiplication", "division"], max_n=max_n, question_count=question_count
+        ["multiplication", "division"],
+        largest_number=largest_number,
+        question_count=question_count,
     )
 
 
@@ -177,12 +185,12 @@ def mnozenie(max_n: int | None, question_count: int | None) -> None:
 )
 @drill_options
 def cwiczenie(
-    operation_ids: Sequence[str], max_n: int | None, question_count: int | None
+    operation_ids: Sequence[str], largest_number: int | None, question_count: int | None
 ) -> None:
     """Drill the chosen operations, all four when none is chosen."""
     click.echo("Ćwiczymy wybrane działania!")
     run_drill(
         operation_ids or list(OPERATION_IDS_BY_NAME.values()),
-        max_n=max_n,
+        largest_number=largest_number,
         question_count=question_count,
     )
