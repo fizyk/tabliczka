@@ -19,18 +19,20 @@ uv run --group windows pyinstaller --onefile --windowed --name tabliczka \
 
 Every pull request adds a towncrier newsfragment,
 `newsfragments/<issue>.<type>.rst`, with a type from `[tool.towncrier]` in
-`pyproject.toml`. Releases are cut by the scheduled release workflow with tbump;
-never bump the version by hand.
+`pyproject.toml`. Write it for the parent reading the release notes: what changes
+in the program for them, never how the code is built. Releases are cut by the
+scheduled release workflow with tbump; never bump the version by hand.
 
 ## Architecture
 
 A PySide6 window, and a Click CLI for running from source, that drill children on
 arithmetic until they stop, then show a score summary. User-facing text is Polish.
 
-Each domain subpackage has `api.py`, `service.py` and `models/` with one class per
-file. `api.py` holds the functions other packages call, and each calls the
-services; it does not re-export them. Across packages, import `api` functions,
-`models` types and `core` constants only.
+Each domain subpackage has `service.py` and `models/` with one class per file. Its
+`__init__.py` exports the functions and classes other packages call and lists them
+in `__all__`. Across packages, import only from the domain package, its `models` and
+`core` constants, for example `from tabliczka.exercises import get_operations`.
+Views stay in `ui/`; a domain package holds no view code.
 
 - `core/constants.py` - constants the whole program shares, such as
   `APPLICATION_NAME`.
@@ -41,19 +43,19 @@ services; it does not re-export them. Across packages, import `api` functions,
   factor), and has its own `default_largest_number` and the smallest
   `largest_number` it accepts, `smallest_largest_number`. It holds no Polish text:
   a question carries only its `expression`, such as `2+4`.
-  `get_operations(operation_ids)` in `api.py` looks them up.
-- `practice` - `Drill(operation_ids, largest_number=, question_count=)` in `api.py`
+  `get_operations(operation_ids)`, exported from the package, looks them up.
+- `practice` - `Drill(operation_ids, largest_number=, question_count=)` in `drill.py`
   holds the operations, limits and `Scoreboard`; `drill.questions()` yields its
   questions, `drill.check_answer(question, given)` scores each and
   `drill.summary()` returns the `Summary` of scores, through the stateless functions
   in `service.py`. It knows nothing of the terminal and never
   decides which operations run.
-- `profiles` - `load_profile()` and `save_profile(profile)` in `api.py` keep one
-  `Profile` per user account: the learner's name, operation ids, `largest_number` and
-  `question_count`. `load_profile()` returns an empty profile, with no name and
-  no operations, when none is saved. `service.py` finds the file in the account's
-  app data folder with `platformdirs` and rejects one it cannot read back;
-  `ProfileRepository` in `repository.py` reads and writes it as JSON.
+- `profiles` - `load_profile()` and `save_profile(profile)`, exported from the
+  package, keep one `Profile` per user account: the learner's name, operation ids,
+  `largest_number` and `question_count`. `load_profile()` returns an empty profile,
+  with no name and no operations, when none is saved. `service.py` finds the file in
+  the account's app data folder with `platformdirs` and rejects one it cannot read
+  back; `ProfileRepository` in `repository.py` reads and writes it as JSON.
 - `__main__.py` - the entry point PyInstaller packages; it opens the window.
 - `ui/text.py` - the Polish copy both interfaces show: each operation's heading in
   `OPERATION_HEADINGS_BY_ID`, the greeting, the question, the feedback and the
@@ -91,7 +93,7 @@ this order:
 1. The domain types `Question` and `Operation` in `exercises/models/`.
 2. The operation ids, default largest numbers and singletons in
    `exercises/service.py`.
-3. `Drill` in `practice/api.py`, and `Score`, `Scoreboard` and `Summary` in
+3. `Drill` in `practice/drill.py`, and `Score`, `Scoreboard` and `Summary` in
    `practice/models/`.
 4. `Profile` in `profiles/models/`.
 5. The Polish interface copy: headings, feedback and the summary in `ui/text.py`;

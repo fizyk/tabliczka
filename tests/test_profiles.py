@@ -5,7 +5,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from tabliczka.profiles.api import load_profile, save_profile
+from tabliczka.profiles import load_profile, save_profile
 from tabliczka.profiles.models import Profile
 
 

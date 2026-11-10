@@ -5,7 +5,7 @@ from pathlib import Path
 from platformdirs import user_config_dir
 
 from tabliczka.core.constants import APPLICATION_NAME
-from tabliczka.exercises.api import get_operations
+from tabliczka.exercises import get_operations
 from tabliczka.profiles.models import Profile
 from tabliczka.profiles.repository import ProfileRepository
 
