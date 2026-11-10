@@ -4,7 +4,7 @@ import re
 
 import pytest
 
-from tabliczka.exercises.api import get_operations
+from tabliczka.exercises import get_operations
 from tabliczka.exercises.models import Operation
 from tabliczka.exercises.service import ADD, DIVIDE, MULTIPLY, SUBTRACT
 

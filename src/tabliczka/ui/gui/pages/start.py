@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from tabliczka.exercises.api import get_operations
+from tabliczka.exercises import get_operations
 from tabliczka.profiles.models import Profile
 from tabliczka.ui.gui.text import (
     DEFAULT_LARGEST_NUMBER_TEXT,

@@ -6,7 +6,7 @@ Polish terms are what the learner sees; identifiers are English.
 
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
-| drill (ćwiczenie) | A run of randomly chosen questions that lasts until the learner types the stop word, presses Ctrl+C or the stop button, or has answered the number of questions. | `Drill` | `src/tabliczka/practice/api.py`, `Drill` |
+| drill (ćwiczenie) | A run of randomly chosen questions that lasts until the learner types the stop word, presses Ctrl+C or the stop button, or has answered the number of questions. | `Drill` | `src/tabliczka/practice/drill.py`, `Drill` |
 | operation | An arithmetic skill a drill can ask questions about. | `Operation` | `src/tabliczka/exercises/models/operation.py`, `Operation` |
 | operation id | The fixed name that identifies an operation in the scores. | `id`; values `add`, `subtract`, `multiplication`, `division` | `src/tabliczka/exercises/models/operation.py`, `Operation.id` |
 | addition (Dodawanie) | The operation that asks for the sum of two operands, the sum at most the largest number. | `ADD`, class `Add` | `src/tabliczka/exercises/service.py`, `Add` |
@@ -24,7 +24,7 @@ Polish terms are what the learner sees; identifiers are English.
 | largest number (max, Największa liczba) | The highest value of the number an operation limits: the sum for addition, the minuend for subtraction, each factor for multiplication and division. | `largest_number`; `--max` on the command line; `LARGEST_NUMBER_LABEL` in the window | `src/tabliczka/exercises/models/operation.py`, `Operation.generate` |
 | default largest number (jak zwykle) | The largest number an operation uses when the drill does not choose one: 20 for addition and subtraction, 10 for multiplication and division. | `default_largest_number`; shown as `DEFAULT_LARGEST_NUMBER_TEXT` in the window | `src/tabliczka/exercises/models/operation.py`, `Operation.default_largest_number` |
 | smallest largest number | The lowest largest number an operation can ask questions with: 2 for addition and subtraction, 1 for multiplication and division. | `smallest_largest_number` | `src/tabliczka/exercises/models/operation.py`, `Operation.smallest_largest_number` |
-| number of questions (pytania, Liczba pytań) | How many questions a drill asks before the summary; without it the drill lasts until the learner stops. | `question_count`; `--pytania` on the command line; `QUESTION_COUNT_LABEL` in the window | `src/tabliczka/practice/api.py`, `Drill.question_count` |
+| number of questions (pytania, Liczba pytań) | How many questions a drill asks before the summary; without it the drill lasts until the learner stops. | `question_count`; `--pytania` on the command line; `QUESTION_COUNT_LABEL` in the window | `src/tabliczka/practice/drill.py`, `Drill.question_count` |
 
 ## Scoring
 

@@ -3,7 +3,7 @@
 from PySide6.QtCore import Qt
 from pytestqt.qtbot import QtBot
 
-from tabliczka.profiles.api import load_profile, save_profile
+from tabliczka.profiles import load_profile, save_profile
 from tabliczka.profiles.models import Profile
 from tabliczka.ui.gui.drill_window import DrillWindow
 from tabliczka.ui.gui.pages.question import QuestionPage

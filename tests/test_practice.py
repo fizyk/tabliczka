@@ -3,7 +3,7 @@
 import pytest
 
 from tabliczka.exercises.service import ADD, DIVIDE, MULTIPLY
-from tabliczka.practice.api import Drill
+from tabliczka.practice import Drill
 from tabliczka.practice.models import Score, Scoreboard, Summary
 
 

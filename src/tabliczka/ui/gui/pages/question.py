@@ -5,7 +5,7 @@ from PySide6.QtGui import QIntValidator
 from PySide6.QtWidgets import QLabel, QLineEdit, QPushButton, QVBoxLayout, QWidget
 
 from tabliczka.exercises.models import Question
-from tabliczka.practice.api import Drill
+from tabliczka.practice import Drill
 from tabliczka.ui.gui.text import STOP_BUTTON_TEXT
 from tabliczka.ui.text import greeting, question_text
 

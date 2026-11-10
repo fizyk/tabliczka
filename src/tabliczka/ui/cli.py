@@ -6,7 +6,7 @@ from contextlib import suppress
 import click
 from click import Abort
 
-from tabliczka.practice.api import Drill
+from tabliczka.practice import Drill
 from tabliczka.practice.models import Score, Summary
 from tabliczka.ui.text import (
     CORRECT_FEEDBACK,

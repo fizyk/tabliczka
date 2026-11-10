@@ -2,7 +2,7 @@
 
 from collections.abc import Iterator, Sequence
 
-from tabliczka.exercises.api import get_operations
+from tabliczka.exercises import get_operations
 from tabliczka.exercises.models import Question
 from tabliczka.practice import service
 from tabliczka.practice.models import Scoreboard, Summary

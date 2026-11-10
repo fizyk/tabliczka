@@ -2,8 +2,8 @@
 
 from PySide6.QtWidgets import QLabel, QMainWindow, QStackedWidget, QVBoxLayout, QWidget
 
-from tabliczka.practice.api import Drill
-from tabliczka.profiles.api import load_profile, save_profile
+from tabliczka.practice import Drill
+from tabliczka.profiles import load_profile, save_profile
 from tabliczka.ui.gui.pages.question import QuestionPage
 from tabliczka.ui.gui.pages.start import StartPage
 from tabliczka.ui.gui.pages.summary import SummaryPage

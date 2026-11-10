@@ -6,7 +6,7 @@ import pytest
 from PySide6.QtCore import QLocale, Qt
 from pytestqt.qtbot import QtBot
 
-from tabliczka.practice.api import Drill
+from tabliczka.practice import Drill
 from tabliczka.practice.models import Score
 from tabliczka.ui.gui.pages.question import QuestionPage
 
