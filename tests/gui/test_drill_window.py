@@ -5,6 +5,7 @@ from pytestqt.qtbot import QtBot
 
 from tabliczka.profiles import load_profile, save_profile
 from tabliczka.profiles.models import Profile
+from tabliczka.releases.models import Release
 from tabliczka.ui.gui.drill_window import DrillWindow
 from tabliczka.ui.gui.pages.question import QuestionPage
 from tabliczka.ui.gui.pages.summary import SummaryPage
@@ -76,3 +77,25 @@ def test_drill_window__saved_profile(qtbot: QtBot, addition_only: None) -> None:
     assert load_profile() == Profile(
         "Ala", ("add",), largest_number=12, question_count=3
     )
+
+
+def test_drill_window__new_version(qtbot: QtBot) -> None:
+    """A newer release is named above the pages, linking to its page."""
+    # Given
+    window = DrillWindow()
+    qtbot.addWidget(window)
+    assert window.new_version.isHidden()
+
+    # When
+    window.show_new_version(
+        Release("0.5.0", "https://github.com/fizyk/tabliczka/releases/tag/v0.5.0")
+    )
+
+    # Then
+    assert not window.new_version.isHidden()
+    assert window.new_version.text() == (
+        "Jest już nowa wersja programu: 0.5.0. "
+        '<a href="https://github.com/fizyk/tabliczka/releases/tag/v0.5.0">'
+        "Zobacz ją tutaj</a>."
+    )
+    assert window.new_version.openExternalLinks()

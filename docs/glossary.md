@@ -46,6 +46,16 @@ Polish terms are what the learner sees; identifiers are English.
 | empty profile | The profile of a user account with none saved: no learner name, no operations, each operation's default largest number and no limit on the number of questions. | `Profile` | `src/tabliczka/profiles/repository.py`, `ProfileRepository.read` |
 | profile file | The JSON file in the user account's app data folder that keeps the profile. | `profile_path`; file name `PROFILE_FILE_NAME` | `src/tabliczka/profiles/service.py`, `profile_path` |
 
+## Releases
+
+| Term | Definition | Canonical identifier | Where defined |
+|---|---|---|---|
+| release | A published version of the program and its page on GitHub. | `Release` | `src/tabliczka/releases/models/release.py`, `Release` |
+| version | Three whole numbers joined by dots, such as `0.5.0`; the release tag adds a leading `v`. | `Release.version`, `__version__` | `src/tabliczka/releases/service.py`, `version_numbers` |
+| newer release | A release whose version is later than the running program's. | `is_newer` | `src/tabliczka/releases/service.py`, `is_newer` |
+| new version check | The request the packaged program sends to GitHub at start, in the background, for the latest release. | `NewVersionCheck` | `src/tabliczka/ui/gui/new_version_check.py`, `NewVersionCheck` |
+| new version notice (Jest już nowa wersja programu) | The line above the pages naming a newer release and linking to its page. | `DrillWindow.new_version`; text in `NEW_VERSION_TEXT`, `NEW_VERSION_LINK_TEXT` | `src/tabliczka/ui/gui/text.py` |
+
 ## Command line
 
 | Term | Definition | Canonical identifier | Where defined |
