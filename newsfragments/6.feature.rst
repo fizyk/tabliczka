@@ -1,5 +1,0 @@
-The window remembers the name and the drill last started, separately for each Windows
-account, and shows them on the start page ready to change. On the first start no
-operations are chosen, so the child picks the ones they have learnt. The name and the
-drill are kept in ``profile.json`` in the account's ``AppData\Roaming\tabliczka``
-folder.

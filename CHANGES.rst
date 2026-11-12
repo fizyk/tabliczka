@@ -3,6 +3,26 @@ CHANGELOG
 
 .. towncrier release notes start
 
+tabliczka 0.5.0 (2026-11-12)
+============================
+
+Features
+--------
+
+- The window remembers the name and the drill last started, separately for each Windows
+  account, and shows them on the start page ready to change. On the first start no
+  operations are chosen, so the child picks the ones they have learnt. The name and the
+  drill are kept in ``profile.json`` in the account's ``AppData\Roaming\tabliczka``
+  folder. (`#6 <https://github.com/fizyk/tabliczka/issues/6>`__)
+
+
+Miscellaneous
+-------------
+
+- The code now uses the full name for the largest number; the program works as before. (`#32 <https://github.com/fizyk/tabliczka/issues/32>`__)
+- The way the code is organised has changed; the program works as before. (`#33 <https://github.com/fizyk/tabliczka/issues/33>`__)
+
+
 tabliczka 0.4.1 (2026-11-08)
 ============================
 

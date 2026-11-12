@@ -1,1 +1,0 @@
-The code now uses the full name for the largest number; the program works as before.
