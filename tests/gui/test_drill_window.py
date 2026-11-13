@@ -99,3 +99,4 @@ def test_drill_window__new_version(qtbot: QtBot) -> None:
         "Zobacz ją tutaj</a>"
     )
     assert window.new_version_notice.openExternalLinks()
+    assert window.new_version_notice.focusPolicy() == Qt.FocusPolicy.StrongFocus

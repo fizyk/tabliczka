@@ -6,6 +6,7 @@ import re
 from tabliczka.releases.models import Release
 
 LATEST_RELEASE_URL = "https://api.github.com/repos/fizyk/tabliczka/releases/latest"
+RELEASE_PAGES_URL = "https://github.com/fizyk/tabliczka/releases/"
 VERSION_PATTERN = re.compile(r"v?(\d+)\.(\d+)\.(\d+)")
 
 
@@ -24,7 +25,8 @@ def version_numbers(version: str) -> tuple[int, int, int]:
 def read_release(reply_body: bytes) -> Release:
     """Return the release described by GitHub's reply about the latest release.
 
-    Reject a reply that does not name the release's tag and page.
+    Reject a reply that does not name the release's tag and its page among the
+    program's releases on GitHub.
     """
     fields = json.loads(reply_body)
     if not isinstance(fields, dict):
@@ -41,6 +43,11 @@ def read_release(reply_body: bytes) -> Release:
             "as text; check that LATEST_RELEASE_URL asks for the latest release."
         )
     version_numbers(tag)
+    if not page_url.startswith(RELEASE_PAGES_URL):
+        raise ValueError(
+            f"The release page {page_url!r} is not under {RELEASE_PAGES_URL}; "
+            "check that LATEST_RELEASE_URL asks for this program's latest release."
+        )
     return Release(version=tag.removeprefix("v"), page_url=page_url)
 
 

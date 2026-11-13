@@ -40,6 +40,20 @@ def test_read_release() -> None:
             b'{"tag_name": "v0.5.0-rc1", "html_url": "https://github.example/"}',
             "three whole numbers",
         ),
+        (
+            b'{"tag_name": "v0.5.0", "html_url": "file:///C:/Windows/notepad.exe"}',
+            "is not under",
+        ),
+        (
+            b'{"tag_name": "v0.5.0", "html_url": "http://github.com/fizyk/tabliczka/'
+            b'releases/tag/v0.5.0"}',
+            "is not under",
+        ),
+        (
+            b'{"tag_name": "v0.5.0", "html_url": "https://github.example/fizyk/'
+            b'tabliczka/releases/tag/v0.5.0"}',
+            "is not under",
+        ),
     ],
 )
 def test_read_release__rejects(reply_body: bytes, message: str) -> None:

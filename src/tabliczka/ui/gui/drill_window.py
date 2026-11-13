@@ -1,5 +1,6 @@
 """The window that moves from the start page to the questions to the summary."""
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QLabel, QMainWindow, QStackedWidget, QVBoxLayout, QWidget
 
 from tabliczka.practice import Drill
@@ -30,6 +31,10 @@ class DrillWindow(QMainWindow):
         self.feedback = QLabel()
         self.new_version_notice = QLabel()
         self.new_version_notice.setOpenExternalLinks(True)
+        self.new_version_notice.setTextInteractionFlags(
+            Qt.TextInteractionFlag.LinksAccessibleByMouse
+            | Qt.TextInteractionFlag.LinksAccessibleByKeyboard
+        )
         self.new_version_notice.hide()
 
         central = QWidget()

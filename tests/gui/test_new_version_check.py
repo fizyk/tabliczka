@@ -72,7 +72,10 @@ def test_new_version_check__found(qtbot: QtBot, check: NewVersionCheck) -> None:
 @pytest.mark.parametrize(
     "reply",
     [
-        reply_mock(b'{"tag_name": "v0.0.1", "html_url": "https://github.example/"}'),
+        reply_mock(
+            b'{"tag_name": "v0.0.1", "html_url": '
+            b'"https://github.com/fizyk/tabliczka/releases/tag/v0.0.1"}'
+        ),
         reply_mock(b'{"message": "API rate limit exceeded"}'),
         reply_mock(b"<html>"),
         reply_mock(b"", QNetworkReply.NetworkError.HostNotFoundError),
