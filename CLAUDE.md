@@ -56,6 +56,10 @@ Views stay in `ui/`; a domain package holds no view code.
   with no name and no operations, when none is saved. `service.py` finds the file in
   the account's app data folder with `platformdirs` and rejects one it cannot read
   back; `ProfileRepository` in `repository.py` reads and writes it as JSON.
+- `releases` - `read_release(reply_body)` reads GitHub's reply about the latest
+  release, at `LATEST_RELEASE_URL`, into a `Release` with its `version` and
+  `page_url`, rejecting any other reply, and `is_newer(release, program_version)`
+  compares the versions with `packaging`'s `Version`. It does no networking.
 - `__main__.py` - the entry point PyInstaller packages; it opens the window.
 - `ui/text.py` - the Polish copy both interfaces show: each operation's heading in
   `OPERATION_HEADINGS_BY_ID`, the greeting, the question, the feedback and the
@@ -72,9 +76,12 @@ Views stay in `ui/`; a domain package holds no view code.
   shows the summary. `drill_window.py` holds `DrillWindow`, which builds the start
   page from the loaded profile, saves it again at each start, moves between the
   pages and shows the feedback; pages never touch each other's widgets.
-  `rich_text.py` colours the feedback and the summary, `text.py` holds the
-  window's own Polish copy, and `application.py` holds `main`, which shows any
-  unexpected error in a message.
+  `rich_text.py` colours the feedback and the summary and links the new
+  version notice, `text.py` holds the window's own Polish copy, and `application.py`
+  holds `main`, which shows any unexpected error in a message. In the packaged program
+  only (`sys.frozen`), `main` starts `NewVersionCheck` from `new_version_check.py`,
+  which asks GitHub in the background and, for a newer release, has `DrillWindow`
+  show the notice above the pages; any failure stays silent.
 
 New drills (printable worksheets and others; see the GitHub issues) should pass
 different operations or arguments to `Drill`, not add new question logic; a new
@@ -96,9 +103,12 @@ this order:
 3. `Drill` in `practice/drill.py`, and `Score`, `Scoreboard` and `Summary` in
    `practice/models/`.
 4. `Profile` in `profiles/models/`.
-5. The Polish interface copy: headings, feedback and the summary in `ui/text.py`;
+5. `Release` in `releases/models/`.
+6. The Polish interface copy: headings, feedback and the summary in `ui/text.py`;
    commands, options, prompts and help text in `ui/cli.py`; labels and buttons in
    `ui/gui/text.py`.
+7. The window's classes in `ui/gui/` and `ui/gui/pages/`, such as `StartPage`,
+   `DrillWindow` and `NewVersionCheck`.
 
 ## Published text
 
@@ -108,7 +118,7 @@ this order:
 - Validation messages, read by the parent: `click.BadParameter` in `ui/cli.py`.
 - Option and command help, read by the parent: `help=` in `ui/cli.py`.
 - Exception messages, read by the developer: `raise` in `exercises/`,
-  `practice/` and `profiles/`.
+  `practice/`, `profiles/` and `releases/`.
 - Release notes, read by the parent: `newsfragments/*.rst`, built into
   `CHANGES.rst` and each GitHub Release.
 

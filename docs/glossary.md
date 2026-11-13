@@ -46,6 +46,16 @@ Polish terms are what the learner sees; identifiers are English.
 | empty profile | The profile of a user account with none saved: no learner name, no operations, each operation's default largest number and no limit on the number of questions. | `Profile` | `src/tabliczka/profiles/repository.py`, `ProfileRepository.read` |
 | profile file | The JSON file in the user account's app data folder that keeps the profile. | `profile_path`; file name `PROFILE_FILE_NAME` | `src/tabliczka/profiles/service.py`, `profile_path` |
 
+## Releases
+
+| Term | Definition | Canonical identifier | Where defined |
+|---|---|---|---|
+| release | A published version of the program and its page on GitHub. | `Release` | `src/tabliczka/releases/models/release.py`, `Release` |
+| version | A version number such as `0.5.0` or `0.5.0rc1`, written with a leading `v` in a release tag. | `Release.version`, a `packaging` `Version`; `__version__` | `src/tabliczka/releases/models/release.py`, `Release.version` |
+| latest release | The most recent release published on GitHub, the one the program's version is compared with. | `LATEST_RELEASE_URL` | `src/tabliczka/releases/service.py`, `LATEST_RELEASE_URL` |
+| newer release | A release whose version is later than the running program's. | `is_newer` | `src/tabliczka/releases/service.py`, `is_newer` |
+| new version check | The request the packaged program sends to GitHub at start, in the background, for the latest release. | `NewVersionCheck` | `src/tabliczka/ui/gui/new_version_check.py`, `NewVersionCheck` |
+
 ## Command line
 
 | Term | Definition | Canonical identifier | Where defined |
@@ -65,6 +75,7 @@ Polish terms are what the learner sees; identifiers are English.
 | stop button (Koniec) | The button that ends a drill in the window and shows the summary, as the stop word does on the command line. | `stop_button`, with its text in `STOP_BUTTON_TEXT` | `src/tabliczka/ui/gui/pages/question.py`, `QuestionPage` |
 | feedback (Dobrze, Niestety, źle) | What the learner is told after each answer: right, or wrong with the correct answer. | `CORRECT_FEEDBACK`, `wrong_feedback`; coloured by `feedback_html` | `src/tabliczka/ui/text.py` |
 | error message (Coś poszło nie tak) | The message the window shows for an unexpected error, with its traceback in the details. | `ERROR_MESSAGE`; shown by `show_error` | `src/tabliczka/ui/gui/text.py`, `ERROR_MESSAGE` |
+| new version notice (Jest już nowa wersja programu) | The line above the pages naming a newer release and linking to its page. | `DrillWindow.new_version_notice`; text in `NEW_VERSION_TEXT`, `NEW_VERSION_LINK_TEXT` | `src/tabliczka/ui/gui/drill_window.py`, `DrillWindow.show_new_version` |
 
 ## Spelled two ways
 
@@ -78,6 +89,9 @@ Polish terms are what the learner sees; identifiers are English.
   `user_config_dir` is the library call that finds it.
 - **Learner answer.** The type that reads it is `LearnerAnswer`; the value is
   `given` in `run_drill`, `Drill.check_answer` and `QuestionPage`.
+- **Newer release.** `releases/` and the docstrings say newer release (`is_newer`);
+  the window's identifiers say new version (`NewVersionCheck`, `new_version_notice`,
+  `NEW_VERSION_TEXT`), matching the copy, "nowa wersja programu".
 
 ## One word, two meanings
 

@@ -1,4 +1,4 @@
-"""Polish copy only the window shows: labels, buttons, special values and errors."""
+"""Polish copy only the window shows: labels, buttons, values, notices and errors."""
 
 WINDOW_TITLE = "Tabliczka"
 ERROR_MESSAGE = "Coś poszło nie tak. Zamknij program i uruchom go jeszcze raz."
@@ -11,3 +11,6 @@ DEFAULT_LARGEST_NUMBER_TEXT = "jak zwykle"
 NO_QUESTION_COUNT_TEXT = "bez limitu"
 START_BUTTON_TEXT = "Zaczynamy!"
 STOP_BUTTON_TEXT = "Koniec"
+
+NEW_VERSION_TEXT = "Jest już nowa wersja programu: {version}."
+NEW_VERSION_LINK_TEXT = "Zobacz ją tutaj"
