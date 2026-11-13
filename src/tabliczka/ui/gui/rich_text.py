@@ -53,4 +53,4 @@ def score_lines(score: Score) -> list[str]:
 def new_version_html(release: Release) -> str:
     """Return the notice of a newer release, linking to its page."""
     notice = escape(NEW_VERSION_TEXT.format(version=release.version))
-    return f'{notice} <a href="{escape(release.url)}">{NEW_VERSION_LINK_TEXT}</a>.'
+    return f'{notice} <a href="{escape(release.page_url)}">{NEW_VERSION_LINK_TEXT}</a>'

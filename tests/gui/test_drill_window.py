@@ -84,7 +84,7 @@ def test_drill_window__new_version(qtbot: QtBot) -> None:
     # Given
     window = DrillWindow()
     qtbot.addWidget(window)
-    assert window.new_version.isHidden()
+    assert window.new_version_notice.isHidden()
 
     # When
     window.show_new_version(
@@ -92,10 +92,10 @@ def test_drill_window__new_version(qtbot: QtBot) -> None:
     )
 
     # Then
-    assert not window.new_version.isHidden()
-    assert window.new_version.text() == (
+    assert not window.new_version_notice.isHidden()
+    assert window.new_version_notice.text() == (
         "Jest już nowa wersja programu: 0.5.0. "
         '<a href="https://github.com/fizyk/tabliczka/releases/tag/v0.5.0">'
-        "Zobacz ją tutaj</a>."
+        "Zobacz ją tutaj</a>"
     )
-    assert window.new_version.openExternalLinks()
+    assert window.new_version_notice.openExternalLinks()

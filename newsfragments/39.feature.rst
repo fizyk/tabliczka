@@ -1,4 +1,4 @@
 The Windows program tells you when a newer version is out: at start it checks GitHub,
-and when there is one it names the version above the questions with a link to its
-download page. It downloads nothing itself. Without the internet, or when GitHub
-does not answer, the program works as before and says nothing.
+and when there is one it names the version at the top of the window, with a link to
+its download page. It downloads nothing itself. With no internet connection, or when
+GitHub does not answer, the program works as before and says nothing.

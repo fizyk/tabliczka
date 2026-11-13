@@ -20,7 +20,7 @@ def test_read_release() -> None:
     release = read_release(reply_body)
 
     # Then
-    assert release == Release(version="0.5.0", url=RELEASE_PAGE)
+    assert release == Release(version="0.5.0", page_url=RELEASE_PAGE)
 
 
 @pytest.mark.parametrize(
@@ -28,7 +28,7 @@ def test_read_release() -> None:
     [
         (b"{", "Expecting"),
         (b"\xff", "utf-8"),
-        (b"[]", "JSON object"),
+        (b"[]", "is not a JavaScript Object Notation"),
         (b'{"html_url": "https://github.example/"}', "tag_name and html_url"),
         (b'{"tag_name": "v0.5.0"}', "tag_name and html_url"),
         (b'{"tag_name": 5, "html_url": "https://github.example/"}', "tag_name"),
@@ -50,7 +50,7 @@ def test_read_release__rejects(reply_body: bytes, message: str) -> None:
 
 
 @pytest.mark.parametrize(
-    ("version", "current_version", "newer"),
+    ("version", "program_version", "newer"),
     [
         ("0.5.0", "0.4.1", True),
         ("0.4.2", "0.4.1", True),
@@ -61,7 +61,7 @@ def test_read_release__rejects(reply_body: bytes, message: str) -> None:
         ("0.9.0", "0.10.0", False),
     ],
 )
-def test_is_newer(version: str, current_version: str, *, newer: bool) -> None:
+def test_is_newer(version: str, program_version: str, *, newer: bool) -> None:
     """Only a later version counts as newer, compared number by number."""
     # When / Then
-    assert is_newer(Release(version, RELEASE_PAGE), current_version) is newer
+    assert is_newer(Release(version, RELEASE_PAGE), program_version) is newer

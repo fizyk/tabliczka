@@ -11,4 +11,4 @@ class Release:
     """
 
     version: str
-    url: str
+    page_url: str

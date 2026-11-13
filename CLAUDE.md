@@ -57,9 +57,9 @@ Views stay in `ui/`; a domain package holds no view code.
   the account's app data folder with `platformdirs` and rejects one it cannot read
   back; `ProfileRepository` in `repository.py` reads and writes it as JSON.
 - `releases` - `read_release(reply_body)` reads GitHub's reply about the latest
-  release, at `LATEST_RELEASE_URL`, into a `Release` with its `version` and page
-  `url`, rejecting any other reply, and `is_newer(release, current_version)` compares
-  the versions number by number. It does no networking.
+  release, at `LATEST_RELEASE_URL`, into a `Release` with its `version` and
+  `page_url`, rejecting any other reply, and `is_newer(release, program_version)`
+  compares the versions number by number. It does no networking.
 - `__main__.py` - the entry point PyInstaller packages; it opens the window.
 - `ui/text.py` - the Polish copy both interfaces show: each operation's heading in
   `OPERATION_HEADINGS_BY_ID`, the greeting, the question, the feedback and the
@@ -107,6 +107,8 @@ this order:
 6. The Polish interface copy: headings, feedback and the summary in `ui/text.py`;
    commands, options, prompts and help text in `ui/cli.py`; labels and buttons in
    `ui/gui/text.py`.
+7. The window's classes in `ui/gui/` and `ui/gui/pages/`, such as `StartPage`,
+   `DrillWindow` and `NewVersionCheck`.
 
 ## Published text
 

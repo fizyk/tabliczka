@@ -28,15 +28,22 @@ def read_release(reply_body: bytes) -> Release:
     """
     fields = json.loads(reply_body)
     if not isinstance(fields, dict):
-        raise ValueError("A release reply needs to be a JSON object.")
+        raise ValueError(
+            "GitHub's reply about the latest release is not "
+            "a JavaScript Object Notation (JSON) object; "
+            "check that LATEST_RELEASE_URL asks for the latest release."
+        )
     tag = fields.get("tag_name")
-    url = fields.get("html_url")
-    if not isinstance(tag, str) or not isinstance(url, str):
-        raise ValueError("A release reply needs tag_name and html_url as text.")
+    page_url = fields.get("html_url")
+    if not isinstance(tag, str) or not isinstance(page_url, str):
+        raise ValueError(
+            "GitHub's reply about the latest release needs tag_name and html_url "
+            "as text; check that LATEST_RELEASE_URL asks for the latest release."
+        )
     version_numbers(tag)
-    return Release(version=tag.removeprefix("v"), url=url)
+    return Release(version=tag.removeprefix("v"), page_url=page_url)
 
 
-def is_newer(release: Release, current_version: str) -> bool:
-    """Return whether the release's version is later than ``current_version``."""
-    return version_numbers(release.version) > version_numbers(current_version)
+def is_newer(release: Release, program_version: str) -> bool:
+    """Return whether the release's version is later than ``program_version``."""
+    return version_numbers(release.version) > version_numbers(program_version)
