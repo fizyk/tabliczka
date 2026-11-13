@@ -16,15 +16,15 @@ def read_release(reply_body: bytes) -> Release:
     Reject a reply that does not name the release's tag and its page among the
     program's releases on GitHub.
     """
-    fields = json.loads(reply_body)
-    if not isinstance(fields, dict):
+    reply = json.loads(reply_body)
+    if not isinstance(reply, dict):
         raise ValueError(
             "GitHub's reply about the latest release is not "
             "a JavaScript Object Notation (JSON) object; "
             "check that LATEST_RELEASE_URL asks for the latest release."
         )
-    tag = fields.get("tag_name")
-    page_url = fields.get("html_url")
+    tag = reply.get("tag_name")
+    page_url = reply.get("html_url")
     if not isinstance(tag, str) or not isinstance(page_url, str):
         raise ValueError(
             "GitHub's reply about the latest release needs tag_name and html_url "
