@@ -2,13 +2,12 @@
 
 from dataclasses import dataclass
 
+from packaging.version import Version
+
 
 @dataclass(frozen=True)
 class Release:
-    """A published version of the program and the page it is published on.
+    """A published version of the program and the page it is published on."""
 
-    ``version`` has no leading ``v``, such as ``0.5.0``.
-    """
-
-    version: str
+    version: Version
     page_url: str

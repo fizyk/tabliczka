@@ -51,7 +51,7 @@ Polish terms are what the learner sees; identifiers are English.
 | Term | Definition | Canonical identifier | Where defined |
 |---|---|---|---|
 | release | A published version of the program and its page on GitHub. | `Release` | `src/tabliczka/releases/models/release.py`, `Release` |
-| version | Three whole numbers joined by dots, such as `0.5.0`, written with a leading `v` in a release tag. | `Release.version`, `__version__` | `src/tabliczka/releases/models/release.py`, `Release.version` |
+| version | A version number such as `0.5.0` or `0.5.0rc1`, written with a leading `v` in a release tag. | `Release.version`, a `packaging` `Version`; `__version__` | `src/tabliczka/releases/models/release.py`, `Release.version` |
 | latest release | The most recent release published on GitHub, the one the program's version is compared with. | `LATEST_RELEASE_URL` | `src/tabliczka/releases/service.py`, `LATEST_RELEASE_URL` |
 | newer release | A release whose version is later than the running program's. | `is_newer` | `src/tabliczka/releases/service.py`, `is_newer` |
 | new version check | The request the packaged program sends to GitHub at start, in the background, for the latest release. | `NewVersionCheck` | `src/tabliczka/ui/gui/new_version_check.py`, `NewVersionCheck` |

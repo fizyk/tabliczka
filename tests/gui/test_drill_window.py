@@ -1,5 +1,6 @@
 """Tests for the window that moves between the pages."""
 
+from packaging.version import Version
 from PySide6.QtCore import Qt
 from pytestqt.qtbot import QtBot
 
@@ -88,7 +89,9 @@ def test_drill_window__new_version(qtbot: QtBot) -> None:
 
     # When
     window.show_new_version(
-        Release("0.5.0", "https://github.com/fizyk/tabliczka/releases/tag/v0.5.0")
+        Release(
+            Version("0.5.0"), "https://github.com/fizyk/tabliczka/releases/tag/v0.5.0"
+        )
     )
 
     # Then

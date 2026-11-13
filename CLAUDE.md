@@ -59,7 +59,7 @@ Views stay in `ui/`; a domain package holds no view code.
 - `releases` - `read_release(reply_body)` reads GitHub's reply about the latest
   release, at `LATEST_RELEASE_URL`, into a `Release` with its `version` and
   `page_url`, rejecting any other reply, and `is_newer(release, program_version)`
-  compares the versions number by number. It does no networking.
+  compares the versions with `packaging`'s `Version`. It does no networking.
 - `__main__.py` - the entry point PyInstaller packages; it opens the window.
 - `ui/text.py` - the Polish copy both interfaces show: each operation's heading in
   `OPERATION_HEADINGS_BY_ID`, the greeting, the question, the feedback and the

@@ -4,6 +4,7 @@ from collections.abc import Iterator
 from unittest.mock import MagicMock
 
 import pytest
+from packaging.version import Version
 from PySide6.QtCore import QByteArray, QObject
 from PySide6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkRequest
 from pytestqt.qtbot import QtBot
@@ -65,7 +66,7 @@ def test_new_version_check__found(qtbot: QtBot, check: NewVersionCheck) -> None:
         check.read(reply)
 
     # Then
-    assert found.args == [Release("99.0.0", RELEASE_PAGE)]
+    assert found.args == [Release(Version("99.0.0"), RELEASE_PAGE)]
     reply.deleteLater.assert_called_once_with()
 
 

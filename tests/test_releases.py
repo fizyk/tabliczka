@@ -1,6 +1,7 @@
 """Tests for reading the latest release and comparing its version."""
 
 import pytest
+from packaging.version import Version
 
 from tabliczka.releases import is_newer, read_release
 from tabliczka.releases.models import Release
@@ -20,7 +21,7 @@ def test_read_release() -> None:
     release = read_release(reply_body)
 
     # Then
-    assert release == Release(version="0.5.0", page_url=RELEASE_PAGE)
+    assert release == Release(version=Version("0.5.0"), page_url=RELEASE_PAGE)
 
 
 @pytest.mark.parametrize(
@@ -34,11 +35,7 @@ def test_read_release() -> None:
         (b'{"tag_name": 5, "html_url": "https://github.example/"}', "tag_name"),
         (
             b'{"tag_name": "latest", "html_url": "https://github.example/"}',
-            "three whole numbers",
-        ),
-        (
-            b'{"tag_name": "v0.5.0-rc1", "html_url": "https://github.example/"}',
-            "three whole numbers",
+            "Invalid version",
         ),
         (
             b'{"tag_name": "v0.5.0", "html_url": "file:///C:/Windows/notepad.exe"}',
@@ -73,9 +70,14 @@ def test_read_release__rejects(reply_body: bytes, message: str) -> None:
         ("0.4.1", "0.4.1", False),
         ("0.4.0", "0.4.1", False),
         ("0.9.0", "0.10.0", False),
+        ("0.5.0", "0.5.0rc1", True),
+        ("0.5.0rc1", "0.5.0", False),
     ],
 )
 def test_is_newer(version: str, program_version: str, *, newer: bool) -> None:
-    """Only a later version counts as newer, compared number by number."""
+    """Only a later version counts as newer; a pre-release comes before its release."""
+    # Given
+    release = Release(Version(version), RELEASE_PAGE)
+
     # When / Then
-    assert is_newer(Release(version, RELEASE_PAGE), program_version) is newer
+    assert is_newer(release, program_version) is newer
