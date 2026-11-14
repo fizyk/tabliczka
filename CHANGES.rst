@@ -3,6 +3,18 @@ CHANGELOG
 
 .. towncrier release notes start
 
+tabliczka 0.6.0 (2026-11-14)
+============================
+
+Features
+--------
+
+- The Windows program tells you when a newer version is out: at start it checks GitHub,
+  and when there is one it names the version at the top of the window, with a link to
+  its download page. It downloads nothing itself. With no internet connection, or when
+  GitHub does not answer, the program works as before and says nothing. (`#39 <https://github.com/fizyk/tabliczka/issues/39>`__)
+
+
 tabliczka 0.5.0 (2026-11-12)
 ============================
 
