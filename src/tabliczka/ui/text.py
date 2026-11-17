@@ -8,9 +8,13 @@ OPERATION_HEADINGS_BY_ID = {
     "subtract": "Odejmowanie",
     "multiplication": "Mnożenie",
     "division": "Dzielenie",
+    "division_with_remainder": "Dzielenie z resztą",
+    "square": "Kwadraty",
+    "cube": "Sześciany",
 }
 
 CORRECT_FEEDBACK = "Dobrze!"
+REMAINDER_WORD = "reszty"
 SUMMARY_HEADING = "Twój wynik to:"
 
 
@@ -25,9 +29,16 @@ def question_text(question: Question) -> str:
     return f"{heading}: Ile to {question.expression}?"
 
 
+def answer_text(question: Question) -> str:
+    """Return the correct answer as said aloud, with the remainder when it has one."""
+    if question.remainder is None:
+        return str(question.answer)
+    return f"{question.answer} {REMAINDER_WORD} {question.remainder}"
+
+
 def wrong_feedback(question: Question) -> str:
     """Return the feedback on a wrong answer, with the correct one."""
-    return f"Niestety, źle, prawidłowy wynik to {question.answer}."
+    return f"Niestety, źle, prawidłowy wynik to {answer_text(question)}."
 
 
 def correct_count(score: Score) -> str:

@@ -36,17 +36,18 @@ Views stay in `ui/`; a domain package holds no view code.
 
 - `core/constants.py` - constants the whole program shares, such as
   `APPLICATION_NAME`.
-- `exercises` - one class per operation (`Add`, `Subtract`, `Multiply`, `Divide`)
-  in `service.py`, satisfying the `Operation` protocol, kept as singletons in
-  `OPERATIONS_BY_ID`. Each builds a `Question` whose largest number, at most
-  `largest_number`, is the operation's own choice (the sum, the minuend, each
-  factor), and has its own `default_largest_number` and the smallest
-  `largest_number` it accepts, `smallest_largest_number`. It holds no Polish text:
-  a question carries only its `expression`, such as `2+4`.
+- `exercises` - one class per operation (`Add`, `Subtract`, `Multiply`, `Divide`,
+  `DivideWithRemainder`, `Square`, `Cube`) in `service.py`, satisfying the `Operation`
+  protocol, kept as singletons in `OPERATIONS_BY_ID`. Each builds a `Question` whose
+  largest number, at most `largest_number`, is the operation's own choice (the sum,
+  the minuend, each factor, the base), and has its own `default_largest_number` and
+  the smallest `largest_number` it accepts, `smallest_largest_number`. It holds no
+  Polish text: a question carries only its `expression`, such as `2+4`, its `answer`
+  and, for division with remainder only, its `remainder`.
   `get_operations(operation_ids)`, exported from the package, looks them up.
 - `practice` - `Drill(operation_ids, largest_number=, question_count=)` in `drill.py`
   holds the operations, limits and `Scoreboard`; `drill.questions()` yields its
-  questions, `drill.check_answer(question, given)` scores each and
+  questions, `drill.check_answer(question, given_answer)` scores each and
   `drill.summary()` returns the `Summary` of scores, through the stateless functions
   in `service.py`. It knows nothing of the terminal and never
   decides which operations run.

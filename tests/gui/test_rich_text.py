@@ -26,6 +26,17 @@ def test_feedback_html(*, correct: bool, html: str) -> None:
     assert feedback_html(question, correct=correct) == html
 
 
+def test_feedback_html__remainder() -> None:
+    """A wrong answer to a division with remainder is corrected with both numbers."""
+    # Given
+    question = Question("17:5", 3, "division_with_remainder", remainder=2)
+
+    # When / Then
+    assert feedback_html(question, correct=False) == (
+        '<span style="color: red">Niestety, źle, prawidłowy wynik to 3 reszty 2.</span>'
+    )
+
+
 def test_summary_html() -> None:
     """The summary shows the totals, then each operation's own score."""
     # Given

@@ -20,12 +20,16 @@ from tabliczka.ui.text import (
 )
 
 STOP_WORD = "koniec"
+REMAINDER_PROMPT = "Ile reszty?"
 
 OPERATION_IDS_BY_NAME = {
     "dodawanie": "add",
     "odejmowanie": "subtract",
     "mnozenie": "multiplication",
     "dzielenie": "division",
+    "dzielenie-z-reszta": "division_with_remainder",
+    "kwadraty": "square",
+    "szesciany": "cube",
 }
 
 
@@ -90,10 +94,17 @@ def run_drill(
     click.echo(f"Wpisz „{STOP_WORD}”, żeby zakończyć.")
     with suppress(Abort):
         for question in drill.questions():
-            given = click.prompt(question_text(question), type=LEARNER_ANSWER)
-            if given is None:
+            given_answer = click.prompt(question_text(question), type=LEARNER_ANSWER)
+            if given_answer is None:
                 break
-            if drill.check_answer(question, given):
+            given_remainder = None
+            if question.remainder is not None:
+                given_remainder = click.prompt(REMAINDER_PROMPT, type=LEARNER_ANSWER)
+                if given_remainder is None:
+                    break
+            if drill.check_answer(
+                question, given_answer, given_remainder=given_remainder
+            ):
                 click.echo(click.style(CORRECT_FEEDBACK, fg="green"))
             else:
                 click.echo(click.style(wrong_feedback(question), fg="red"))
@@ -108,8 +119,9 @@ def drill_options[CommandFunction: Callable[..., None]](
         "--max",
         "largest_number",
         type=click.IntRange(min=2),
-        help="Ustala największą liczbę w pytaniach (sumę, odjemną albo czynnik); "
-        "domyślnie 20 przy dodawaniu i odejmowaniu, 10 przy mnożeniu i dzieleniu.",
+        help="Ustala największą liczbę w pytaniach (sumę, odjemną, czynnik albo "
+        "podstawę potęgi); domyślnie 20 przy dodawaniu i odejmowaniu, 5 przy "
+        "sześcianach, a 10 przy pozostałych działaniach.",
     )(command)
     return click.option(
         "--pytania",
@@ -173,7 +185,7 @@ def mnozenie(largest_number: int | None, question_count: int | None) -> None:
     )
 
 
-@main.command(help="Ćwiczy wybrane działania, domyślnie wszystkie cztery.")
+@main.command(help="Ćwiczy wybrane działania, domyślnie wszystkie.")
 @click.option(
     "--dzialanie",
     "operation_ids",
@@ -181,13 +193,13 @@ def mnozenie(largest_number: int | None, question_count: int | None) -> None:
     multiple=True,
     callback=chosen_operation_ids,
     help="Wybiera działanie do ćwiczenia; podaj kilka razy, żeby ćwiczyć kilka, "
-    "a bez tej opcji program ćwiczy wszystkie cztery.",
+    "a bez tej opcji program ćwiczy wszystkie.",
 )
 @drill_options
 def cwiczenie(
     operation_ids: Sequence[str], largest_number: int | None, question_count: int | None
 ) -> None:
-    """Drill the chosen operations, all four when none is chosen."""
+    """Drill the chosen operations, all of them when none is chosen."""
     click.echo("Ćwiczymy wybrane działania!")
     run_drill(
         operation_ids or list(OPERATION_IDS_BY_NAME.values()),
