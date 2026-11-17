@@ -167,12 +167,13 @@ def test_check_answer__remainder(
         (
             Question("1+1", 2, "add"),
             0,
-            r"The question 1\+1 has no remainder\. Give None\.",
+            r"The question 1\+1 has no remainder\. Give None as given_remainder\.",
         ),
         (
             Question("17:5", 3, "division_with_remainder", remainder=2),
             None,
-            r"The question 17:5 asks for a remainder\. Give one\.",
+            r"The question 17:5 asks for a remainder\. "
+            r"Give given_remainder as a whole number\.",
         ),
     ],
 )

@@ -70,11 +70,13 @@ def check_answer(
     """
     if question.remainder is None and given_remainder is not None:
         raise ValueError(
-            f"The question {question.expression} has no remainder. Give None."
+            f"The question {question.expression} has no remainder. "
+            "Give None as given_remainder."
         )
     if question.remainder is not None and given_remainder is None:
         raise ValueError(
-            f"The question {question.expression} asks for a remainder. Give one."
+            f"The question {question.expression} asks for a remainder. "
+            "Give given_remainder as a whole number."
         )
     correct = (given_answer, given_remainder) == (question.answer, question.remainder)
     scoreboard.record(question.operation_id, correct=correct)

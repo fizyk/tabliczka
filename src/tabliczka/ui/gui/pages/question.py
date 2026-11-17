@@ -85,11 +85,11 @@ class QuestionPage(QWidget):
         fields = [self.given_answer]
         if self.asks_remainder():
             fields.append(self.given_remainder)
-        empty_field = next(
+        unanswered_field = next(
             (field for field in fields if not field.hasAcceptableInput()), None
         )
-        if empty_field is not None:
-            empty_field.setFocus()
+        if unanswered_field is not None:
+            unanswered_field.setFocus()
             return
         correct = self.drill.check_answer(
             self.question,

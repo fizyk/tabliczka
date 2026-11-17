@@ -119,9 +119,10 @@ def drill_options[CommandFunction: Callable[..., None]](
         "--max",
         "largest_number",
         type=click.IntRange(min=2),
-        help="Ustala największą liczbę w pytaniach (sumę, odjemną, czynnik albo "
-        "podstawę potęgi); domyślnie 20 przy dodawaniu i odejmowaniu, 5 przy "
-        "sześcianach, a 10 przy pozostałych działaniach.",
+        help="Ustala największą liczbę w pytaniach (sumę, odjemną, czynnik, "
+        "dzielnik i iloraz albo podstawę potęgi); "
+        "domyślnie 20 przy dodawaniu i odejmowaniu, 5 przy sześcianach, "
+        "a 10 przy pozostałych działaniach.",
     )(command)
     return click.option(
         "--pytania",
