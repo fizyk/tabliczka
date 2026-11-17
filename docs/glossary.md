@@ -18,10 +18,10 @@ Polish terms are what the learner sees; identifiers are English.
 | cube (Sześciany) | The operation that asks for the cube of a base at most the largest number, written `4³`. | `CUBE`, class `Cube` | `src/tabliczka/exercises/service.py`, `Cube` |
 | operand | One of the two numbers an addition, subtraction, multiplication or division question is built from; in multiplication and division, a factor. | `x`, `y` | `src/tabliczka/exercises/service.py`, `Add.generate`, `Subtract.generate`, `Multiply.generate`, `Divide.generate` |
 | minuend (odjemna) | The number a subtraction question subtracts from, `x+y`. | `minuend` | `src/tabliczka/exercises/service.py`, `Subtract.generate` |
-| dividend | The number a division with remainder question divides, `divisor × quotient + remainder`. | `dividend` | `src/tabliczka/exercises/service.py`, `DivideWithRemainder.generate` |
-| divisor | The number a division with remainder question divides by. | `divisor` | `src/tabliczka/exercises/service.py`, `DivideWithRemainder.generate` |
-| quotient | The result of a division with remainder, not counting what is left over. | `quotient`; held as `Question.answer` | `src/tabliczka/exercises/service.py`, `DivideWithRemainder.generate` |
-| base | The number a square or cube question raises to a power. | `base` | `src/tabliczka/exercises/service.py`, `Square.generate`, `Cube.generate` |
+| dividend (dzielna) | The number a division with remainder question divides, `divisor × quotient + remainder`. | `dividend` | `src/tabliczka/exercises/service.py`, `DivideWithRemainder.generate` |
+| divisor (dzielnik) | The number a division with remainder question divides by. | `divisor` | `src/tabliczka/exercises/service.py`, `DivideWithRemainder.generate` |
+| quotient (iloraz) | The result of a division with remainder, not counting what is left over. | `quotient`; held as `Question.answer` | `src/tabliczka/exercises/service.py`, `DivideWithRemainder.generate` |
+| base (podstawa potęgi) | The number a square or cube question raises to a power. | `base` | `src/tabliczka/exercises/service.py`, `Square.generate`, `Cube.generate` |
 | question | One exercise put to the learner, with its expected answer. | `Question` | `src/tabliczka/exercises/models/question.py`, `Question` |
 | expression | The arithmetic a question asks about, such as `2+4`. | `expression` | `src/tabliczka/exercises/models/question.py`, `Question.expression` |
 | prompt (Ile to) | The text of a question as shown to the learner: the operation's heading and the expression. | `question_text` | `src/tabliczka/ui/text.py`, `question_text` |
