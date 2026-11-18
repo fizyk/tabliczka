@@ -20,8 +20,10 @@ uv run --group windows pyinstaller --onefile --windowed --name tabliczka \
 Every pull request adds a towncrier newsfragment,
 `newsfragments/<issue>.<type>.rst`, with a type from `[tool.towncrier]` in
 `pyproject.toml`. Write it for the parent reading the release notes: what changes
-in the program for them, never how the code is built. Releases are cut by the
-scheduled release workflow with tbump; never bump the version by hand.
+in the program for them, never how the code is built. A change that leaves the
+program as it was takes the `misc` type, written for the developer; the release
+notes show only its issue link. Releases are cut by the scheduled release workflow
+with tbump; never bump the version by hand.
 
 ## Architecture
 
@@ -120,8 +122,10 @@ this order:
 - Option and command help, read by the parent: `help=` in `ui/cli.py`.
 - Exception messages, read by the developer: `raise` in `exercises/`,
   `practice/`, `profiles/` and `releases/`.
-- Release notes, read by the parent: `newsfragments/*.rst`, built into
-  `CHANGES.rst` and each GitHub Release.
+- Release notes, read by the parent: `newsfragments/*.rst` except `*.misc.rst`,
+  built into `CHANGES.rst` and each GitHub Release.
+- Developer notes, read by the developer: `newsfragments/*.misc.rst`, kept out of
+  the release notes.
 
 ## Preserved behaviour
 

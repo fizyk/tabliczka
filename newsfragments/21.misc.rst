@@ -1,1 +1,2 @@
-The tests now run on Linux the same way as on Windows; the program works as before.
+The Linux tests run through the shared actions-reuse pytest workflow, which
+installs the Qt system libraries through its apt-packages input.
