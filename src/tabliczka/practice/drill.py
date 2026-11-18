@@ -41,9 +41,20 @@ class Drill:
             question_count=self.question_count,
         )
 
-    def check_answer(self, question: Question, given: int) -> bool:
-        """Record whether ``given`` answers the question, and return it."""
-        return service.check_answer(self.scoreboard, question, given)
+    def check_answer(
+        self,
+        question: Question,
+        given_answer: int,
+        *,
+        given_remainder: int | None = None,
+    ) -> bool:
+        """Record and return whether the given answer and remainder are right.
+
+        Reject a remainder for a question with none, and no remainder for one with one.
+        """
+        return service.check_answer(
+            self.scoreboard, question, given_answer, given_remainder=given_remainder
+        )
 
     def summary(self) -> Summary:
         """Return the drill's total and each operation's score so far."""

@@ -8,22 +8,30 @@ Polish terms are what the learner sees; identifiers are English.
 |---|---|---|---|
 | drill (ćwiczenie) | A run of randomly chosen questions that lasts until the learner types the stop word, presses Ctrl+C or the stop button, or has answered the number of questions. | `Drill` | `src/tabliczka/practice/drill.py`, `Drill` |
 | operation | An arithmetic skill a drill can ask questions about. | `Operation` | `src/tabliczka/exercises/models/operation.py`, `Operation` |
-| operation id | The fixed name that identifies an operation in the scores. | `id`; values `add`, `subtract`, `multiplication`, `division` | `src/tabliczka/exercises/models/operation.py`, `Operation.id` |
+| operation id | The fixed name that identifies an operation in the scores. | `id`; values `add`, `subtract`, `multiplication`, `division`, `division_with_remainder`, `square`, `cube` | `src/tabliczka/exercises/models/operation.py`, `Operation.id` |
 | addition (Dodawanie) | The operation that asks for the sum of two operands, the sum at most the largest number. | `ADD`, class `Add` | `src/tabliczka/exercises/service.py`, `Add` |
 | subtraction (Odejmowanie) | The operation that asks `(x+y)-x`, so the answer is the operand `y`, with the minuend `x+y` at most the largest number. | `SUBTRACT`, class `Subtract` | `src/tabliczka/exercises/service.py`, `Subtract` |
 | multiplication (Mnożenie) | The operation that asks for the product of two operands, each at most the largest number. | `MULTIPLY`, class `Multiply` | `src/tabliczka/exercises/service.py`, `Multiply` |
 | division (Dzielenie) | The operation that asks `(x*y):x`, so the answer is the operand `y`, with `x` and `y` at most the largest number. | `DIVIDE`, class `Divide` | `src/tabliczka/exercises/service.py`, `Divide` |
-| operand | One of the two numbers a question is built from; in multiplication and division, a factor. | `x`, `y` | `src/tabliczka/exercises/service.py`, `Add.generate` and the other operations |
+| division with remainder (Dzielenie z resztą) | The operation that asks to divide a dividend that leaves a remainder of at least 1, answered with the quotient and the remainder, with the divisor and the quotient at most the largest number. | `DIVIDE_WITH_REMAINDER`, class `DivideWithRemainder` | `src/tabliczka/exercises/service.py`, `DivideWithRemainder` |
+| square (Kwadraty) | The operation that asks for the square of a base at most the largest number, written `4²`. | `SQUARE`, class `Square` | `src/tabliczka/exercises/service.py`, `Square` |
+| cube (Sześciany) | The operation that asks for the cube of a base at most the largest number, written `4³`. | `CUBE`, class `Cube` | `src/tabliczka/exercises/service.py`, `Cube` |
+| operand | One of the two numbers an addition, subtraction, multiplication or division question is built from; in multiplication and division, a factor. | `x`, `y` | `src/tabliczka/exercises/service.py`, `Add.generate`, `Subtract.generate`, `Multiply.generate`, `Divide.generate` |
 | minuend (odjemna) | The number a subtraction question subtracts from, `x+y`. | `minuend` | `src/tabliczka/exercises/service.py`, `Subtract.generate` |
+| dividend (dzielna) | The number a division with remainder question divides, `divisor × quotient + remainder`. | `dividend` | `src/tabliczka/exercises/service.py`, `DivideWithRemainder.generate` |
+| divisor (dzielnik) | The number a division with remainder question divides by. | `divisor` | `src/tabliczka/exercises/service.py`, `DivideWithRemainder.generate` |
+| quotient (iloraz) | The result of a division with remainder, not counting what is left over. | `quotient`; held as `Question.answer` | `src/tabliczka/exercises/service.py`, `DivideWithRemainder.generate` |
+| base (podstawa potęgi) | The number a square or cube question raises to a power. | `base` | `src/tabliczka/exercises/service.py`, `Square.generate`, `Cube.generate` |
 | question | One exercise put to the learner, with its expected answer. | `Question` | `src/tabliczka/exercises/models/question.py`, `Question` |
 | expression | The arithmetic a question asks about, such as `2+4`. | `expression` | `src/tabliczka/exercises/models/question.py`, `Question.expression` |
 | prompt (Ile to) | The text of a question as shown to the learner: the operation's heading and the expression. | `question_text` | `src/tabliczka/ui/text.py`, `question_text` |
-| answer (expected answer) | The correct result of a question. | `answer` | `src/tabliczka/exercises/models/question.py`, `Question.answer` |
+| answer (expected answer) | The correct result of a question; in division with remainder, the quotient. | `answer` | `src/tabliczka/exercises/models/question.py`, `Question.answer` |
+| remainder (reszty, Ile reszty?) | What a division with remainder leaves over, asked for after the quotient; questions answered with one number have none. | `Question.remainder`; `REMAINDER_WORD` in the copy and the window, `REMAINDER_PROMPT` on the command line | `src/tabliczka/exercises/models/question.py`, `Question.remainder` |
 | learner answer | What the learner types in reply to a question: a whole number or the stop word. | `LearnerAnswer` | `src/tabliczka/ui/cli.py`, `LearnerAnswer` |
 | stop word (koniec) | The word that ends a drill when typed instead of an answer. | `STOP_WORD` | `src/tabliczka/ui/cli.py`, `STOP_WORD` |
-| largest number (max, Największa liczba) | The highest value of the number an operation limits: the sum for addition, the minuend for subtraction, each factor for multiplication and division. | `largest_number`; `--max` on the command line; `LARGEST_NUMBER_LABEL` in the window | `src/tabliczka/exercises/models/operation.py`, `Operation.generate` |
-| default largest number (jak zwykle) | The largest number an operation uses when the drill does not choose one: 20 for addition and subtraction, 10 for multiplication and division. | `default_largest_number`; shown as `DEFAULT_LARGEST_NUMBER_TEXT` in the window | `src/tabliczka/exercises/models/operation.py`, `Operation.default_largest_number` |
-| smallest largest number | The lowest largest number an operation can ask questions with: 2 for addition and subtraction, 1 for multiplication and division. | `smallest_largest_number` | `src/tabliczka/exercises/models/operation.py`, `Operation.smallest_largest_number` |
+| largest number (max, Największa liczba) | The highest value of the number an operation limits: the sum for addition, the minuend for subtraction, each factor for multiplication and division, the divisor and the quotient for division with remainder, the base for squares and cubes. | `largest_number`; `--max` on the command line; `LARGEST_NUMBER_LABEL` in the window | `src/tabliczka/exercises/models/operation.py`, `Operation.generate` |
+| default largest number (jak zwykle) | The largest number an operation uses when the drill does not choose one: 20 for addition and subtraction, 5 for cubes, 10 for the others. | `default_largest_number`; shown as `DEFAULT_LARGEST_NUMBER_TEXT` in the window | `src/tabliczka/exercises/models/operation.py`, `Operation.default_largest_number` |
+| smallest largest number | The lowest largest number an operation can ask questions with: 2 for addition, subtraction and division with remainder, 1 for the others. | `smallest_largest_number` | `src/tabliczka/exercises/models/operation.py`, `Operation.smallest_largest_number` |
 | number of questions (pytania, Liczba pytań) | How many questions a drill asks before the summary; without it the drill lasts until the learner stops. | `question_count`; `--pytania` on the command line; `QUESTION_COUNT_LABEL` in the window | `src/tabliczka/practice/drill.py`, `Drill.question_count` |
 
 ## Scoring
@@ -63,8 +71,8 @@ Polish terms are what the learner sees; identifiers are English.
 | learner name (imię ucznia) | The name the program greets the learner by. | `name`, `Profile.name`; `--imie` on the command line | `src/tabliczka/ui/cli.py`, `main` |
 | addition drill (dodawanie) | The command that drills addition and subtraction. | `dodawanie` | `src/tabliczka/ui/cli.py`, `dodawanie` |
 | multiplication drill (mnozenie) | The command that drills multiplication and division. | `mnozenie` | `src/tabliczka/ui/cli.py`, `mnozenie` |
-| operation name (działanie) | The Polish name that chooses one operation with `--dzialanie`. | keys of `OPERATION_IDS_BY_NAME`; values `dodawanie`, `odejmowanie`, `mnozenie`, `dzielenie` | `src/tabliczka/ui/cli.py`, `OPERATION_IDS_BY_NAME` |
-| chosen drill (cwiczenie) | The command that drills the operations chosen with `--dzialanie`, all four when none is chosen. | `cwiczenie`; `--dzialanie` | `src/tabliczka/ui/cli.py`, `cwiczenie` |
+| operation name (działanie) | The Polish name that chooses one operation with `--dzialanie`. | keys of `OPERATION_IDS_BY_NAME`; values `dodawanie`, `odejmowanie`, `mnozenie`, `dzielenie`, `dzielenie-z-reszta`, `kwadraty`, `szesciany` | `src/tabliczka/ui/cli.py`, `OPERATION_IDS_BY_NAME` |
+| chosen drill (cwiczenie) | The command that drills the operations chosen with `--dzialanie`, all of them when none is chosen. | `cwiczenie`; `--dzialanie` | `src/tabliczka/ui/cli.py`, `cwiczenie` |
 
 ## Window
 
@@ -73,22 +81,25 @@ Polish terms are what the learner sees; identifiers are English.
 | start page (Zaczynamy) | The first page of the window, asking for the learner name and the drill: the operations, the largest number and the number of questions, showing the loaded profile. | `StartPage`; `start_button`, with its text in `START_BUTTON_TEXT` | `src/tabliczka/ui/gui/pages/start.py`, `StartPage` |
 | question page | The page that asks a drill's questions one at a time. | `QuestionPage` | `src/tabliczka/ui/gui/pages/question.py`, `QuestionPage` |
 | stop button (Koniec) | The button that ends a drill in the window and shows the summary, as the stop word does on the command line. | `stop_button`, with its text in `STOP_BUTTON_TEXT` | `src/tabliczka/ui/gui/pages/question.py`, `QuestionPage` |
-| feedback (Dobrze, Niestety, źle) | What the learner is told after each answer: right, or wrong with the correct answer. | `CORRECT_FEEDBACK`, `wrong_feedback`; coloured by `feedback_html` | `src/tabliczka/ui/text.py` |
+| feedback (Dobrze, Niestety, źle) | What the learner is told after each answer: right, or wrong with the correct answer. | `CORRECT_FEEDBACK`, `wrong_feedback`, with the correct answer as said aloud in `answer_text`; coloured by `feedback_html` | `src/tabliczka/ui/text.py` |
 | error message (Coś poszło nie tak) | The message the window shows for an unexpected error, with its traceback in the details. | `ERROR_MESSAGE`; shown by `show_error` | `src/tabliczka/ui/gui/text.py`, `ERROR_MESSAGE` |
 | new version notice (Jest już nowa wersja programu) | The line above the pages naming a newer release and linking to its page. | `DrillWindow.new_version_notice`; text in `NEW_VERSION_TEXT`, `NEW_VERSION_LINK_TEXT` | `src/tabliczka/ui/gui/drill_window.py`, `DrillWindow.show_new_version` |
 
 ## Spelled two ways
 
-- **Operation names.** Classes and singletons use verbs for every operation (`Add`,
-  `Subtract`, `Multiply`, `Divide`), but operation ids mix verbs and nouns (`add`,
-  `subtract`, `multiplication`, `division`).
+- **Operation names.** Classes and singletons use verbs for the four arithmetic
+  operations and division with remainder (`Add`, `Subtract`, `Multiply`, `Divide`,
+  `DivideWithRemainder`) and nouns for the powers (`Square`, `Cube`), but operation
+  ids mix verbs and nouns (`add`, `subtract`, `multiplication`, `division`,
+  `division_with_remainder`, `square`, `cube`).
 - **Learner name.** The command line option is `--imie`; the code holds it as `name`.
 - **Multiplication drill.** The command is `mnozenie` (no Polish letters); the copy
   says `Mnożenie`.
 - **App data folder.** The domain term and the test fixture say app data folder;
   `user_config_dir` is the library call that finds it.
-- **Learner answer.** The type that reads it is `LearnerAnswer`; the value is
-  `given` in `run_drill`, `Drill.check_answer` and `QuestionPage`.
+- **Learner answer.** The type that reads it is `LearnerAnswer`; the values are
+  `given_answer` and `given_remainder` in `run_drill`, `Drill.check_answer` and
+  `QuestionPage`.
 - **Newer release.** `releases/` and the docstrings say newer release (`is_newer`);
   the window's identifiers say new version (`NewVersionCheck`, `new_version_notice`,
   `NEW_VERSION_TEXT`), matching the copy, "nowa wersja programu".

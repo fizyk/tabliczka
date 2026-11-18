@@ -63,7 +63,7 @@ class DrillWindow(QMainWindow):
         )
         page.finished.connect(lambda: self.show_page(SummaryPage(drill.summary())))
         self.show_page(page)
-        page.given.setFocus()
+        page.given_answer.setFocus()
 
     def show_page(self, page: QWidget) -> None:
         """Replace the current page with ``page``."""

@@ -7,7 +7,7 @@ import click
 import pytest
 from click.testing import CliRunner
 
-from tabliczka.exercises.service import ADD
+from tabliczka.exercises.service import ADD, DIVIDE_WITH_REMAINDER
 from tabliczka.practice.models import Score, Summary
 from tabliczka.ui.cli import LEARNER_ANSWER, main, print_summary, run_drill
 
@@ -72,7 +72,15 @@ DRILL_PROMPT = "Co ćwiczymy? (dodawanie, mnozenie, cwiczenie): "
             ["--imie", "Ala"],
             "cwiczenie\n",
             f"Witaj Ala!\n{DRILL_PROMPT}cwiczenie\n{CHOSEN_INTRO}",
-            ["add", "subtract", "multiplication", "division"],
+            [
+                "add",
+                "subtract",
+                "multiplication",
+                "division",
+                "division_with_remainder",
+                "square",
+                "cube",
+            ],
             None,
             None,
         ),
@@ -95,6 +103,24 @@ DRILL_PROMPT = "Co ćwiczymy? (dodawanie, mnozenie, cwiczenie): "
             ["division", "add"],
             50,
             5,
+        ),
+        (
+            [
+                "--imie",
+                "Ala",
+                "cwiczenie",
+                "--dzialanie",
+                "dzielenie-z-reszta",
+                "--dzialanie",
+                "kwadraty",
+                "--dzialanie",
+                "szesciany",
+            ],
+            "",
+            f"Witaj Ala!\n{CHOSEN_INTRO}",
+            ["division_with_remainder", "square", "cube"],
+            None,
+            None,
         ),
     ],
 )
@@ -217,6 +243,60 @@ def test_run_drill(monkeypatch: pytest.MonkeyPatch, typed: str) -> None:
         "Niestety, źle, prawidłowy wynik to 2.\n"
     )
     assert "1 - źle" in result.output
+
+
+@pytest.mark.parametrize(
+    ("typed", "output"),
+    [
+        (
+            "1\n0\nkoniec\n",
+            "Dzielenie z resztą: Ile to 3:2?: 1\nIle reszty?: 0\n"
+            "Niestety, źle, prawidłowy wynik to 1 reszty 1.\n",
+        ),
+        (
+            "1\n1\nkoniec\n",
+            "Dzielenie z resztą: Ile to 3:2?: 1\nIle reszty?: 1\nDobrze!\n",
+        ),
+    ],
+)
+def test_run_drill__remainder(
+    monkeypatch: pytest.MonkeyPatch, typed: str, output: str
+) -> None:
+    """A division with remainder asks for the remainder after the quotient."""
+    # Given
+    monkeypatch.setattr(
+        "tabliczka.practice.service.choice", lambda operations: DIVIDE_WITH_REMAINDER
+    )
+    monkeypatch.setattr("tabliczka.exercises.service.randint", lambda low, high: low)
+    drill = click.Command(
+        "drill", callback=lambda: run_drill(["division_with_remainder"])
+    )
+
+    # When
+    result = CliRunner().invoke(drill, input=typed)
+
+    # Then
+    assert result.exit_code == 0
+    assert result.output.startswith(f"Wpisz „koniec”, żeby zakończyć.\n{output}")
+
+
+def test_run_drill__stops_at_remainder(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The stop word typed for the remainder ends the drill without scoring."""
+    # Given
+    monkeypatch.setattr(
+        "tabliczka.practice.service.choice", lambda operations: DIVIDE_WITH_REMAINDER
+    )
+    monkeypatch.setattr("tabliczka.exercises.service.randint", lambda low, high: low)
+    drill = click.Command(
+        "drill", callback=lambda: run_drill(["division_with_remainder"])
+    )
+
+    # When
+    result = CliRunner().invoke(drill, input="1\nkoniec\n")
+
+    # Then
+    assert result.exit_code == 0
+    assert result.output.endswith("Dzielenie z resztą:\n0 - dobrze\n")
 
 
 def test_run_drill__stops_after_question_count(

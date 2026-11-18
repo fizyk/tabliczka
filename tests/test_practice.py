@@ -2,6 +2,7 @@
 
 import pytest
 
+from tabliczka.exercises.models import Question
 from tabliczka.exercises.service import ADD, DIVIDE, MULTIPLY
 from tabliczka.practice import Drill
 from tabliczka.practice.models import Score, Scoreboard, Summary
@@ -131,14 +132,62 @@ def test_check_answer(offset: int, *, correct: bool, score: Score) -> None:
     # Given
     drill = Drill(["add"])
     question = ADD.generate(10)
-    given = question.answer + offset
+    given_answer = question.answer + offset
 
     # When
-    result = drill.check_answer(question, given)
+    result = drill.check_answer(question, given_answer)
 
     # Then
     assert result is correct
     assert drill.scoreboard.score("add") == score
+
+
+@pytest.mark.parametrize(
+    ("given_answer", "given_remainder", "correct"),
+    [(3, 2, True), (2, 2, False), (3, 1, False)],
+)
+def test_check_answer__remainder(
+    given_answer: int, given_remainder: int, *, correct: bool
+) -> None:
+    """A division with remainder is right only with both the quotient and remainder."""
+    # Given
+    drill = Drill(["division_with_remainder"])
+    question = Question("17:5", 3, "division_with_remainder", remainder=2)
+
+    # When
+    result = drill.check_answer(question, given_answer, given_remainder=given_remainder)
+
+    # Then
+    assert result is correct
+
+
+@pytest.mark.parametrize(
+    ("question", "given_remainder", "message"),
+    [
+        (
+            Question("1+1", 2, "add"),
+            0,
+            r"The question 1\+1 has no remainder\. Give None as given_remainder\.",
+        ),
+        (
+            Question("17:5", 3, "division_with_remainder", remainder=2),
+            None,
+            r"The question 17:5 asks for a remainder\. "
+            r"Give given_remainder as a whole number\.",
+        ),
+    ],
+)
+def test_check_answer__rejects(
+    question: Question, given_remainder: int | None, message: str
+) -> None:
+    """A remainder for a question with none, or none for one with one, is rejected."""
+    # Given
+    drill = Drill(["add", "division_with_remainder"])
+
+    # When / Then
+    with pytest.raises(ValueError, match=message):
+        drill.check_answer(question, question.answer, given_remainder=given_remainder)
+    assert drill.summary().total == Score()
 
 
 def test_summary() -> None:

@@ -57,9 +57,28 @@ def ask_questions(
         )
 
 
-def check_answer(scoreboard: Scoreboard, question: Question, given: int) -> bool:
-    """Record whether ``given`` answers the question, and return it."""
-    correct = given == question.answer
+def check_answer(
+    scoreboard: Scoreboard,
+    question: Question,
+    given_answer: int,
+    *,
+    given_remainder: int | None,
+) -> bool:
+    """Record and return whether the given answer and remainder are right.
+
+    Reject a remainder for a question with none, and no remainder for one with one.
+    """
+    if question.remainder is None and given_remainder is not None:
+        raise ValueError(
+            f"The question {question.expression} has no remainder. "
+            "Give None as given_remainder."
+        )
+    if question.remainder is not None and given_remainder is None:
+        raise ValueError(
+            f"The question {question.expression} asks for a remainder. "
+            "Give given_remainder as a whole number."
+        )
+    correct = (given_answer, given_remainder) == (question.answer, question.remainder)
     scoreboard.record(question.operation_id, correct=correct)
     return correct
 

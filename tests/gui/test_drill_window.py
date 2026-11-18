@@ -26,11 +26,11 @@ def test_drill_window(qtbot: QtBot, addition_only: None) -> None:
 
     # When / Then
     assert page.question_label.text() == "Dodawanie: Ile to 1+1?"
-    qtbot.keyClicks(page.given, "2")
-    qtbot.keyClick(page.given, Qt.Key.Key_Return)
+    qtbot.keyClicks(page.given_answer, "2")
+    qtbot.keyClick(page.given_answer, Qt.Key.Key_Return)
     assert "Dobrze!" in window.feedback.text()
-    qtbot.keyClicks(page.given, "4")
-    qtbot.keyClick(page.given, Qt.Key.Key_Return)
+    qtbot.keyClicks(page.given_answer, "4")
+    qtbot.keyClick(page.given_answer, Qt.Key.Key_Return)
     assert "Niestety, źle, prawidłowy wynik to 2." in window.feedback.text()
     summary = window.pages.currentWidget()
     assert isinstance(summary, SummaryPage)
@@ -48,8 +48,8 @@ def test_drill_window__stop(qtbot: QtBot, addition_only: None) -> None:
     qtbot.mouseClick(window.start_page.start_button, Qt.MouseButton.LeftButton)
     page = window.pages.currentWidget()
     assert isinstance(page, QuestionPage)
-    qtbot.keyClicks(page.given, "2")
-    qtbot.keyClick(page.given, Qt.Key.Key_Return)
+    qtbot.keyClicks(page.given_answer, "2")
+    qtbot.keyClick(page.given_answer, Qt.Key.Key_Return)
 
     # When
     qtbot.mouseClick(page.stop_button, Qt.MouseButton.LeftButton)

@@ -1,4 +1,4 @@
-"""The four arithmetic operations, and finding them by id."""
+"""The arithmetic operations, and finding them by id."""
 
 from collections import Counter
 from collections.abc import Sequence
@@ -64,13 +64,67 @@ class Divide:
         return Question(f"{product}:{x}", y, self.id)
 
 
+class DivideWithRemainder:
+    """Division with a remainder; divisor and quotient at most the largest number."""
+
+    id = "division_with_remainder"
+    default_largest_number = 10
+    smallest_largest_number = 2
+
+    def generate(self, largest_number: int) -> Question:
+        """Return a division question whose remainder is at least 1."""
+        divisor = randint(2, largest_number)
+        quotient = randint(1, largest_number)
+        remainder = randint(1, divisor - 1)
+        dividend = divisor * quotient + remainder
+        return Question(f"{dividend}:{divisor}", quotient, self.id, remainder=remainder)
+
+
+class Square:
+    """The square of a base at most the largest number."""
+
+    id = "square"
+    default_largest_number = 10
+    smallest_largest_number = 1
+
+    def generate(self, largest_number: int) -> Question:
+        """Return a question about a square."""
+        base = randint(1, largest_number)
+        return Question(f"{base}²", base**2, self.id)
+
+
+class Cube:
+    """The cube of a base at most the largest number."""
+
+    id = "cube"
+    default_largest_number = 5
+    smallest_largest_number = 1
+
+    def generate(self, largest_number: int) -> Question:
+        """Return a question about a cube."""
+        base = randint(1, largest_number)
+        return Question(f"{base}³", base**3, self.id)
+
+
 ADD = Add()
 SUBTRACT = Subtract()
 MULTIPLY = Multiply()
 DIVIDE = Divide()
+DIVIDE_WITH_REMAINDER = DivideWithRemainder()
+SQUARE = Square()
+CUBE = Cube()
 
 OPERATIONS_BY_ID: dict[str, Operation] = {
-    operation.id: operation for operation in (ADD, SUBTRACT, MULTIPLY, DIVIDE)
+    operation.id: operation
+    for operation in (
+        ADD,
+        SUBTRACT,
+        MULTIPLY,
+        DIVIDE,
+        DIVIDE_WITH_REMAINDER,
+        SQUARE,
+        CUBE,
+    )
 }
 
 
