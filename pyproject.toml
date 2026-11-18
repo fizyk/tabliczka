@@ -124,7 +124,7 @@ showcontent = true
 [[tool.towncrier.type]]
 directory = "misc"
 name = "Miscellaneous"
-showcontent = true
+showcontent = false
 
 [tool.rstcheck]
 report_level = "WARNING"

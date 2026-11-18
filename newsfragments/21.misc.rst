@@ -1,0 +1,2 @@
+The Linux tests run through the shared actions-reuse pytest workflow, which
+installs the Qt system libraries through its apt-packages input.
