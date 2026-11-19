@@ -1,7 +1,0 @@
-Three new operations to practise: division with remainder ("Dzielenie z resztą"),
-squares ("Kwadraty") and cubes ("Sześciany"). In division with remainder the child
-types the quotient and then the remainder, and both must be right. The largest number
-limits the divisor and the quotient, or the number being squared or cubed; by default
-it is 10, and 5 for cubes. On the command line, choose them with ``--dzialanie`` as
-``dzielenie-z-reszta``, ``kwadraty`` and ``szesciany``; ``cwiczenie`` without
-``--dzialanie`` now practises all seven operations.

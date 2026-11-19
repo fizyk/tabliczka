@@ -3,6 +3,27 @@ CHANGELOG
 
 .. towncrier release notes start
 
+tabliczka 0.7.0 (2026-11-19)
+============================
+
+Features
+--------
+
+- Three new operations to practise: division with remainder ("Dzielenie z resztą"),
+  squares ("Kwadraty") and cubes ("Sześciany"). In division with remainder the child
+  types the quotient and then the remainder, and both must be right. The largest number
+  limits the divisor and the quotient, or the number being squared or cubed; by default
+  it is 10, and 5 for cubes. On the command line, choose them with ``--dzialanie`` as
+  ``dzielenie-z-reszta``, ``kwadraty`` and ``szesciany``; ``cwiczenie`` without
+  ``--dzialanie`` now practises all seven operations. (`#7 <https://github.com/fizyk/tabliczka/issues/7>`__)
+
+
+Miscellaneous
+-------------
+
+- `#21 <https://github.com/fizyk/tabliczka/issues/21>`__
+
+
 tabliczka 0.6.0 (2026-11-14)
 ============================
 
