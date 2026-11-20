@@ -113,9 +113,12 @@ def notices() -> str:
         key=lambda found: canonicalize_name(found.name),
     )
     qt_for_python = [
-        found for found in bundled if canonicalize_name(found.name) in QT_FOR_PYTHON_NAMES
+        found
+        for found in bundled
+        if canonicalize_name(found.name) in QT_FOR_PYTHON_NAMES
     ]
-    if {canonicalize_name(found.name) for found in qt_for_python} != QT_FOR_PYTHON_NAMES:
+    qt_for_python_names = {canonicalize_name(found.name) for found in qt_for_python}
+    if qt_for_python_names != QT_FOR_PYTHON_NAMES:
         raise SystemExit(
             f"{PROGRAM_NAME} no longer bundles all of {sorted(QT_FOR_PYTHON_NAMES)}; "
             "update QT_FOR_PYTHON_NAMES and the Qt for Python notice."
@@ -132,11 +135,7 @@ def notices() -> str:
         "It bundles Python and the\nlibraries below, each under its own licence.",
         python_notice(),
         qt_for_python_notice(program_version, pyside_versions.pop()),
-        *(
-            package_notice(found)
-            for found in bundled
-            if found not in qt_for_python
-        ),
+        *(package_notice(found) for found in bundled if found not in qt_for_python),
         heading("GNU Lesser General Public License, version 3"),
         LGPL_TEXT_PATH.read_text(encoding="utf-8").strip(),
     ]
