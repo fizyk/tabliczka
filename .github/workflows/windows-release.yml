@@ -25,6 +25,10 @@ jobs:
         run: >-
           uv run --locked --group windows pyinstaller
           --onefile --windowed --name tabliczka src/tabliczka/__main__.py
+      - name: Write the licence notices
+        run: |
+          uv run --locked --group windows python release/notices.py dist/NOTICES.txt
+          cp LICENSE dist/LICENSE.txt
       - name: Start the program
         shell: pwsh
         run: |
@@ -39,7 +43,10 @@ jobs:
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: tabliczka
-          path: dist/tabliczka.exe
+          path: |
+            dist/tabliczka.exe
+            dist/NOTICES.txt
+            dist/LICENSE.txt
           if-no-files-found: error
 
   publish:
@@ -71,5 +78,6 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ github.ref_name }}
         run: >-
-          gh release create "$VERSION" dist/tabliczka.exe
+          gh release create "$VERSION"
+          dist/tabliczka.exe dist/NOTICES.txt dist/LICENSE.txt
           --title "tabliczka ${VERSION#v}" --notes-file release-notes.md

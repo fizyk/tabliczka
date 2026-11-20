@@ -1,0 +1,5 @@
+Each Windows release now comes with ``NOTICES.txt`` and ``LICENSE.txt`` beside
+``tabliczka.exe``. ``NOTICES.txt`` names Python and the libraries the program
+contains: Qt for Python and Qt under the GNU Lesser General Public License, version 3,
+with links to their source code, and the copyright and licence notices of the others.
+``LICENSE.txt`` holds the GNU General Public License, version 3.
