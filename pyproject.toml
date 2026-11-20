@@ -4,7 +4,7 @@ requires = [ "uv-build>=0.12,<0.14" ]
 
 [project]
 name = "tabliczka"
-version = "0.7.0"
+version = "0.7.1"
 description = "Add your description here"
 readme = "README.md"
 license = "GPL-3.0-or-later"
@@ -80,7 +80,7 @@ message_template = "Release {new_version}"
 tag_template = "v{new_version}"
 
 [tool.tbump.version]
-current = "0.7.0"
+current = "0.7.1"
 regex = '''
   (?P<major>\d+)
   \.

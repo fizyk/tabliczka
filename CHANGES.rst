@@ -3,6 +3,15 @@ CHANGELOG
 
 .. towncrier release notes start
 
+tabliczka 0.7.1 (2026-11-20)
+============================
+
+Miscellaneous
+-------------
+
+- `#40 <https://github.com/fizyk/tabliczka/issues/40>`__
+
+
 tabliczka 0.7.0 (2026-11-19)
 ============================
 
