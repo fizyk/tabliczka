@@ -1,0 +1,2 @@
+The project is licensed under the GNU General Public License, version 3 or later,
+declared in ``pyproject.toml`` and the README.
