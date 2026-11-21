@@ -93,7 +93,9 @@ The design rationale is in `.junie/plans/modularise-tabliczka-cli.md`.
 
 Pushing a `v*` tag runs `.github/workflows/windows-release.yml`, which builds
 the windowed `tabliczka.exe` on Windows and publishes it in a GitHub Release with that version's
-`CHANGES.rst` section.
+`CHANGES.rst` section. Beside it go `LICENSE.txt` and `NOTICES.txt`, which
+`release/notices.py` writes from the locked runtime dependencies; it fails on a new
+dependency that ships no licence file.
 
 ## Glossary
 
